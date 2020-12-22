@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -93,104 +95,85 @@ public class Expansions extends PlaceholderExpansion {
      * @return Possibly-null String of the requested identifier.
      */
     @Override
-    public String onRequest(OfflinePlayer player, String identifier){
-    	Clock clock = new Clock();
-        // %PlayTimes_playtime%
-        if(identifier.equalsIgnoreCase("playtime")){
-        	return clock.getTime((Statistics.getPlayerStatistic(player.getUniqueId(), "PLAYTIME")/20));
-        }
+	public String onRequest(OfflinePlayer player, String identifier) {
+		identifier = identifier.toLowerCase();
+		Clock clock = new Clock();
+		switch (identifier) {
+			case "playtime":
+				return clock.getTime((Statistics.getPlayerStatistic(player.getUniqueId(), "PLAYTIME") / 20));
+			case "uptime":
+				return clock.getUptime();
+			case "joindate":
+				return FirstJoinDate.getOfflineJoinDate(player.getUniqueId(), plugin.getConfig().getString("date-format"));
+			case "justhours":
+				return clock.getHours((Statistics.getPlayerStatistic(player.getUniqueId(), "PLAYTIME") / 20)) + "";
+			case "justdays":
+				return clock.getDays((Statistics.getPlayerStatistic(player.getUniqueId(), "PLAYTIME") / 20)) + "";
+			case "justmins":
+				return clock.getMins((Statistics.getPlayerStatistic(player.getUniqueId(), "PLAYTIME") / 20)) + "";
+			case "justsecs":
+				return clock.getSecs((Statistics.getPlayerStatistic(player.getUniqueId(), "PLAYTIME") / 20)) + "";
+		}
 
-        // %PlayTimes_uptime%
-        else if(identifier.equalsIgnoreCase("uptime")){
-        	return clock.getUptime();
-        }
-        
-        // %PlayTimes_joindate%
-        else if(identifier.equalsIgnoreCase("joindate")){
-        	return FirstJoinDate.getOfflineJoinDate(player.getUniqueId(), plugin.getConfig().getString("date-format"));
-        }
-        
-        // %PlayTimes_just--%
-        else if (identifier.equalsIgnoreCase("justhours")) {
-        	return clock.getHours((Statistics.getPlayerStatistic(player.getUniqueId(), "PLAYTIME")/20)) + "";
-        }
-        else if (identifier.equalsIgnoreCase("justdays")) {
-        	return clock.getDays((Statistics.getPlayerStatistic(player.getUniqueId(), "PLAYTIME")/20)) + "";
-        }
-        else if (identifier.equalsIgnoreCase("justmins")) {
-        	return clock.getMins((Statistics.getPlayerStatistic(player.getUniqueId(), "PLAYTIME")/20)) + "";
-        }
-        else if (identifier.equalsIgnoreCase("justsecs")) {
-        	return clock.getSecs((Statistics.getPlayerStatistic(player.getUniqueId(), "PLAYTIME")/20)) + "";
-        }
-        
-        // %PlayTimes_topname#%
-        else if (identifier.contains("topname")) {
-        	TimelessServer server = new TimelessServer();
-        	List<UUID> players = server.getTop10Players();
-   		 
+		// %PlayTimes_topname#%
+		if (identifier.contains("topname")) {
+			TimelessServer server = new TimelessServer();
+			List<UUID> players = server.getTop10Players();
+			String num = identifier.substring(7);
+			int val;
+
+			if (isInteger(num))
+				val = (Integer.parseInt(num) < 1) ? 0 : Integer.parseInt(num) - 1;
+			else
+				return ChatColor.RED + "Invalid leaderboard position!";
+
+			if (players.size() < val + 1)
+				return "N/A";
+
+			OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(players.get(val));
+			String name = "";
 			try {
-				if (identifier.equalsIgnoreCase("topname1"))
-					return (players.isEmpty() ? "N/A" : NameFetcher.getName(players.get(0)));
-				else if (identifier.equalsIgnoreCase("topname2"))
-					return (players.size() < 2 ? "N/A" : NameFetcher.getName(players.get(1)));
-				else if (identifier.equalsIgnoreCase("topname3"))
-					return (players.size() < 3 ? "N/A" : NameFetcher.getName(players.get(2)));
-				else if (identifier.equalsIgnoreCase("topname4"))
-					return (players.size() < 4 ? "N/A" : NameFetcher.getName(players.get(3)));
-				else if (identifier.equalsIgnoreCase("topname5"))
-					return (players.size() < 5 ? "N/A" : NameFetcher.getName(players.get(4)));
-				else if (identifier.equalsIgnoreCase("topname6"))
-					return (players.size() < 6 ? "N/A" : NameFetcher.getName(players.get(5)));
-				else if (identifier.equalsIgnoreCase("topname7"))
-					return (players.size() < 7 ? "N/A" : NameFetcher.getName(players.get(6)));
-				else if (identifier.equalsIgnoreCase("topname8"))
-					return (players.size() < 8 ? "N/A" : NameFetcher.getName(players.get(7)));
-				else if (identifier.equalsIgnoreCase("topname9"))
-					return (players.size() < 9 ? "N/A" : NameFetcher.getName(players.get(8)));
-				else if (identifier.equalsIgnoreCase("topname10"))
-					return (players.size() < 10 ? "N/A" : NameFetcher.getName(players.get(9)));
-				
+				name = (targetPlayer.getName() == null) ? NameFetcher.getName(targetPlayer.getUniqueId()) : targetPlayer.getName();
 			} catch (IOException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
-        }
-        
-        // %PlayTimes_toptime#%
-        else if (identifier.contains("toptime")) {
-        	TimelessServer server = new TimelessServer();
-        	List<Integer> players = server.getTop10Times();
-   		 
-			if (identifier.equalsIgnoreCase("toptime1"))
-				return (players.isEmpty() ? "N/A" : clock.getTime(players.get(0)));
-			else if (identifier.equalsIgnoreCase("toptime2"))
-				return (players.size() < 2 ? "N/A" : clock.getTime(players.get(1)));
-			else if (identifier.equalsIgnoreCase("toptime3"))
-				return (players.size() < 3 ? "N/A" : clock.getTime(players.get(2)));
-			else if (identifier.equalsIgnoreCase("toptime4"))
-				return (players.size() < 4 ? "N/A" : clock.getTime(players.get(3)));
-			else if (identifier.equalsIgnoreCase("toptime5"))
-				return (players.size() < 5 ? "N/A" : clock.getTime(players.get(4)));
-			else if (identifier.equalsIgnoreCase("toptime6"))
-				return (players.size() < 6 ? "N/A" : clock.getTime(players.get(5)));
-			else if (identifier.equalsIgnoreCase("toptime7"))
-				return (players.size() < 7 ? "N/A" : clock.getTime(players.get(6)));
-			else if (identifier.equalsIgnoreCase("toptime8"))
-				return (players.size() < 8 ? "N/A" : clock.getTime(players.get(7)));
-			else if (identifier.equalsIgnoreCase("toptime9"))
-				return (players.size() < 9 ? "N/A" : clock.getTime(players.get(8)));
-			else if (identifier.equalsIgnoreCase("toptime10"))
-				return (players.size() < 10 ? "N/A" : clock.getTime(players.get(9)));
-        }
-        
-        
 
-        // We return null if an invalid placeholder (f.e. %example_placeholder3%) 
-        // was provided
-        return null;
-    }
+			return (players.isEmpty() ? "N/A" : name);
+		}
+
+		// %PlayTimes_toptime#%
+		else if (identifier.contains("toptime")) {
+			TimelessServer server = new TimelessServer();
+			List<Integer> players = server.getTop10Times();
+
+			String num = identifier.substring(7);
+			int val;
+			if (isInteger(num))
+				val = (Integer.parseInt(num) < 1) ? 0 : Integer.parseInt(num) - 1;
+			else
+				return ChatColor.RED + "Invalid leaderboard position!";
+			if (players.size() < val + 1)
+				return "N/A";
+
+			return (players.isEmpty() ? "N/A" : clock.getTime(players.get(val)));
+		}
+
+
+		// We return null if an invalid placeholder (f.e. %example_placeholder3%)
+		// was provided
+		return null;
+	}
+
+	boolean isInteger(String str) {
+		try {
+			Integer.parseInt(str);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
 }
-
 
 
 

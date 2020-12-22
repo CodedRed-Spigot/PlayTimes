@@ -8,9 +8,13 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.Statistic;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import me.codedred.playtimes.PlayTimes;
 
 public class Statistics {
 	
@@ -35,12 +39,17 @@ public class Statistics {
             JSONObject pilot = null;
             if (stat.equalsIgnoreCase("PLAYTIME")) {
             	try {
-            		if (isNewerVersion()) {
+    				OfflinePlayer op = Bukkit.getOfflinePlayer(player);
+    				if (PlayTimes.getPlugin(PlayTimes.class).isNewerVersion())
+    					return op.getStatistic((Statistic.valueOf("PLAY_ONE_MINUTE")));
+    				else
+    					return op.getPlayer().getStatistic((Statistic.valueOf("PLAY_ONE_TICK")));
+            		/*if (isNewerVersion()) {
             			pilot = (JSONObject) jsonObject.get("stats");
             			JSONObject second = (JSONObject) pilot.get("minecraft:custom");
             			return (long) second.get("minecraft:play_one_minute");
             		}
-            		return (long) jsonObject.get("stat.playOneMinute");
+            		return (long) jsonObject.get("stat.playOneMinute");*/
             	} catch (Exception e) {
             		return 0;
             	}
