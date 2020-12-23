@@ -41,7 +41,7 @@ public class Statistics {
             	try {
     				OfflinePlayer op = Bukkit.getOfflinePlayer(player);
     				if (PlayTimes.getPlugin(PlayTimes.class).isNewerVersion())
-    					return op.getStatistic((Statistic.valueOf("PLAY_ONE_MINUTE")));
+    					return op.getPlayer().getStatistic((Statistic.valueOf("PLAY_ONE_MINUTE")));
     				else
     					return op.getPlayer().getStatistic((Statistic.valueOf("PLAY_ONE_TICK")));
             		/*if (isNewerVersion()) {
