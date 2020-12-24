@@ -12,7 +12,7 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.codedred.playtimes.api.TimelessServer;
 import me.codedred.playtimes.models.Clock;
 import me.codedred.playtimes.utils.FirstJoinDate;
-import me.codedred.playtimes.utils.NameFetcher;
+import me.codedred.playtimes.utils.StatFetcher;
 import me.codedred.playtimes.utils.Statistics;
 
 /**
@@ -133,7 +133,7 @@ public class Expansions extends PlaceholderExpansion {
 			OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(players.get(val));
 			String name = "";
 			try {
-				name = (targetPlayer.getName() == null) ? NameFetcher.getName(targetPlayer.getUniqueId()) : targetPlayer.getName();
+				name = (targetPlayer.getName() == null) ? StatFetcher.getName(targetPlayer.getUniqueId()) : targetPlayer.getName();
 			} catch (IOException e) {
 				//e.printStackTrace();
 			}

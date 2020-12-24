@@ -13,7 +13,7 @@ import me.codedred.playtimes.PlayTimes;
 import me.codedred.playtimes.models.Clock;
 import me.codedred.playtimes.models.NonOnlinePlayer;
 import me.codedred.playtimes.models.OnlinePlayer;
-import me.codedred.playtimes.utils.UUIDFetcher;
+import me.codedred.playtimes.utils.StatFetcher;
 
 public class Time implements CommandExecutor {
 
@@ -58,7 +58,7 @@ public class Time implements CommandExecutor {
 			}
 			UUID target = null;
 			try {
-				target = UUIDFetcher.getUUID(args[0]);
+				target = StatFetcher.getUUID(args[0]);
 			} catch (Exception e) {
 				sender.sendMessage(plugin.fp(plugin.getConfig().getString("messages.player-not-found")));
 				return true;

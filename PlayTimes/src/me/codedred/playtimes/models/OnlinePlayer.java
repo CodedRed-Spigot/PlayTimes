@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 import me.codedred.playtimes.PlayTimes;
 import me.codedred.playtimes.utils.FirstJoinDate;
-import me.codedred.playtimes.utils.PAPI;
+import me.codedred.playtimes.utils.PAPIHolders;
 
 public class OnlinePlayer {
 
@@ -24,7 +24,7 @@ public class OnlinePlayer {
 		for (String msg : plugin.getConfig().getStringList("playtime.message")) {
 			
 			if (plugin.hasPAPI())
-				msg = PAPI.getHolders(player, msg);
+				msg = PAPIHolders.getHolders(player, msg);
 			
 			if (msg.indexOf("{\"text\":") != -1)
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + target + " " + translatedMsg(msg));

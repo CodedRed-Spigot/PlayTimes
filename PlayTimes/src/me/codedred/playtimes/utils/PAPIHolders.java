@@ -5,10 +5,8 @@ import org.bukkit.entity.Player;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 
-public class PAPI {
+public class PAPIHolders {
 
-	
-	
 	/***
 	 * Translates PAPI holders
 	 * 

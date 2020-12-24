@@ -81,10 +81,7 @@ public class Debugger {
 			List<String> list = new ArrayList<>(); list.add("Cmaaxx"); list.add("CodedRed");
 			plugin.getConfig().set("hide-players-from-leaderboard.players", list);
 		}
-		//if (!plugin.getConfig().contains("papi-custom-placeholders")) {
-		//	plugin.getConfig().set("papi-custom-placeholders.enabled", false);
-		//	plugin.getConfig().set("papi-custom-placeholders.placeholders.", "");
-		//}
+
 		plugin.saveConfig();
 	}
 }

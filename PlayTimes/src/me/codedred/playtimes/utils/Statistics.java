@@ -2,7 +2,6 @@ package me.codedred.playtimes.utils;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.UUID;
 
@@ -12,7 +11,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import me.codedred.playtimes.PlayTimes;
 
@@ -26,7 +24,30 @@ public class Statistics {
         
         if(playerStatistics.exists()) {
             JSONParser parser = new JSONParser();
-            JSONObject jsonObject = null;
+            JSONObject jsonObject;
+			try {
+				jsonObject = (JSONObject) parser.parse(new FileReader(playerStatistics));
+			} catch (Exception e) {
+				return 0;
+			}
+			JSONObject pilot;
+			if (stat.equalsIgnoreCase("PLAYTIME")) {
+				try {
+					OfflinePlayer op = Bukkit.getOfflinePlayer(player);
+					if (PlayTimes.getPlugin(PlayTimes.class).isNewerVersion()) {
+						if (op.isOnline())
+							return op.getPlayer().getStatistic((Statistic.valueOf("PLAY_ONE_MINUTE")));
+						pilot = (JSONObject) jsonObject.get("stats");
+						JSONObject second = (JSONObject) pilot.get("minecraft:custom");
+						return (long) second.get("minecraft:play_one_minute");
+					}
+					else if (op.isOnline())
+						return op.getPlayer().getStatistic((Statistic.valueOf("PLAY_ONE_TICK")));
+					return (long) jsonObject.get("stat.playOneMinute");
+				} catch (Exception e) {
+					return 0;
+				}
+           /* JSONObject jsonObject = null;
             try {
                 try {
 					jsonObject = (JSONObject) parser.parse(new FileReader(playerStatistics));
@@ -44,15 +65,15 @@ public class Statistics {
     					return op.getPlayer().getStatistic((Statistic.valueOf("PLAY_ONE_MINUTE")));
     				else
     					return op.getPlayer().getStatistic((Statistic.valueOf("PLAY_ONE_TICK")));
-            		/*if (isNewerVersion()) {
+            		if (isNewerVersion()) {
             			pilot = (JSONObject) jsonObject.get("stats");
             			JSONObject second = (JSONObject) pilot.get("minecraft:custom");
             			return (long) second.get("minecraft:play_one_minute");
             		}
-            		return (long) jsonObject.get("stat.playOneMinute");*/
+            		return (long) jsonObject.get("stat.playOneMinute");
             	} catch (Exception e) {
             		return 0;
-            	}
+            	}*/
             }
             else if (stat.equalsIgnoreCase("LEAVE")) {
             	try {

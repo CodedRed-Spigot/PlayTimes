@@ -10,7 +10,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import me.codedred.playtimes.PlayTimes;
-import me.codedred.playtimes.utils.UUIDFetcher;
+import me.codedred.playtimes.utils.StatFetcher;
 
 public class Editor implements CommandExecutor {
 	
@@ -40,7 +40,7 @@ public class Editor implements CommandExecutor {
 					}
 					UUID target = null;
 					try {
-						target = UUIDFetcher.getUUID(args[1]);
+						target = StatFetcher.getUUID(args[1]);
 					} catch(Exception e) {
 						sender.sendMessage(plugin.fp("&cPlayer not found/never joined server before!"));
 						return true;
@@ -69,7 +69,7 @@ public class Editor implements CommandExecutor {
 				if (args[0].equalsIgnoreCase("set")) {
 					UUID target = null;
 					try {
-						target = UUIDFetcher.getUUID(args[1]);
+						target = StatFetcher.getUUID(args[1]);
 					} catch(Exception e) {
 						sender.sendMessage(plugin.fp("&cPlayer not found/never joined server before!"));
 						return true;

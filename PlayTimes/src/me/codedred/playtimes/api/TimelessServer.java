@@ -25,19 +25,21 @@ public class TimelessServer {
 	}
 	
 	public List<UUID> getTop10Players() {
-		List<UUID> players = new ArrayList<UUID>();
+		 List<UUID> players = new ArrayList<>();
 		 Map<String, Integer> map = getTopTen();
+		 Object[] array = map.keySet().toArray();
 		 for (int i = 0; i < map.size(); i++)
-             players.add(UUID.fromString(map.keySet().toArray()[i].toString()));
+			 players.add(UUID.fromString(array[i].toString()));
 		 
 		 return players;
 	}
 	
 	public List<Integer> getTop10Times() {
-		List<Integer> players = new ArrayList<Integer>();
+		 List<Integer> players = new ArrayList<>();
 		 Map<String, Integer> map = getTopTen();
+		 Object[] array = map.values().toArray();
 		 for (int i = 0; i < map.size(); i++)
-            players.add(Integer.parseInt(map.values().toArray()[i].toString())/20);
+			 players.add(Integer.parseInt(array[i].toString())/20);
 		 return players;
 	}
 	
