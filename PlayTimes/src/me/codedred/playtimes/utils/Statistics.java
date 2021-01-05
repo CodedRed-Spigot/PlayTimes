@@ -2,17 +2,15 @@ package me.codedred.playtimes.utils;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Statistic;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-
-import me.codedred.playtimes.PlayTimes;
+import org.json.simple.parser.ParseException;
 
 public class Statistics {
 	
@@ -21,84 +19,43 @@ public class Statistics {
         File worldFolder = new File(Bukkit.getServer().getWorlds().get(0).getWorldFolder(), "stats");
         File playerStatistics = new File(worldFolder, player + ".json");
         
-        
         if(playerStatistics.exists()) {
-            JSONParser parser = new JSONParser();
-            JSONObject jsonObject;
-			try {
-				jsonObject = (JSONObject) parser.parse(new FileReader(playerStatistics));
-			} catch (Exception e) {
-				return 0;
-			}
-			JSONObject pilot;
-			if (stat.equalsIgnoreCase("PLAYTIME")) {
-				try {
-					OfflinePlayer op = Bukkit.getOfflinePlayer(player);
-					if (PlayTimes.getPlugin(PlayTimes.class).isNewerVersion()) {
-						if (op.isOnline())
-							return op.getPlayer().getStatistic((Statistic.valueOf("PLAY_ONE_MINUTE")));
-						pilot = (JSONObject) jsonObject.get("stats");
-						JSONObject second = (JSONObject) pilot.get("minecraft:custom");
-						return (long) second.get("minecraft:play_one_minute");
-					}
-					else if (op.isOnline())
-						return op.getPlayer().getStatistic((Statistic.valueOf("PLAY_ONE_TICK")));
-					return (long) jsonObject.get("stat.playOneMinute");
-				} catch (Exception e) {
-					return 0;
-				}
-           /* JSONObject jsonObject = null;
             try {
-                try {
-					jsonObject = (JSONObject) parser.parse(new FileReader(playerStatistics));
-				} catch (ParseException e) {
-					return 0;
-				}
-            } catch (IOException e) {
-            	return 0;
-            }
-            JSONObject pilot = null;
-            if (stat.equalsIgnoreCase("PLAYTIME")) {
-            	try {
-    				OfflinePlayer op = Bukkit.getOfflinePlayer(player);
-    				if (PlayTimes.getPlugin(PlayTimes.class).isNewerVersion())
-    					return op.getPlayer().getStatistic((Statistic.valueOf("PLAY_ONE_MINUTE")));
-    				else
-    					return op.getPlayer().getStatistic((Statistic.valueOf("PLAY_ONE_TICK")));
-            		if (isNewerVersion()) {
-            			pilot = (JSONObject) jsonObject.get("stats");
-            			JSONObject second = (JSONObject) pilot.get("minecraft:custom");
-            			return (long) second.get("minecraft:play_one_minute");
-            		}
-            		return (long) jsonObject.get("stat.playOneMinute");
-            	} catch (Exception e) {
-            		return 0;
-            	}*/
-            }
-            else if (stat.equalsIgnoreCase("LEAVE")) {
-            	try {
+                JSONParser parser = new JSONParser();
+                JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(playerStatistics));
+                
+                JSONObject pilot = null; // changes depending on stat
+                JSONObject passenger = null;
+           
+                
+                if (stat.equalsIgnoreCase("PLAYTIME")) {
+                	if (isNewerVersion()) {
+                		pilot = (JSONObject) jsonObject.get("stats");
+                		passenger = (JSONObject) pilot.get("minecraft:custom");
+                		return (long) passenger.get("minecraft:play_one_minute");
+                	}
+                	return (long) jsonObject.get("stat.playOneMinute");
+                }
+                else if (stat.equalsIgnoreCase("LEAVE")) {
             		if (isNewerVersion()) {
             			pilot = (JSONObject) jsonObject.get("stats");
             			JSONObject second = (JSONObject) pilot.get("minecraft:custom");
             			return (long) second.get("minecraft:leave_game");
             		}
-            			return (long) jsonObject.get("stat.leaveGame");
-            	} catch (Exception e) {
-            		return 0;
-            	}
-            }
-            else if (stat.equalsIgnoreCase("REST")) {
-            	try {
+            		return (long) jsonObject.get("stat.leaveGame");
+                }
+                else if (stat.equalsIgnoreCase("REST")) {
             		if (isNewerVersion()) {
             			pilot = (JSONObject) jsonObject.get("stats");
             			JSONObject second = (JSONObject) pilot.get("minecraft:custom");
             			return (long) second.get("minecraft:time_since_rest");
             		}
-            			return (long) jsonObject.get("stat.timeSinceDeath");
-            	} catch (Exception e) {
-            		return 0;
-            	}
-            }
+            		return (long) jsonObject.get("stat.timeSinceDeath");
+                }
+			} catch (IOException | ParseException e) {
+				//e.printStackTrace();
+				// return 0;
+			}
         }
         return 0;
     }

@@ -10,12 +10,17 @@ public class HexUtil {
 	private static Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
 
 	public static String hex(String msg) {
-		Matcher match = pattern.matcher(msg);
-		while (match.find()) {
-			String color = msg.substring(match.start(), match.end());
-			msg = msg.replace(color, ChatColor.of(color) + "");
-			match = pattern.matcher(msg);
+		try {
+			String newmsg = msg;
+			Matcher match = pattern.matcher(msg);
+			while (match.find()) {
+				String color = msg.substring(match.start(), match.end());
+				newmsg = msg.replace(color, ChatColor.of(color) + "");
+				match = pattern.matcher(msg);
+			}
+			return newmsg;
+		} catch (Exception e) {
+			return msg;
 		}
-		return msg;
 	}
 }
