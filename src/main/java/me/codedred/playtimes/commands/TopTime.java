@@ -60,6 +60,7 @@ public class TopTime implements CommandExecutor {
 			StatManager statManager = StatManager.getInstance();
 			TimeManager timeManager = TimeManager.getInstance();
 
+			 String original = content;
 			 sender.sendMessage(header);
              for (int i = 0; i < map.size(); i++) {
                  UUID uuid = UUID.fromString(map.keySet().toArray()[i].toString());
@@ -70,8 +71,8 @@ public class TopTime implements CommandExecutor {
                  for (String[] r : replacements)
                  	content = StringUtils.replace(content, r[0], r[1]);
                  content = StringUtils.replace(content,"%joindate%", statManager.getJoinDate(uuid));
-
                  sender.sendMessage(ChatUtil.format(content));
+				 content = original;
              }
 			 sender.sendMessage(footer);
 

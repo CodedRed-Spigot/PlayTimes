@@ -33,9 +33,9 @@ public class RisingStats implements Stats {
                 switch(type) {
                     case PLAYTIME:
                         return passenger.get("minecraft:play_one_minute").getAsLong();
-                    case REST:
-                        return passenger.get("minecraft:leave_game").getAsLong();
                     case LEAVE:
+                        return passenger.get("minecraft:leave_game").getAsLong();
+                    case REST:
                         return passenger.get("minecraft:time_since_rest").getAsLong();
                 }
             } catch (IOException | JsonSyntaxException e) {
