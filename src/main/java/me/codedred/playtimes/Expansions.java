@@ -99,7 +99,7 @@ public class Expansions extends PlaceholderExpansion {
 		TimeManager timings = TimeManager.getInstance();
 		switch (identifier) {
 			case "playtime":
-				return timings.buildFormat(stats.getPlayerStat(player.getUniqueId(), StatisticType.PLAYTIME));
+				return timings.buildFormat(stats.getPlayerStat(player.getUniqueId(), StatisticType.PLAYTIME)/20);
 			case "uptime":
 				return stats.getUptime();
 			case "joindate":
@@ -146,7 +146,7 @@ public class Expansions extends PlaceholderExpansion {
 			if (players.size() < val + 1)
 				return "N/A";
 
-			return (players.isEmpty() ? "N/A" : timings.buildFormat(players.get(val)));
+			return (players.isEmpty() ? "N/A" : timings.buildFormat(players.get(val)/20));
 		}
 
 

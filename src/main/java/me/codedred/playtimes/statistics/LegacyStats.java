@@ -32,7 +32,7 @@ public class LegacyStats implements Stats {
                         return jsonObject.get("stat.timeSinceDeath").getAsLong();
                 }
 
-            } catch (IOException | JsonSyntaxException e) {
+            } catch (Exception e) {
                 //e.printStackTrace();
             }
         }

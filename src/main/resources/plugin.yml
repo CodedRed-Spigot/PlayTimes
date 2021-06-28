@@ -3,7 +3,7 @@ main: me.codedred.playtimes.PlayTimes
 # Keeping 'Cmaaxx' as author for Metric purposes.
 author: Cmaaxx
 authors: [CodedRed]
-version: 1.4.1
+version: 1.4.2
 softdepend: [PlaceholdersAPI, PlaceholderAPI]
 
 commands:

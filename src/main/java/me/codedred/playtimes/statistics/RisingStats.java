@@ -38,7 +38,7 @@ public class RisingStats implements Stats {
                     case REST:
                         return passenger.get("minecraft:time_since_rest").getAsLong();
                 }
-            } catch (IOException | JsonSyntaxException e) {
+            } catch (Exception e) {
                 //e.printStackTrace();
             }
         }
