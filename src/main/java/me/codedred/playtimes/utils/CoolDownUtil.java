@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public class CoolDownUtil {
 
-	private static Map<UUID, Long> cooldowns = new HashMap<UUID, Long>();
+	private static Map<UUID, Long> cooldowns = new HashMap<>();
 	
 	public static void remove(UUID uuid) {
 		cooldowns.remove(uuid);

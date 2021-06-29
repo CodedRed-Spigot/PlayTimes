@@ -4,7 +4,6 @@ import me.codedred.playtimes.data.DataManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
-import javax.xml.crypto.Data;
 import java.lang.reflect.Method;
 
 public class ServerUtils {

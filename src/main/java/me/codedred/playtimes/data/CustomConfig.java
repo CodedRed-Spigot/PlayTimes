@@ -23,48 +23,48 @@ public class CustomConfig {
 	}
 
 	public void reloadConfig() {
-		if (this.dataConfigFile == null) {
-			this.dataConfigFile = new File(this.plugin.getDataFolder(),
+		if (dataConfigFile == null) {
+			dataConfigFile = new File(plugin.getDataFolder(),
 					name);
 		}
 		
-		this.dataConfig = YamlConfiguration
-				.loadConfiguration(this.dataConfigFile);
+		dataConfig = YamlConfiguration
+				.loadConfiguration(dataConfigFile);
 
-		InputStream defConfigStream = this.plugin.getResource(name);
+		InputStream defConfigStream = plugin.getResource(name);
 		if (defConfigStream != null) {
 			YamlConfiguration defConfig = YamlConfiguration
 					.loadConfiguration(new InputStreamReader(defConfigStream));
-			this.dataConfig.setDefaults(defConfig);
+			dataConfig.setDefaults(defConfig);
 		}
 	}
 
 	public FileConfiguration getConfig() {
-		if (this.dataConfig == null) {
+		if (dataConfig == null) {
 			reloadConfig();
 		}
-		return this.dataConfig;
+		return dataConfig;
 	}
 
 	public void saveConfig() {
-		if ((this.dataConfig == null) || (this.dataConfigFile == null)) {
+		if ((dataConfig == null) || (dataConfigFile == null)) {
 			return;
 		}
 		try {
-			getConfig().save(this.dataConfigFile);
+			getConfig().save(dataConfigFile);
 		} catch (IOException ex) {
-			this.plugin.getLogger().log(Level.SEVERE, "Could not save config to "
-					+ this.dataConfigFile, ex);
+			plugin.getLogger().log(Level.SEVERE, "Could not save config to "
+					+ dataConfigFile, ex);
 		}
 	} 
 
 	public void saveDefaultConfig() {
-		if (this.dataConfigFile == null) {
-			this.dataConfigFile = new File(this.plugin.getDataFolder(),
+		if (dataConfigFile == null) {
+			dataConfigFile = new File(plugin.getDataFolder(),
 					name);
 		}
-		if (!this.dataConfigFile.exists()) {
-			this.plugin.saveResource(name, false);
+		if (!dataConfigFile.exists()) {
+			plugin.saveResource(name, false);
 		}
 	}
 

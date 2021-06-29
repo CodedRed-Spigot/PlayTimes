@@ -1,6 +1,5 @@
 package me.codedred.playtimes.time.formats;
 
-import me.codedred.playtimes.data.DataManager;
 import me.codedred.playtimes.time.Timings;
 
 public class NativeFormat implements Timings {
@@ -17,8 +16,8 @@ public class NativeFormat implements Timings {
         // Time less than 1 hour
         if (minutes < 60) {
             if (secondsLeft > 0)
-                return String.valueOf(minutes + (minutes == 1 ? MINUTE : MINUTES) + " " + secondsLeft + (secondsLeft == 1 ? SECOND : SECONDS));
-            return String.valueOf(minutes + (minutes == 1 ? MINUTE : MINUTES));
+                return minutes + (minutes == 1 ? MINUTE : MINUTES) + " " + secondsLeft + (secondsLeft == 1 ? SECOND : SECONDS);
+            return minutes + (minutes == 1 ? MINUTE : MINUTES);
         }
 
         String format;

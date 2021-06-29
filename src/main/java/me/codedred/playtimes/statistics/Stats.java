@@ -8,10 +8,10 @@ import java.util.UUID;
 
 public interface Stats {
 
-    public long getPlayerStatistic(UUID uuid, StatisticType type);
-    public boolean hasJoinedBefore(UUID uuid);
-    public String getJoinDate(UUID uuid);
-    public long getOnlineStatistic(Player player, StatisticType type);
+    long getPlayerStatistic(UUID uuid, StatisticType type);
+    boolean hasJoinedBefore(UUID uuid);
+    String getJoinDate(UUID uuid);
+    long getOnlineStatistic(Player player, StatisticType type);
 
-    static File worldFolder = new File(Bukkit.getServer().getWorlds().get(0).getWorldFolder(), "stats");
+    File worldFolder = new File(Bukkit.getServer().getWorlds().get(0).getWorldFolder(), "stats");
 }

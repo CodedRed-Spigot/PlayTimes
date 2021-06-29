@@ -2,7 +2,6 @@ package me.codedred.playtimes.server;
 
 import me.codedred.playtimes.data.DataManager;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 
 import java.io.IOException;
 import java.util.UUID;

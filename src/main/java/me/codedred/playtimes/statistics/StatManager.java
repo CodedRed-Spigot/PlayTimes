@@ -2,7 +2,6 @@ package me.codedred.playtimes.statistics;
 
 import me.codedred.playtimes.time.TimeManager;
 import me.codedred.playtimes.utils.ServerUtils;
-import org.bukkit.Server;
 
 import java.lang.management.ManagementFactory;
 import java.util.UUID;

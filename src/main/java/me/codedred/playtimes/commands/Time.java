@@ -1,5 +1,6 @@
 package me.codedred.playtimes.commands;
 
+import me.codedred.playtimes.PlayTimes;
 import me.codedred.playtimes.data.DataManager;
 import me.codedred.playtimes.data.Debugger;
 import me.codedred.playtimes.server.ServerManager;
@@ -158,25 +159,29 @@ public class Time implements CommandExecutor {
 			ChatUtil.errno(sender, ChatUtil.ChatTypes.NO_PERMISSION);
 			return true;
 		}
-		UUID target;
-		try {
-			target = ServerManager.getInstance().getUUID(args[0]);
-		} catch (NullPointerException e) {
-			ChatUtil.errno(sender, ChatUtil.ChatTypes.PLAYER_NOT_FOUND);
-			return true;
-		}
-		if (target == null) {
-			ChatUtil.errno(sender, ChatUtil.ChatTypes.PLAYER_NOT_FOUND);
-			return true;
-		}
-		if (!StatManager.getInstance().hasJoinedBefore(target)) {
-			ChatUtil.errno(sender, ChatUtil.ChatTypes.PLAYER_NEVER_PLAYED);
-			return true;
-		}
 
-		org.bukkit.OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(target);
-		OfflinePlayer player = new OfflinePlayer(sender, target, offlinePlayer.getName());
-		player.sendMessageToTarget();
+		Bukkit.getScheduler().runTaskAsynchronously(PlayTimes.getPlugin(PlayTimes.class), () -> {
+			UUID target;
+			try {
+				target = ServerManager.getInstance().getUUID(args[0]);
+			} catch (NullPointerException e) {
+				ChatUtil.errno(sender, ChatUtil.ChatTypes.PLAYER_NOT_FOUND);
+				return;
+			}
+			if (target == null) {
+				ChatUtil.errno(sender, ChatUtil.ChatTypes.PLAYER_NOT_FOUND);
+				return;
+			}
+			if (!StatManager.getInstance().hasJoinedBefore(target)) {
+				ChatUtil.errno(sender, ChatUtil.ChatTypes.PLAYER_NEVER_PLAYED);
+				return;
+			}
+
+			org.bukkit.OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(target);
+			OfflinePlayer player = new OfflinePlayer(sender, target, offlinePlayer.getName());
+			player.sendMessageToTarget();
+		});
+
 
 		return true;
 	}

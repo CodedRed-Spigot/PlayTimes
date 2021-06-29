@@ -2,7 +2,6 @@ package me.codedred.playtimes.statistics;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
 import me.codedred.playtimes.data.DataManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Statistic;
@@ -10,7 +9,6 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.UUID;

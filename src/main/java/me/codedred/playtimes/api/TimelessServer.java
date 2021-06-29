@@ -2,12 +2,9 @@ package me.codedred.playtimes.api;
 
 import me.codedred.playtimes.models.Leaderboard;
 import me.codedred.playtimes.statistics.StatManager;
-import org.bukkit.Bukkit;
-import me.codedred.playtimes.PlayTimes;
 
 import java.lang.management.ManagementFactory;
 import java.util.*;
-import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
 public class TimelessServer {

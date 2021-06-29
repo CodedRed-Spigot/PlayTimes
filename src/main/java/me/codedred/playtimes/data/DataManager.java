@@ -12,8 +12,8 @@ public class DataManager {
 	}
 	
 	private final CustomConfig data = new CustomConfig(PlayTimes.getPlugin(PlayTimes.class), "data.yml");
-	private final CustomConfig cfg = new CustomConfig(PlayTimes.getPlugin(PlayTimes.class), "config.yml");;
-	//private final CustomConfig holo = new CustomConfig(PlayTimes.getPlugin(PlayTimes.class), "hologram.yml");;
+	private final CustomConfig cfg = new CustomConfig(PlayTimes.getPlugin(PlayTimes.class), "config.yml");
+	//private final CustomConfig holo = new CustomConfig(PlayTimes.getPlugin(PlayTimes.class), "hologram.yml");
 
 	public FileConfiguration getConfig() {
 		return cfg.getConfig();
@@ -34,11 +34,7 @@ public class DataManager {
 	}
 
 	public void saveData() {
-		data.saveConfig();;
-	}
-
-	public void saveConfig() {
-		cfg.saveConfig();;
+		data.saveConfig();
 	}
 
 	//public void saveHolo() {

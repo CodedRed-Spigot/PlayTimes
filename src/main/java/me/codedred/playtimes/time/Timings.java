@@ -1,12 +1,9 @@
 package me.codedred.playtimes.time;
 
-import java.lang.management.ManagementFactory;
-import java.util.concurrent.TimeUnit;
-
 public interface Timings extends TimeRegistry {
 
-    public String buildFormat(long time);
-    public static int getDays(long l) {
+    String buildFormat(long time);
+    /*public static int getDays(long l) {
         if (l < 60) {
             return 0;
         }
@@ -38,6 +35,6 @@ public interface Timings extends TimeRegistry {
             return 0;
         }
         return (int) (l);
-    }
+    }*/
 
 }

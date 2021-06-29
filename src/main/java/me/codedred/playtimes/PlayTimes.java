@@ -10,14 +10,10 @@ import me.codedred.playtimes.server.ServerManager;
 import me.codedred.playtimes.statistics.StatManager;
 import me.codedred.playtimes.time.TimeManager;
 import me.codedred.playtimes.utils.ChatUtil;
-import me.codedred.playtimes.utils.ServerUtils;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.lang.reflect.Method;
 
 public class PlayTimes extends JavaPlugin {
 	
@@ -53,7 +49,7 @@ public class PlayTimes extends JavaPlugin {
 	}
 
 	private void registerEvents() {
-		PluginManager pm = this.getServer().getPluginManager();
+		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(new Join(), this);
 		pm.registerEvents(new Quit(), this);
 	}

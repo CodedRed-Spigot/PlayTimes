@@ -3,11 +3,8 @@ package me.codedred.playtimes.api;
 import me.codedred.playtimes.statistics.StatManager;
 import me.codedred.playtimes.statistics.StatisticType;
 import me.codedred.playtimes.time.TimeManager;
-import org.bukkit.Material;
-import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 
-import java.lang.reflect.Method;
 import java.util.UUID;
 
 public class TimelessPlayer {

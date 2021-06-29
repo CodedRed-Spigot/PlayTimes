@@ -7,5 +7,5 @@ public enum StatisticType {
     PLAYTIME,
     LEAVE,
     REST
-    ;
+
 }

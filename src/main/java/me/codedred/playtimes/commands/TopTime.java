@@ -47,23 +47,30 @@ public class TopTime implements CommandExecutor {
 				 sender.sendMessage(ChatUtil.format("&cRejoin the server to fill the leaderboard!"));
 				 return true;
 			 }
+
 			 String header = ChatUtil.format(data.getConfig().getString("top-playtime.header"));
 			 String footer = ChatUtil.format(data.getConfig().getString("top-playtime.footer"));
 			 String content = data.getConfig().getString("top-playtime.content");
-			 if (ServerUtils.hasPAPI() && sender instanceof Player) {
-				 Player player = (Player) sender;
-				 header = PAPIHolders.getHolders(player, header);
-				 footer = PAPIHolders.getHolders(player, footer);
-				 content = PAPIHolders.getHolders(player, content);
-			 }
 
 			StatManager statManager = StatManager.getInstance();
 			TimeManager timeManager = TimeManager.getInstance();
+
+		if (ServerUtils.hasPAPI() && sender instanceof Player) {
+			Player player = (Player) sender;
+			header = PAPIHolders.getHolders(player, header);
+			footer = PAPIHolders.getHolders(player, footer);
+		}
 
 			 String original = content;
 			 sender.sendMessage(header);
              for (int i = 0; i < map.size(); i++) {
                  UUID uuid = UUID.fromString(map.keySet().toArray()[i].toString());
+
+				 if (ServerUtils.hasPAPI()) {
+					 org.bukkit.OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+					 if (player != null)
+						 content = PAPIHolders.getHolders(player, content);
+				 }
 
                  String[][] replacements = {{"%player%", Bukkit.getServer().getOfflinePlayer(uuid).getName()},
 						 					{"%place%",String.valueOf(i + 1)},

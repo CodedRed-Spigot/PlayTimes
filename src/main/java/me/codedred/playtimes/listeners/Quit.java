@@ -6,7 +6,6 @@ import me.codedred.playtimes.statistics.StatisticType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
-import me.codedred.playtimes.PlayTimes;
 
 import java.util.UUID;
 

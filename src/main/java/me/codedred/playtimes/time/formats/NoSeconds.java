@@ -13,7 +13,7 @@ public class NoSeconds implements Timings {
 
         // Time less than 1 hour
         if (minutes < 60)
-            return String.valueOf(minutes + (minutes == 1 ? MINUTE : MINUTES));
+            return minutes + (minutes == 1 ? MINUTE : MINUTES);
 
         String format;
 

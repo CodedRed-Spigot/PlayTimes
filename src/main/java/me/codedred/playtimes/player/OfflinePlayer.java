@@ -10,7 +10,6 @@ import me.codedred.playtimes.utils.ServerUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +40,7 @@ public class OfflinePlayer {
         long rawTime = statManager.getPlayerStat(target, StatisticType.PLAYTIME);
 
         if (ServerUtils.hasPAPI()) {
-            org.bukkit.OfflinePlayer offlinePlayer = Bukkit.getPlayer(name);
+            org.bukkit.OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(target);
             List<String> papiMessage = new ArrayList<>();
             if (offlinePlayer != null) {
                 for (String msg : message)

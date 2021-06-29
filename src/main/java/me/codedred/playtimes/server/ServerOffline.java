@@ -1,6 +1,7 @@
 package me.codedred.playtimes.server;
 
 import com.google.gson.*;
+import org.bukkit.Bukkit;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,7 +15,19 @@ public class ServerOffline implements ServerStatus {
 
     @Override
     public UUID getUUID(String name) {
-        return UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(StandardCharsets.UTF_8));
+        if (Bukkit.isPrimaryThread()) {
+            System.out.println("Prime Thread");
+        }
+        try {
+            InputStream is = new URL("https://api.mojang.com/users/profiles/minecraft/" + name).openStream();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+            JsonObject rootobj = new Gson().fromJson(rd, JsonObject.class);
+            String fixedName = rootobj.get("name").getAsString();
+            is.close();
+            return UUID.nameUUIDFromBytes(("OfflinePlayer:" + fixedName).getBytes(StandardCharsets.UTF_8));
+        } catch (JsonSyntaxException | IOException e) {
+            return null;
+        }
     }
 
     @Override

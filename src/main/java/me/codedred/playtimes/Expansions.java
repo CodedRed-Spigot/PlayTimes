@@ -1,17 +1,15 @@
 package me.codedred.playtimes;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import me.codedred.playtimes.api.TimelessServer;
 import me.codedred.playtimes.models.Leaderboard;
-import me.codedred.playtimes.server.ServerManager;
 import me.codedred.playtimes.statistics.StatManager;
 import me.codedred.playtimes.statistics.StatisticType;
 import me.codedred.playtimes.time.TimeManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +44,7 @@ public class Expansions extends PlaceholderExpansion {
      * @return The name of the author as a String.
      */
     @Override
-    public String getAuthor(){
+    public @NotNull String getAuthor(){
         return "Cmaaxx"; // CodedRed
     }
 
@@ -60,7 +58,7 @@ public class Expansions extends PlaceholderExpansion {
      * @return The identifier in {@code %<identifier>_<value>%} as String.
      */
     @Override
-    public String getIdentifier(){
+    public @NotNull String getIdentifier(){
         return "PlayTimes";
     }
 
@@ -71,8 +69,8 @@ public class Expansions extends PlaceholderExpansion {
      * @return The version as a String.
      */
     @Override
-    public String getVersion(){
-        return "R5";
+    public @NotNull String getVersion(){
+        return PlayTimes.getPlugin(PlayTimes.class).getDescription().getVersion();
     }
   
     @Override
@@ -93,7 +91,7 @@ public class Expansions extends PlaceholderExpansion {
      * @return Possibly-null String of the requested identifier.
      */
     @Override
-	public String onRequest(OfflinePlayer player, String identifier) {
+	public String onRequest(OfflinePlayer player, @NotNull String identifier) {
 		identifier = identifier.toLowerCase();
 		StatManager stats = StatManager.getInstance();
 		TimeManager timings = TimeManager.getInstance();

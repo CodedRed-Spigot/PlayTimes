@@ -6,9 +6,7 @@ import me.codedred.playtimes.statistics.StatisticType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import me.codedred.playtimes.PlayTimes;
 
-import java.util.List;
 import java.util.UUID;
 
 public class Join implements Listener {
