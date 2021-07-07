@@ -14,9 +14,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import me.codedred.playtimes.player.OnlinePlayer;
 import me.codedred.playtimes.player.OfflinePlayer;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Time implements CommandExecutor {
 	
@@ -160,29 +163,36 @@ public class Time implements CommandExecutor {
 			return true;
 		}
 
-		Bukkit.getScheduler().runTaskAsynchronously(PlayTimes.getPlugin(PlayTimes.class), () -> {
-			UUID target;
-			try {
-				target = ServerManager.getInstance().getUUID(args[0]);
-			} catch (NullPointerException e) {
-				ChatUtil.errno(sender, ChatUtil.ChatTypes.PLAYER_NOT_FOUND);
-				return;
-			}
-			if (target == null) {
-				ChatUtil.errno(sender, ChatUtil.ChatTypes.PLAYER_NOT_FOUND);
-				return;
-			}
-			if (!StatManager.getInstance().hasJoinedBefore(target)) {
-				ChatUtil.errno(sender, ChatUtil.ChatTypes.PLAYER_NEVER_PLAYED);
-				return;
-			}
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				Pattern p = Pattern.compile("[^a-z0-9_]", Pattern.CASE_INSENSITIVE);
+				Matcher m = p.matcher(args[0]);
+				boolean b = m.find();
 
-			org.bukkit.OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(target);
-			OfflinePlayer player = new OfflinePlayer(sender, target, offlinePlayer.getName());
-			player.sendMessageToTarget();
-		});
+				if (b) {
+					ChatUtil.errno(sender, ChatUtil.ChatTypes.PLAYER_NOT_FOUND);
+					return;
+				}
+
+				UUID target;
+				if (Bukkit.getPlayer(args[0]) == null) {
+					target = ServerManager.getInstance().getUUID(args[0]);
+					if (target == null) {
+						ChatUtil.errno(sender, ChatUtil.ChatTypes.PLAYER_NOT_FOUND);
+						return;
+					}
+				}
+				else
+					target = Bukkit.getPlayer(args[0]).getUniqueId();
+
+				org.bukkit.OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(target);
+				OfflinePlayer player = new OfflinePlayer(sender, target, offlinePlayer.getName());
+				player.sendMessageToTarget();
 
 
+			}
+		}.runTaskAsynchronously(PlayTimes.getPlugin(PlayTimes.class));
 		return true;
 	}
 }

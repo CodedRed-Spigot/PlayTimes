@@ -3,6 +3,7 @@ package me.codedred.playtimes.server;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import me.codedred.playtimes.statistics.StatManager;
 import org.bukkit.Bukkit;
 
 import java.io.BufferedReader;
@@ -17,9 +18,13 @@ public class ServerOnline implements ServerStatus {
 
     @Override
     public UUID getUUID(String name) {
-        if (Bukkit.isPrimaryThread()) {
-            System.out.println("Prime Thread");
-        }
+        UUID uuid = Bukkit.getOfflinePlayer(name).getUniqueId();
+        if (!StatManager.getInstance().hasJoinedBefore(uuid))
+            return null;
+        return uuid;
+    }
+
+    private UUID getMainThreadMojangUUID(String name) {
         try {
             InputStream is = new URL("https://api.mojang.com/users/profiles/minecraft/" + name).openStream();
             BufferedReader rd = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));

@@ -31,6 +31,8 @@ public class RisenStats implements Stats {
 
                 switch(type) {
                     case PLAYTIME:
+                        if (passenger.get("minecraft:play_time") == null)
+                            return passenger.get("minecraft:play_one_minute").getAsLong();
                         return passenger.get("minecraft:play_time").getAsLong();
                     case LEAVE:
                         return passenger.get("minecraft:leave_game").getAsLong();

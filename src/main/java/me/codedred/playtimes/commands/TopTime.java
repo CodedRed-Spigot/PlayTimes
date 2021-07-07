@@ -65,11 +65,15 @@ public class TopTime implements CommandExecutor {
 			 sender.sendMessage(header);
              for (int i = 0; i < map.size(); i++) {
                  UUID uuid = UUID.fromString(map.keySet().toArray()[i].toString());
-
 				 if (ServerUtils.hasPAPI()) {
-					 org.bukkit.OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+					 org.bukkit.OfflinePlayer player = Bukkit.getPlayer(uuid);
 					 if (player != null)
 						 content = PAPIHolders.getHolders(player, content);
+					 else {
+						 org.bukkit.OfflinePlayer oplayer = Bukkit.getOfflinePlayer(uuid);
+						 content = PAPIHolders.getHolders(oplayer, content);
+					 }
+
 				 }
 
                  String[][] replacements = {{"%player%", Bukkit.getServer().getOfflinePlayer(uuid).getName()},
