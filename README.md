@@ -72,7 +72,7 @@ PlayTimes is the perfect plugin for your server! Have players show off and compe
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-More info coming soon!
+More info coming soon! Wiki will be updated!
 _For more examples, please refer to the [Documentation][site-url]_
 
 
