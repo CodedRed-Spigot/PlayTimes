@@ -1,7 +1,6 @@
-
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
+[![Downloads][downloads-shield]][downloads-url]
+[![Bstatsp][bstatsp-shield]][bstatsp-url]
+[![Bstatss][bstatss-shield]][bstatss-url]
 [![Issues][issues-shield]][issues-url]
 [![GNU License][license-shield]][license-url]
 
@@ -19,10 +18,10 @@
   <p align="center">
     The best /playtime plugin! PAPI support, offline checks, API & more!
     <br />
-    <a href="https://github.com/CodedRed-Spigot/PlayTimes"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/CodedRed-Spigot/PlayTimes/wiki"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="[site-url]">View Demo</a>
+    <a href="https://www.spigotmc.org/resources/playtimes-check-players-playtime-server-uptime.58858/">View Demo</a>
     ·
     <a href="https://github.com/CodedRed-Spigot/PlayTimes/issues">Report Bug</a>
     ·
@@ -72,8 +71,8 @@ PlayTimes is the perfect plugin for your server! Have players show off and compe
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-More info coming soon! Wiki will be updated!
-_For more examples, please refer to the [Documentation][site-url]_
+Check out the Wiki!   
+[Documentation](https://github.com/CodedRed-Spigot/PlayTimes/wiki)
 
 
 
@@ -131,10 +130,14 @@ Project Link: [https://github.com/CodedRed-Spigot/PlayTimes](https://github.com/
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [contributors-shield]: https://img.shields.io/github/contributors/CodedRed-Spigot/PlayTimes.svg?style=for-the-badge
 [contributors-url]: https://github.com/CodedRed-Spigot/PlayTimes/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/CodedRed-Spigot/PlayTimes.svg?style=for-the-badge
-[forks-url]: https://github.com/CodedRed-Spigot/PlayTimes/network/members
+[bstatsp-shield]: https://img.shields.io/bstats/players/5289?style=for-the-badge
+[bstatsp-url]: https://bstats.org/plugin/bukkit/PlayTimes/5289
+[bstatss-shield]: https://img.shields.io/bstats/servers/5289?color=orange&style=for-the-badge
+[bstatss-url]: https://bstats.org/plugin/bukkit/PlayTimes/5289
 [stars-shield]: https://img.shields.io/github/stars/CodedRed-Spigot/PlayTimes.svg?style=for-the-badge
 [stars-url]: https://github.com/CodedRed-Spigot/PlayTimes/stargazers
+[downloads-shield]: https://img.shields.io/spiget/downloads/58858?style=for-the-badge
+[downloads-url]: https://www.spigotmc.org/resources/playtimes-check-players-playtime-server-uptime.58858/
 [issues-shield]: https://img.shields.io/github/issues/CodedRed-Spigot/PlayTimes.svg?style=for-the-badge
 [issues-url]: https://github.com/CodedRed-Spigot/PlayTimes/issues
 [license-shield]: https://img.shields.io/github/license/CodedRed-Spigot/PlayTimes.svg?style=for-the-badge
