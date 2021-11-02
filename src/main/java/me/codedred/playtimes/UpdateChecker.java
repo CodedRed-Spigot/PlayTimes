@@ -22,7 +22,7 @@ public class UpdateChecker {
             checkURL = new URL(
                     "https://api.spigotmc.org/legacy/update.php?resource=" + projectID);
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 

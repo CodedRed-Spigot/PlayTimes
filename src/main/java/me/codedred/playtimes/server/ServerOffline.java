@@ -37,10 +37,6 @@ public class ServerOffline implements ServerStatus {
 
     @Override
     public String getName(UUID uuid) throws JsonSyntaxException, IOException {
-        /*if (Bukkit.isPrimaryThread()) {
-            System.out.println("Prime Thread");
-            return "";
-        }*/
         try (InputStream is = new URL("https://mcapi.ca/player/profile/" + uuid).openStream()) {
             BufferedReader rd = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
             JsonObject rootobj = new Gson().fromJson(rd, JsonObject.class);

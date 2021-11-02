@@ -75,8 +75,7 @@ public class PlayTimes extends JavaPlugin {
                 				+ getDescription().getVersion());
             }
         } catch (Exception e) {
-            getLogger().info("Could not check for updates! Stacktrace:");
-            e.printStackTrace();
+			getServer().getConsoleSender().sendMessage("[PlayTimes] Could not check for updates!");
         }
 	}
 
