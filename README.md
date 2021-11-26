@@ -141,5 +141,5 @@ Project Link: [https://github.com/CodedRed-Spigot/PlayTimes](https://github.com/
 [issues-shield]: https://img.shields.io/github/issues/CodedRed-Spigot/PlayTimes.svg?style=for-the-badge
 [issues-url]: https://github.com/CodedRed-Spigot/PlayTimes/issues
 [license-shield]: https://img.shields.io/github/license/CodedRed-Spigot/PlayTimes.svg?style=for-the-badge
-[license-url]: https://github.com/CodedRed-Spigot/PlayTimes/blob/master/LICENSE.txt
+[license-url]: https://github.com/CodedRed-Spigot/PlayTimes/blob/main/LICENSE
 [site-url]: https://www.spigotmc.org/resources/playtimes-check-players-playtime-server-uptime.58858/
