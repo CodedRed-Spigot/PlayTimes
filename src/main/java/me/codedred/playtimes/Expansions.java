@@ -70,7 +70,7 @@ public class Expansions extends PlaceholderExpansion {
      */
     @Override
     public @NotNull String getVersion(){
-        return PlayTimes.getPlugin(PlayTimes.class).getDescription().getVersion();
+        return "1.4.6";
     }
   
     @Override
