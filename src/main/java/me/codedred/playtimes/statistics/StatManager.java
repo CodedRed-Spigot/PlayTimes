@@ -38,7 +38,7 @@ public class StatManager {
     }
 
     public boolean hasJoinedBefore(UUID uuid) {
-        return getStats().hasJoinedBefore(uuid);
+        return !getStats().hasJoinedBefore(uuid);
     }
 
     public String getJoinDate(UUID uuid) {

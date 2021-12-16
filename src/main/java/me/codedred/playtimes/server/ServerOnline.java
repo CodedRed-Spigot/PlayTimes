@@ -19,7 +19,7 @@ public class ServerOnline implements ServerStatus {
     @Override
     public UUID getUUID(String name) {
         UUID uuid = Bukkit.getOfflinePlayer(name).getUniqueId();
-        if (!StatManager.getInstance().hasJoinedBefore(uuid))
+        if (StatManager.getInstance().hasJoinedBefore(uuid))
             return null;
         return uuid;
     }

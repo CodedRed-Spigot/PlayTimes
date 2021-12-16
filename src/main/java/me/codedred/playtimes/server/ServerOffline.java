@@ -22,7 +22,7 @@ public class ServerOffline implements ServerStatus {
             String fixedName = rootobj.get("name").getAsString();
             is.close();
             UUID uuid = UUID.nameUUIDFromBytes(("OfflinePlayer:" + fixedName).getBytes(StandardCharsets.UTF_8));
-            if (!StatManager.getInstance().hasJoinedBefore(uuid))
+            if (StatManager.getInstance().hasJoinedBefore(uuid))
                 return null;
             return uuid;
         } catch (Exception e) {

@@ -19,7 +19,7 @@ public class ServerUtils {
     }
 
     public static boolean isRisenVersion() {
-        return Bukkit.getServer().getVersion().contains("1.17");
+        return (Bukkit.getServer().getVersion().contains("1.17") || Bukkit.getServer().getVersion().contains("1.18"));
     }
 
     public static boolean hasPAPI() {
