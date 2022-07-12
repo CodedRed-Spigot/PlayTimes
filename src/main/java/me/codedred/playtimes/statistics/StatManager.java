@@ -19,10 +19,8 @@ public class StatManager {
     private boolean legacy = false;
 
     public void registerStatistics() {
-        if (ServerUtils.isRisenVersion())
+        if (ServerUtils.isRisenVersion() || ServerUtils.isNewerVersion())
             stats = new RisenStats();
-        else if (ServerUtils.isNewerVersion())
-            stats = new RisingStats();
         else {
             stats = new LegacyStats();
             setLegacy();
