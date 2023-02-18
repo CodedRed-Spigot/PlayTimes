@@ -8,19 +8,31 @@ import java.lang.reflect.Method;
 
 public class ServerUtils {
 
+    private ServerUtils() {
+        throw new IllegalStateException("Utility Class");
+    }
+    private static Boolean isNewerVersion = null;
+
     public static boolean isNewerVersion() {
-        try {
-            Class<?> class_Material = Material.class;
-            Method method = class_Material.getDeclaredMethod("matchMaterial", String.class, Boolean.TYPE);
-            return (method != null);
-        } catch(ReflectiveOperationException ex) {
-            return false;
+        if (isNewerVersion == null) {
+            try {
+                Class<?> classMaterial = Material.class;
+                Method method = classMaterial.getDeclaredMethod("matchMaterial", String.class, boolean.class);
+                isNewerVersion = (method != null);
+            } catch (ReflectiveOperationException ex) {
+                isNewerVersion = false;
+            }
         }
+        return isNewerVersion;
     }
 
+    /**
+     * Checks if the server version is 1.17+
+     * @return true if so
+     */
     public static boolean isRisenVersion() {
-        return Bukkit.getServer().getVersion().contains("1.17") || Bukkit.getServer().getVersion().contains("1.18")
-                || Bukkit.getServer().getVersion().contains("1.19");
+        String version = Bukkit.getServer().getVersion();
+        return version.startsWith("1.1") && (version.length() <= 5 || Character.isDigit(version.charAt(5)) && version.charAt(5) >= '7');
     }
 
     public static boolean hasPAPI() {
