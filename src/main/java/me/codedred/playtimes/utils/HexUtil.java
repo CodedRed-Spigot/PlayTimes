@@ -2,21 +2,33 @@ package me.codedred.playtimes.utils;
 
 import net.md_5.bungee.api.ChatColor;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class HexUtil {
 
-	private static final Pattern hexPattern = Pattern.compile("<#([A-Fa-f0-9]){6}>");
-	public static String hex(String message){
-		Matcher matcher = hexPattern.matcher(message);
-		while (matcher.find()) {
-			ChatColor hexColor = ChatColor.of(matcher.group().substring(1, matcher.group().length() - 1));
-			String before = message.substring(0, matcher.start());
-			String after = message.substring(matcher.end());
-			message = before + hexColor + after;
-			matcher = hexPattern.matcher(message);
+	private HexUtil() {
+		throw new IllegalStateException("Utility Class");
+	}
+
+	public static String hex(String message) {
+		StringBuilder builder = new StringBuilder();
+		int index = 0;
+
+		while (index < message.length()) {
+			int colorCodeStart = message.indexOf("<#", index);
+			if (colorCodeStart != -1) {
+				int colorCodeEnd = message.indexOf(">", colorCodeStart + 2);
+				if (colorCodeEnd != -1) {
+					builder.append(message, index, colorCodeStart);
+					String hexCode = message.substring(colorCodeStart + 2, colorCodeEnd);
+					ChatColor hexColor = ChatColor.of('#' + hexCode);
+					builder.append(hexColor);
+					index = colorCodeEnd + 1;
+					continue;
+				}
+			}
+			builder.append(message.substring(index));
+			break;
 		}
-		return ChatColor.translateAlternateColorCodes('&', message);
+
+		return ChatColor.translateAlternateColorCodes('&', builder.toString());
 	}
 }
