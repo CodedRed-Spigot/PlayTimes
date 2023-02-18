@@ -15,6 +15,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Objects;
+
 public class PlayTimes extends JavaPlugin {
 	
 	@Override
@@ -32,7 +34,7 @@ public class PlayTimes extends JavaPlugin {
 		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
 			Expansions exp = new Expansions();
 			exp.register();
-			getServer().getConsoleSender().sendMessage(ChatColor.DARK_PURPLE + "[PlayTimes] " + ChatColor.WHITE + "PlaceholdersAPI Hooked!");
+			getLogger().info(ChatColor.DARK_PURPLE + "[PlayTimes] " + ChatColor.WHITE + "PlaceholdersAPI Hooked!");
 		}
 
 		registerEvents();
@@ -40,12 +42,12 @@ public class PlayTimes extends JavaPlugin {
 
 		@SuppressWarnings("unused")
         Metrics metrics = new Metrics(this);
-		getServer().getConsoleSender().sendMessage(ChatColor.DARK_PURPLE + "[PlayTimes] " + ChatColor.WHITE + "Successfully loaded.");
+		getLogger().info(ChatColor.DARK_PURPLE + "[PlayTimes] " + ChatColor.WHITE + "Successfully loaded.");
 	}
 
 	@Override
 	public void onDisable() {
-
+		getLogger().info("PlayTimes shutting down");
 	}
 
 	private void registerEvents() {
@@ -55,11 +57,11 @@ public class PlayTimes extends JavaPlugin {
 	}
 
 	private void registerCommands() {
-		getCommand("playtime").setExecutor(
+		Objects.requireNonNull(getCommand("playtime")).setExecutor(
 				new Time());
-		getCommand("uptime").setExecutor(
+		Objects.requireNonNull(getCommand("uptime")).setExecutor(
 				new Uptime());
-		getCommand("topplaytime").setExecutor(
+		Objects.requireNonNull(getCommand("topplaytime")).setExecutor(
 				new TopTime());
 	}
 
@@ -67,15 +69,15 @@ public class PlayTimes extends JavaPlugin {
 		UpdateChecker updater = new UpdateChecker(this, 58858);
         try {
             if (updater.checkForUpdates()) {
-				getServer().getConsoleSender().sendMessage(ChatUtil.format("&eYou are using an older version of PlayTimes!"));
-				getServer().getConsoleSender().sendMessage(ChatUtil.format("&eDownload the newest version here:"));
-				getServer().getConsoleSender().sendMessage(ChatUtil.format("&bhttps://www.spigotmc.org/resources/58858/"));
+				getLogger().warning(ChatUtil.format("&eYou are using an older version of PlayTimes!"));
+				getLogger().info(ChatUtil.format("&eDownload the newest version here:"));
+				getLogger().info(ChatUtil.format("&bhttps://www.spigotmc.org/resources/58858/"));
             } else {
-                getServer().getConsoleSender().sendMessage("[PlayTimes] Plugin is up to date! - "
-                				+ getDescription().getVersion());
+				getLogger().info("[PlayTimes] Plugin is up to date! - "
+						+ getDescription().getVersion());
             }
         } catch (Exception e) {
-			getServer().getConsoleSender().sendMessage("[PlayTimes] Could not check for updates!");
+			getLogger().info("[PlayTimes] Could not check for updates!");
         }
 	}
 
