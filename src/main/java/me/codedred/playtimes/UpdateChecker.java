@@ -2,50 +2,53 @@ package me.codedred.playtimes;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
+import java.util.Objects;
 
 
 public class UpdateChecker {
 
-    private URL checkURL;
-    private String newVersion;
+    private static final String UPDATE_URL = "https://api.spigotmc.org/legacy/update.php?resource=%d";
+
     private final JavaPlugin plugin;
+    private final int projectId;
+    private String cachedVersion;
 
-    public UpdateChecker(JavaPlugin plugin, int projectID) {
-        this.plugin = plugin;
-        newVersion = plugin.getDescription().getVersion();
-        try {
-            checkURL = new URL(
-                    "https://api.spigotmc.org/legacy/update.php?resource=" + projectID);
-        } catch (MalformedURLException e) {
-            //e.printStackTrace();
+    public UpdateChecker(JavaPlugin plugin, int projectId) {
+        this.plugin = Objects.requireNonNull(plugin, "Plugin cannot be null.");
+        this.projectId = projectId;
+        this.cachedVersion = plugin.getDescription().getVersion();
+    }
+
+    public boolean checkForUpdates() throws IOException {
+        String latestVersion = getCachedVersion();
+
+        if (latestVersion == null) {
+            URL url = new URL(String.format(UPDATE_URL, projectId));
+            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(5000);
+            connection.setUseCaches(true);
+
+            latestVersion = new BufferedReader(new InputStreamReader(connection.getInputStream()))
+                    .readLine();
+
+            if (latestVersion == null || latestVersion.isEmpty()) {
+                throw new IOException("Failed to retrieve latest version.");
+            }
+
+            cachedVersion = latestVersion;
         }
+
+        return !plugin.getDescription().getVersion().equals(cachedVersion);
     }
 
-    /*public int getProjectID() {
-        return project;
-    }
-
-    public JavaPlugin getPlugin() {
-        return plugin;
-    }
-
-    public String getLatestVersion() {
-        return newVersion;
-    }
-
-    public String getResourceURL() {
-        return "https://www.spigotmc.org/resources/" + project;
-    }*/
-
-    public boolean checkForUpdates() throws Exception {
-        URLConnection con = checkURL.openConnection();
-        newVersion = new BufferedReader(new InputStreamReader(con.getInputStream()))
-                .readLine();
-        return !plugin.getDescription().getVersion().equals(newVersion);
+    public String getCachedVersion() {
+        return cachedVersion;
     }
 }

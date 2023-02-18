@@ -15,6 +15,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.IOException;
 import java.util.Objects;
 
 public class PlayTimes extends JavaPlugin {
@@ -66,19 +67,20 @@ public class PlayTimes extends JavaPlugin {
 	}
 
 	private void checkForUpdate() {
-		UpdateChecker updater = new UpdateChecker(this, 58858);
-        try {
-            if (updater.checkForUpdates()) {
-				getLogger().warning(ChatUtil.format("&eYou are using an older version of PlayTimes!"));
-				getLogger().info(ChatUtil.format("&eDownload the newest version here:"));
-				getLogger().info(ChatUtil.format("&bhttps://www.spigotmc.org/resources/58858/"));
-            } else {
-				getLogger().info("[PlayTimes] Plugin is up to date! - "
-						+ getDescription().getVersion());
-            }
-        } catch (Exception e) {
-			getLogger().info("[PlayTimes] Could not check for updates!");
-        }
+		Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
+			UpdateChecker updater = new UpdateChecker(this, 58858);
+			try {
+				if (updater.checkForUpdates()) {
+					getLogger().warning(ChatUtil.format("&eYou are using an older version of PlayTimes!"));
+					getLogger().info(ChatUtil.format("&eDownload the newest version here:"));
+					getLogger().info(ChatUtil.format("&bhttps://www.spigotmc.org/resources/58858/"));
+				} else {
+					getLogger().info("[PlayTimes] Plugin is up to date! - " + getDescription().getVersion());
+				}
+			} catch (IOException e) {
+				getLogger().warning("[PlayTimes] Could not check for updates!");
+			}
+		});
 	}
 
 
