@@ -4,16 +4,13 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.codedred.playtimes.models.Leaderboard;
 import me.codedred.playtimes.statistics.StatManager;
 import me.codedred.playtimes.statistics.StatisticType;
-import me.codedred.playtimes.time.TimeManager;
+import me.codedred.playtimes.utils.TimeFormatterUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * This class will automatically register as a placeholder expansion 
@@ -94,10 +91,9 @@ public class Expansions extends PlaceholderExpansion {
 	public String onRequest(OfflinePlayer player, @NotNull String identifier) {
 		identifier = identifier.toLowerCase();
 		StatManager stats = StatManager.getInstance();
-		TimeManager timings = TimeManager.getInstance();
 		switch (identifier) {
 			case "playtime":
-				return timings.buildFormat(stats.getPlayerStat(player.getUniqueId(), StatisticType.PLAYTIME)/20);
+				return TimeFormatterUtil.secondsToFormattedTime(stats.getPlayerStat(player.getUniqueId(), StatisticType.PLAYTIME)/20, "HH:mm:ss", Locale.US, "CDT");
 			case "uptime":
 				return stats.getUptime();
 			case "joindate":
@@ -144,7 +140,7 @@ public class Expansions extends PlaceholderExpansion {
 			if (players.size() < val + 1)
 				return "N/A";
 
-			return (players.isEmpty() ? "N/A" : timings.buildFormat(players.get(val)/20));
+			return (players.isEmpty() ? "N/A" : TimeFormatterUtil.secondsToFormattedTime(players.get(val)/20, "HH:mm:ss", Locale.US, "CDT"));
 		}
 
 
