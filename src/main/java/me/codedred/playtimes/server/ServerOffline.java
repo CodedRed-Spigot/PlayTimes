@@ -1,6 +1,7 @@
 package me.codedred.playtimes.server;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import me.codedred.playtimes.statistics.StatManager;
 
 import java.io.BufferedReader;
@@ -15,17 +16,16 @@ public class ServerOffline implements ServerStatus {
 
     @Override
     public UUID getUUID(String name) {
-        try {
-            InputStream is = new URL("https://api.mojang.com/users/profiles/minecraft/" + name).openStream();
+        try (InputStream is = new URL("https://api.mojang.com/users/profiles/minecraft/" + name).openStream()) {
             BufferedReader rd = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
             JsonObject rootobj = new Gson().fromJson(rd, JsonObject.class);
             String fixedName = rootobj.get("name").getAsString();
-            is.close();
             UUID uuid = UUID.nameUUIDFromBytes(("OfflinePlayer:" + fixedName).getBytes(StandardCharsets.UTF_8));
-            if (StatManager.getInstance().hasJoinedBefore(uuid))
+            if (StatManager.getInstance().hasJoinedBefore(uuid)) {
                 return null;
+            }
             return uuid;
-        } catch (Exception e) {
+        } catch (IOException e) {
             return null;
         }
     }
@@ -36,11 +36,10 @@ public class ServerOffline implements ServerStatus {
     }
 
     @Override
-    public String getName(UUID uuid) throws JsonSyntaxException, IOException {
-        try (InputStream is = new URL("https://mcapi.ca/player/profile/" + uuid).openStream()) {
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+    public String getName(UUID uuid) throws IOException {
+        try (InputStream is = new URL("https://mcapi.ca/player/profile/" + uuid).openStream();
+             BufferedReader rd = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
             JsonObject rootobj = new Gson().fromJson(rd, JsonObject.class);
-
             return rootobj.get("name").getAsString();
         } catch (IOException e) {
             e.printStackTrace();

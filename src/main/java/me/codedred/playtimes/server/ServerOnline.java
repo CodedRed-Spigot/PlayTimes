@@ -1,10 +1,9 @@
 package me.codedred.playtimes.server;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.*;
 import me.codedred.playtimes.statistics.StatManager;
 import org.bukkit.Bukkit;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,31 +16,12 @@ import java.util.UUID;
 public class ServerOnline implements ServerStatus {
 
     @Override
-    public UUID getUUID(String name) {
+    public UUID getUUID(@NotNull String name) {
         UUID uuid = Bukkit.getOfflinePlayer(name).getUniqueId();
-        if (StatManager.getInstance().hasJoinedBefore(uuid))
-            return null;
-        return uuid;
-    }
-
-    private UUID getMainThreadMojangUUID(String name) {
-        try {
-            InputStream is = new URL("https://api.mojang.com/users/profiles/minecraft/" + name).openStream();
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-            JsonObject rootobj = new Gson().fromJson(rd, JsonObject.class);
-            String u = rootobj.get("id").getAsString();
-            StringBuilder uuid = new StringBuilder();
-            for (int i = 0; i <= 31; i++) {
-                uuid.append(u.charAt(i));
-                if (i == 7 || i == 11 || i == 15 || i == 19) {
-                    uuid.append("-");
-                }
-            }
-            is.close();
-            return UUID.fromString(uuid.toString());
-        } catch (JsonSyntaxException | IOException e) {
+        if (StatManager.getInstance().hasJoinedBefore(uuid)) {
             return null;
         }
+        return uuid;
     }
 
     @Override
@@ -50,12 +30,14 @@ public class ServerOnline implements ServerStatus {
     }
 
     @Override
-    public String getName(UUID uuid) throws JsonSyntaxException, IOException {
+    public String getName(UUID uuid) throws IOException {
         try (InputStream is = new URL("https://mcapi.ca/player/profile/" + uuid).openStream()) {
             BufferedReader rd = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-            JsonObject rootobj = new Gson().fromJson(rd, JsonObject.class);
+            JsonElement root = JsonParser.parseReader(rd);
 
-            return rootobj.get("name").getAsString();
+            JsonObject rootObj = root.getAsJsonObject();
+
+            return rootObj.get("name").getAsString();
         } catch (IOException e) {
             e.printStackTrace();
             return "User Not Found";
