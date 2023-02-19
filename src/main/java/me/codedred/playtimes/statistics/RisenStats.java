@@ -11,40 +11,41 @@ import java.io.File;
 import java.io.FileReader;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Map;
 import java.util.UUID;
 
 public class RisenStats implements Stats {
 
-    private static final Map<StatisticType, String> PROPERTY_MAP = Map.of(
-            StatisticType.PLAYTIME, "minecraft:custom.minecraft:play_time",
-            StatisticType.LEAVE, "minecraft:custom.minecraft:leave_game",
-            StatisticType.REST, "minecraft:custom.minecraft:time_since_rest"
-    );
-
     @Override
     public long getPlayerStatistic(UUID uuid, StatisticType type) {
-        if (Bukkit.getPlayer(uuid) != null) {
+        if (Bukkit.getPlayer(uuid) != null)
             return getOnlineStatistic(Bukkit.getPlayer(uuid), type);
-        }
 
         File playerStatistics = new File(worldFolder, uuid + ".json");
 
         if (playerStatistics.exists()) {
-            try (FileReader reader = new FileReader(playerStatistics)) {
-                JsonObject jsonObject = new Gson().fromJson(reader, JsonObject.class);
-                JsonObject stats = jsonObject.getAsJsonObject("stats");
+            try {
+                JsonObject jsonObject = new Gson().fromJson(new FileReader(playerStatistics), JsonObject.class);
 
-                String propertyName = PROPERTY_MAP.get(type);
-                if (propertyName != null) {
-                    return stats.getAsJsonObject(propertyName).get("value").getAsLong();
+                JsonObject pilot = (JsonObject) jsonObject.get("stats");
+                JsonObject passenger = (JsonObject) pilot.get("minecraft:custom");
+
+                switch (type) {
+                    case PLAYTIME -> {
+                        if (passenger.get("minecraft:play_time") == null)
+                            return passenger.get("minecraft:play_one_minute").getAsLong();
+                        return passenger.get("minecraft:play_time").getAsLong();
+                    }
+                    case LEAVE -> {
+                        return passenger.get("minecraft:leave_game").getAsLong();
+                    }
+                    case REST -> {
+                        return passenger.get("minecraft:time_since_rest").getAsLong();
+                    }
                 }
-
             } catch (Exception e) {
                 //e.printStackTrace();
             }
         }
-
         return 0;
     }
 
@@ -55,7 +56,6 @@ public class RisenStats implements Stats {
             case REST -> player.getStatistic(Statistic.TIME_SINCE_REST);
             case LEAVE -> player.getStatistic(Statistic.LEAVE_GAME) + 1;
         };
-
     }
 
     @Override
@@ -64,21 +64,19 @@ public class RisenStats implements Stats {
         return playerStatistics.exists();
     }
 
-    private static final SimpleDateFormat DATE_FORMATTER =
-            new SimpleDateFormat(DataManager.getInstance().getConfig().getString("date-format"));
-
     @Override
     public String getJoinDate(UUID uuid) {
         Player player = Bukkit.getPlayer(uuid);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DataManager.getInstance().getConfig().getString("date-format"));
         Calendar calendar = Calendar.getInstance();
         if (player == null) {
             calendar.setTimeInMillis(Bukkit.getOfflinePlayer(uuid).getFirstPlayed());
-            return DATE_FORMATTER.format(calendar.getTime());
-        } else if (player.hasPlayedBefore()) {
+            return simpleDateFormat.format(calendar.getTime());
+        }
+        else if (player.hasPlayedBefore()) {
             calendar.setTimeInMillis(player.getFirstPlayed());
-            return DATE_FORMATTER.format(calendar.getTime());
+            return simpleDateFormat.format(calendar.getTime());
         }
         return "Never Joined";
     }
-
 }

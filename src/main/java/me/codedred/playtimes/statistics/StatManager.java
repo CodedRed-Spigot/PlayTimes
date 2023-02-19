@@ -19,14 +19,21 @@ public class StatManager {
     private Stats stats;
     private boolean legacy = false;
 
+    public String name;
+
     public void registerStatistics() {
-        if (ServerUtils.isRisenVersion())
+        if (ServerUtils.isRisenVersion()) {
             stats = new RisenStats();
-        else if (ServerUtils.isNewerVersion())
+            name = "Risen";
+        }
+        else if (ServerUtils.isNewerVersion()) {
             stats = new RisingStats();
+            name = "Rising";
+        }
         else {
             stats = new LegacyStats();
             setLegacy();
+            name = "Legacy";
         }
     }
 
