@@ -7,7 +7,6 @@ import me.codedred.playtimes.listeners.Join;
 import me.codedred.playtimes.listeners.Quit;
 import me.codedred.playtimes.server.ServerManager;
 import me.codedred.playtimes.statistics.StatManager;
-import me.codedred.playtimes.time.TimeManager;
 import me.codedred.playtimes.utils.ChatUtil;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -26,7 +25,6 @@ public class PlayTimes extends JavaPlugin {
 
 		ServerManager.getInstance().register();
 		StatManager.getInstance().registerStatistics();
-		TimeManager.getInstance().registerTimings();
 		
 		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
 			Expansions exp = new Expansions();

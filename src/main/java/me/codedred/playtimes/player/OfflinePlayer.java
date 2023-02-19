@@ -3,15 +3,16 @@ package me.codedred.playtimes.player;
 import me.codedred.playtimes.data.DataManager;
 import me.codedred.playtimes.statistics.StatManager;
 import me.codedred.playtimes.statistics.StatisticType;
-import me.codedred.playtimes.time.TimeManager;
 import me.codedred.playtimes.utils.ChatUtil;
 import me.codedred.playtimes.utils.PAPIHolders;
 import me.codedred.playtimes.utils.ServerUtils;
+import me.codedred.playtimes.utils.TimeFormatterUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 public class OfflinePlayer {
@@ -31,7 +32,6 @@ public class OfflinePlayer {
 
     private void buildMessage() {
         DataManager dataManager = DataManager.getInstance();
-        TimeManager timeManager = TimeManager.getInstance();
         StatManager statManager = StatManager.getInstance();
 
         message = dataManager.getConfig().getStringList("playtime.message");
@@ -46,7 +46,7 @@ public class OfflinePlayer {
             message = papiMessage;
         }
 
-        String timeFormat = timeManager.buildFormat(rawTime / 20);
+        String timeFormat = TimeFormatterUtil.secondsToFormattedTime(rawTime / 20, "HH:mm:ss", Locale.US, "CDT");
         List<String> newMessage = new ArrayList<>();
         for (String msg : message) {
             msg = msg.replace("%time%", timeFormat);
