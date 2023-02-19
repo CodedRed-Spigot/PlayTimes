@@ -14,12 +14,15 @@ public class Quit implements Listener {
 	@EventHandler
 	public void onQuit(PlayerQuitEvent event) {
 		DataManager data = DataManager.getInstance();
-		if (data.getData().contains("blocked." + event.getPlayer().getName().toLowerCase()))
+		String playerName = event.getPlayer().getName().toLowerCase();
+		if (data.getData().contains("blocked." + playerName)) {
 			return;
+		}
+
+		StatManager statManager = StatManager.getInstance();
 		UUID uuid = event.getPlayer().getUniqueId();
-		long time = StatManager.getInstance().getPlayerStat(uuid, StatisticType.PLAYTIME);
-		data.getData().set("leaderboard." + uuid, time);
+		long playtime = statManager.getPlayerStat(uuid, StatisticType.PLAYTIME);
+		data.getData().set("leaderboard." + uuid, playtime);
 		data.saveData();
 	}
-
 }

@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class Join implements Listener {
@@ -18,14 +19,12 @@ public class Join implements Listener {
 			return;
 
 		UUID uuid = event.getPlayer().getUniqueId();
-		if (!data.getData().contains("leaderboard." + uuid)) {
+		if (!Objects.requireNonNull(data.getData().getConfigurationSection("leaderboard")).contains(uuid.toString())) {
 			long time = StatManager.getInstance().getPlayerStat(uuid, StatisticType.PLAYTIME);
 			data.getData().set("leaderboard." + uuid, time);
 			data.saveData();
 		}
 
 	}
-	
-	
 
 }
