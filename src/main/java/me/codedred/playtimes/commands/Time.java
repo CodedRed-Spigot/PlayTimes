@@ -24,117 +24,93 @@ import java.util.regex.Pattern;
 
 public class Time implements CommandExecutor {
 
+    private final DataManager data = DataManager.getInstance();
+
     public boolean onCommand(CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
-        DataManager data = DataManager.getInstance();
         if (!sender.hasPermission("pt.use")) {
             ChatUtil.errno(sender, ChatUtil.ChatTypes.NO_PERMISSION);
             return true;
         }
 
-        // command -> /playtimes [0 arguments]
-        if (args.length == 0) {
-            if (!(sender instanceof Player)) {
-                StatManager stats = StatManager.getInstance();
-                sender.sendMessage(ChatUtil.format("&cThe console has been up for " + stats.getUptime()));
-                return true;
-            }
-            OnlinePlayer player = new OnlinePlayer((Player) sender);
-            player.sendMessageToTarget();
-            return true;
+        switch (args.length > 0 ? args[0].toLowerCase() : "") {
+            case "" -> handlePlayerCommand(sender);
+            case "reload" -> handleReloadCommand(sender);
+            case "top" -> handleTopCommand(sender);
+            case "block" -> handleBlockCommand(sender, args, true);
+            case "unblock" -> handleBlockCommand(sender, args, false);
+            default -> handleOtherPlayerCommand(sender, args);
         }
+        return true;
+    }
 
-
-        // command -> /playtimes reload
-        if (args[0].equalsIgnoreCase("reload")) {
-            if (!sender.hasPermission("pt.reload")) {
-                ChatUtil.errno(sender, ChatUtil.ChatTypes.NO_PERMISSION);
-                return true;
-            }
-            Debugger debug = new Debugger();
-            debug.execute();
-            data.reloadAll();
-            TimeManager.getInstance().registerTimings();
-            sender.sendMessage(ChatUtil.format("&9&lPlayTime Configurations Reloaded!"));
-            return true;
+    private void handlePlayerCommand(CommandSender sender) {
+        if (!(sender instanceof Player)) {
+            StatManager stats = StatManager.getInstance();
+            sender.sendMessage(ChatUtil.format("&cThe console has been up for " + stats.getUptime()));
+            return;
         }
+        OnlinePlayer player = new OnlinePlayer((Player) sender);
+        player.sendMessageToTarget();
+    }
 
-
-        // command -> /playtimes top
-        else if (args[0].equalsIgnoreCase("top")) {
-            Bukkit.dispatchCommand(sender, "toppt");
-            return true;
-        }
-
-
-        // command -> /playtimes block <player>
-        else if (args[0].equalsIgnoreCase("block")) {
-            if (!sender.hasPermission("pt.block")) {
-                ChatUtil.errno(sender, ChatUtil.ChatTypes.NO_PERMISSION);
-                return true;
-            }
-            if (args.length < 2) {
-                sender.sendMessage(ChatUtil.formatWithPrefix("&c&lIncorrect Usage&c, try &7/pt block <player>"));
-                return true;
-            }
-            if (data.getData().contains("blocked." + args[1].toLowerCase())) {
-                sender.sendMessage(ChatUtil.formatWithPrefix("&cUser is already blocked!"));
-                sender.sendMessage(ChatUtil.formatWithPrefix("&c&oMaybe try, &7/pt unblock <player>"));
-                return true;
-            }
-            UUID uuid;
-            if (Bukkit.getPlayer(args[1]) == null) {
-                try {
-                    uuid = ServerManager.getInstance().getUUID(args[1].toLowerCase());
-                } catch (NullPointerException e) {
-                    ChatUtil.errno(sender, ChatUtil.ChatTypes.PLAYER_NOT_FOUND);
-                    return true;
-                }
-            } else
-                uuid = Objects.requireNonNull(Bukkit.getPlayer(args[1])).getUniqueId();
-
-
-            data.getData().set("blocked." + args[1].toLowerCase(), uuid.toString());
-
-            if (data.getData().contains("leaderboard." + uuid))
-                data.getData().set("leaderboard." + uuid, null);
-
-            data.saveData();
-            sender.sendMessage(ChatUtil.formatWithPrefix("&aUser &c&lBLOCKED &afrom leaderboards!"));
-            return true;
-        }
-
-
-        // command -> /playtimes block <player>
-        else if (args[0].equalsIgnoreCase("unblock")) {
-            if (!sender.hasPermission("pt.block")) {
-                ChatUtil.errno(sender, ChatUtil.ChatTypes.NO_PERMISSION);
-                return true;
-            }
-            if (args.length < 2) {
-                sender.sendMessage(ChatUtil.formatWithPrefix("&c&lIncorrect Usage&c, try &7/pt unblock <player>"));
-                return true;
-            }
-            if (!data.getData().contains("blocked." + args[1].toLowerCase())) {
-                sender.sendMessage(ChatUtil.formatWithPrefix("&cUser is not blocked!"));
-                sender.sendMessage(ChatUtil.formatWithPrefix("&c&oMaybe try, &7/pt block <player>"));
-                return true;
-            }
-            data.getData().set("blocked." + args[1].toLowerCase(), null);
-            data.saveData();
-
-            sender.sendMessage(ChatUtil.formatWithPrefix("&aUser &b&lUNBLOCKED &afrom leaderboards!"));
-            return true;
-
-
-        }
-
-
-        // command -> /playtimes <player>
-        if (!sender.hasPermission("pt.others")) {
+    private void handleReloadCommand(CommandSender sender) {
+        if (!sender.hasPermission("pt.reload")) {
             ChatUtil.errno(sender, ChatUtil.ChatTypes.NO_PERMISSION);
-            return true;
+            return;
         }
+        Debugger debug = new Debugger();
+        debug.execute();
+        data.reloadAll();
+        TimeManager.getInstance().registerTimings();
+        sender.sendMessage(ChatUtil.format("&9&lPlayTime Configurations Reloaded!"));
+    }
 
+    private void handleTopCommand(CommandSender sender) {
+        Bukkit.dispatchCommand(sender, "toppt");
+    }
+
+    private void handleBlockCommand(CommandSender sender, String[] args, boolean block) {
+        String blockAction = block ? "block" : "unblock";
+        if (!sender.hasPermission("pt." + blockAction)) {
+            ChatUtil.errno(sender, ChatUtil.ChatTypes.NO_PERMISSION);
+            return;
+        }
+        if (args.length < 2) {
+            sender.sendMessage(ChatUtil.formatWithPrefix("&c&lIncorrect Usage&c, try &7/pt " + blockAction + " <player>"));
+            return;
+        }
+        String playerName = args[1];
+        String blockedKey = "blocked." + playerName.toLowerCase();
+        if (block == data.getData().contains(blockedKey)) {
+            sender.sendMessage(ChatUtil.formatWithPrefix("&cUser is already " + blockAction + "ed!"));
+            sender.sendMessage(ChatUtil.formatWithPrefix("&c&oMaybe try, &7/pt " + (block ? "unblock" : "block") + " <player>"));
+            return;
+        }
+        UUID uuid;
+        if (Bukkit.getPlayer(playerName) == null) {
+            try {
+                uuid = ServerManager.getInstance().getUUID(playerName.toLowerCase());
+            } catch (NullPointerException e) {
+                ChatUtil.errno(sender, ChatUtil.ChatTypes.PLAYER_NOT_FOUND);
+                return;
+            }
+        } else {
+            uuid = Objects.requireNonNull(Bukkit.getPlayer(playerName)).getUniqueId();
+        }
+        if (block) {
+            data.getData().set(blockedKey, uuid.toString());
+            if (data.getData().contains("leaderboard." + uuid)) {
+                data.getData().set("leaderboard." + uuid, null);
+            }
+            sender.sendMessage(ChatUtil.formatWithPrefix("&aUser &c&lBLOCKED &afrom leaderboards!"));
+        } else {
+            data.getData().set(blockedKey, null);
+            sender.sendMessage(ChatUtil.formatWithPrefix("&aUser &b&lUNBLOCKED &afrom leaderboards!"));
+        }
+        data.saveData();
+    }
+
+    private void handleOtherPlayerCommand(CommandSender sender, String[] args) {
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -154,16 +130,14 @@ public class Time implements CommandExecutor {
                         ChatUtil.errno(sender, ChatUtil.ChatTypes.PLAYER_NOT_FOUND);
                         return;
                     }
-                } else
+                } else {
                     target = Objects.requireNonNull(Bukkit.getPlayer(args[0])).getUniqueId();
+                }
 
                 org.bukkit.OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(target);
                 OfflinePlayer player = new OfflinePlayer(sender, target, offlinePlayer.getName());
                 player.sendMessageToTarget();
-
-
             }
         }.runTaskAsynchronously(PlayTimes.getPlugin(PlayTimes.class));
-        return true;
     }
 }
