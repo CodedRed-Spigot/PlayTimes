@@ -12,6 +12,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,9 +37,22 @@ public class Time implements CommandExecutor {
             case "top" -> handleTopCommand(sender);
             case "block" -> handleBlockCommand(sender, args, true);
             case "unblock" -> handleBlockCommand(sender, args, false);
+            case "debug" -> handleDebugCommand(sender);
             default -> handleOtherPlayerCommand(sender, args);
         }
         return true;
+    }
+
+    private void handleDebugCommand(CommandSender sender) {
+        if (!sender.hasPermission("pt.reload")) {
+            ChatUtil.errno(sender, ChatUtil.ChatTypes.NO_PERMISSION);
+            return;
+        }
+        // wip
+        sender.sendMessage("Server version: " + Bukkit.getServer().getVersion() +
+                "\nPlayTimes version: " + JavaPlugin.getPlugin(PlayTimes.class).getDescription().getVersion() +
+                "\nStatManager: " + StatManager.getInstance().name +
+                "\nServerStatus: " + ServerManager.getInstance().isOnline());
     }
 
     private void handlePlayerCommand(CommandSender sender) {
@@ -133,6 +147,6 @@ public class Time implements CommandExecutor {
                 OfflinePlayer player = new OfflinePlayer(sender, target, offlinePlayer.getName());
                 player.sendMessageToTarget();
             }
-        }.runTaskAsynchronously(PlayTimes.getPlugin(PlayTimes.class));
+        }.runTaskAsynchronously(JavaPlugin.getPlugin(PlayTimes.class));
     }
 }

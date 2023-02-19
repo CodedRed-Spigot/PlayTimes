@@ -29,7 +29,7 @@ public class PlayTimes extends JavaPlugin {
 		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
 			Expansions exp = new Expansions();
 			exp.register();
-			getLogger().info(ChatColor.DARK_PURPLE + "[PlayTimes] " + ChatColor.WHITE + "PlaceholdersAPI Hooked!");
+			getLogger().info("[PlayTimes] PlaceholdersAPI Hooked!");
 		}
 
 		registerEvents();
@@ -37,7 +37,7 @@ public class PlayTimes extends JavaPlugin {
 
 		@SuppressWarnings("unused")
         Metrics metrics = new Metrics(this);
-		getLogger().info(ChatColor.DARK_PURPLE + "[PlayTimes] " + ChatColor.WHITE + "Successfully loaded.");
+		getLogger().info("[PlayTimes] Successfully loaded.");
 	}
 
 	@Override
