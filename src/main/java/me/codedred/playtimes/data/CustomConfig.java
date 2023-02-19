@@ -1,8 +1,8 @@
 package me.codedred.playtimes.data;
 
+import me.codedred.playtimes.PlayTimes;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import me.codedred.playtimes.PlayTimes;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,61 +11,51 @@ import java.io.InputStreamReader;
 import java.util.logging.Level;
 
 public class CustomConfig {
+	private final String name;
 	private final PlayTimes plugin;
 	private FileConfiguration dataConfig = null;
 	private File dataConfigFile = null;
-	private final String name;
 
-	public CustomConfig(PlayTimes plugin, String name) {
+	public CustomConfig(PlayTimes plugin, String fileName) {
 		this.plugin = plugin;
-		this.name = name;
+		this.name = fileName;
 		saveDefaultConfig();
 	}
 
 	public void reloadConfig() {
-		if (dataConfigFile == null) {
-			dataConfigFile = new File(plugin.getDataFolder(),
-					name);
-		}
-		
-		dataConfig = YamlConfiguration
-				.loadConfiguration(dataConfigFile);
+		if (this.dataConfigFile == null)
+			this.dataConfigFile = new File(this.plugin.getDataFolder(), name);
 
-		InputStream defConfigStream = plugin.getResource(name);
+		this.dataConfig = YamlConfiguration.loadConfiguration(this.dataConfigFile);
+
+		InputStream defConfigStream = this.plugin.getResource(name);
 		if (defConfigStream != null) {
 			YamlConfiguration defConfig = YamlConfiguration
 					.loadConfiguration(new InputStreamReader(defConfigStream));
-			dataConfig.setDefaults(defConfig);
+			this.dataConfig.setDefaults(defConfig);
 		}
 	}
 
 	public FileConfiguration getConfig() {
-		if (dataConfig == null) {
+		if (this.dataConfig == null)
 			reloadConfig();
-		}
-		return dataConfig;
+		return this.dataConfig;
 	}
 
 	public void saveConfig() {
-		if ((dataConfig == null) || (dataConfigFile == null)) {
+		if ((this.dataConfig == null) || (this.dataConfigFile == null))
 			return;
-		}
 		try {
-			getConfig().save(dataConfigFile);
+			getConfig().save(this.dataConfigFile);
 		} catch (IOException ex) {
-			plugin.getLogger().log(Level.SEVERE, "Could not save config to "
-					+ dataConfigFile, ex);
-		}
-	} 
+			this.plugin.getLogger().log(Level.SEVERE, ex, () -> "Could not save config to " + this.dataConfigFile);        }
+	}
 
 	public void saveDefaultConfig() {
-		if (dataConfigFile == null) {
-			dataConfigFile = new File(plugin.getDataFolder(),
-					name);
-		}
-		if (!dataConfigFile.exists()) {
-			plugin.saveResource(name, false);
-		}
+		if (this.dataConfigFile == null)
+			this.dataConfigFile = new File(this.plugin.getDataFolder(), name);
+		if (!this.dataConfigFile.exists())
+			this.plugin.saveResource(name, false);
 	}
 
 }
