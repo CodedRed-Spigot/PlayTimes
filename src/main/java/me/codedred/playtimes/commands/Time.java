@@ -2,7 +2,6 @@ package me.codedred.playtimes.commands;
 
 import me.codedred.playtimes.PlayTimes;
 import me.codedred.playtimes.data.DataManager;
-import me.codedred.playtimes.data.Debugger;
 import me.codedred.playtimes.player.OfflinePlayer;
 import me.codedred.playtimes.player.OnlinePlayer;
 import me.codedred.playtimes.server.ServerManager;
@@ -58,8 +57,6 @@ public class Time implements CommandExecutor {
             ChatUtil.errno(sender, ChatUtil.ChatTypes.NO_PERMISSION);
             return;
         }
-        Debugger debug = new Debugger();
-        debug.execute();
         data.reloadAll();
         TimeManager.getInstance().registerTimings();
         sender.sendMessage(ChatUtil.format("&9&lPlayTime Configurations Reloaded!"));

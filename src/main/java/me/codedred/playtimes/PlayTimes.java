@@ -3,7 +3,6 @@ package me.codedred.playtimes;
 import me.codedred.playtimes.commands.Time;
 import me.codedred.playtimes.commands.TopTime;
 import me.codedred.playtimes.commands.Uptime;
-import me.codedred.playtimes.data.Debugger;
 import me.codedred.playtimes.listeners.Join;
 import me.codedred.playtimes.listeners.Quit;
 import me.codedred.playtimes.server.ServerManager;
@@ -22,9 +21,6 @@ public class PlayTimes extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
-		Debugger debug = new Debugger();
-		debug.execute();
-		
 		checkForUpdate();
 
 
