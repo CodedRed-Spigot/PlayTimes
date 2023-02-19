@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 public class StatManager {
 
-    private final static StatManager instance = new StatManager();
+    private static final StatManager instance = new StatManager();
 
     public static StatManager getInstance() {
         return instance;

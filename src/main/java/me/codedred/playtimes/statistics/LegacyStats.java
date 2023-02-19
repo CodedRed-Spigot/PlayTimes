@@ -7,11 +7,18 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import java.io.File;
 import java.io.FileReader;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.Map;
 import java.util.UUID;
 
 public class LegacyStats implements Stats {
+
+    private static final Map<StatisticType, String> PROPERTY_MAP = Map.of(
+            StatisticType.PLAYTIME, "stat.playOneMinute",
+            StatisticType.LEAVE, "stat.leaveGame",
+            StatisticType.REST, "stat.timeSinceDeath"
+    );
 
     @Override
     public long getPlayerStatistic(UUID uuid, StatisticType type) {
@@ -21,13 +28,9 @@ public class LegacyStats implements Stats {
             try {
                 JsonObject jsonObject = new Gson().fromJson(new FileReader(playerStatistics), JsonObject.class);
 
-                switch(type) {
-                    case PLAYTIME:
-                        return jsonObject.get("stat.playOneMinute").getAsLong();
-                    case LEAVE:
-                        return jsonObject.get("stat.leaveGame").getAsLong();
-                    case REST:
-                        return jsonObject.get("stat.timeSinceDeath").getAsLong();
+                String propertyName = PROPERTY_MAP.get(type);
+                if (propertyName != null) {
+                    return jsonObject.get(propertyName).getAsLong();
                 }
 
             } catch (Exception e) {
@@ -48,18 +51,19 @@ public class LegacyStats implements Stats {
         return playerStatistics.exists();
     }
 
+    private static final DateTimeFormatter DATE_FORMATTER =
+            DateTimeFormatter.ofPattern(DataManager.getInstance().getConfig().getString("date-format"));
+
     @Override
     public String getJoinDate(UUID uuid) {
         Player player = Bukkit.getPlayer(uuid);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DataManager.getInstance().getConfig().getString("date-format"));
         Calendar calendar = Calendar.getInstance();
         if (player == null) {
             calendar.setTimeInMillis(Bukkit.getOfflinePlayer(uuid).getFirstPlayed());
-            return simpleDateFormat.format(calendar.getTime());
-        }
-        else if (player.hasPlayedBefore()) {
+            return DATE_FORMATTER.format(calendar.toInstant());
+        } else if (player.hasPlayedBefore()) {
             calendar.setTimeInMillis(player.getFirstPlayed());
-            return simpleDateFormat.format(calendar.getTime());
+            return DATE_FORMATTER.format(calendar.toInstant());
         }
         return "Never Joined";
     }
