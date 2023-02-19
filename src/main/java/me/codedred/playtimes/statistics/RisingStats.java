@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.FileReader;
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
 import java.util.UUID;
@@ -62,8 +62,8 @@ public class RisingStats implements Stats {
         return playerStatistics.exists();
     }
 
-    private static final DateTimeFormatter DATE_FORMATTER =
-            DateTimeFormatter.ofPattern(DataManager.getInstance().getConfig().getString("date-format"));
+    private static final SimpleDateFormat DATE_FORMATTER =
+            new SimpleDateFormat(DataManager.getInstance().getConfig().getString("date-format"));
 
     @Override
     public String getJoinDate(UUID uuid) {
@@ -71,11 +71,12 @@ public class RisingStats implements Stats {
         Calendar calendar = Calendar.getInstance();
         if (player == null) {
             calendar.setTimeInMillis(Bukkit.getOfflinePlayer(uuid).getFirstPlayed());
-            return DATE_FORMATTER.format(calendar.toInstant());
+            return DATE_FORMATTER.format(calendar.getTime());
         } else if (player.hasPlayedBefore()) {
             calendar.setTimeInMillis(player.getFirstPlayed());
-            return DATE_FORMATTER.format(calendar.toInstant());
+            return DATE_FORMATTER.format(calendar.getTime());
         }
         return "Never Joined";
     }
+
 }
