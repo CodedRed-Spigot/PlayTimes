@@ -1,13 +1,15 @@
 package me.codedred.playtimes.utils;
 
 import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
 import java.util.UUID;
 
 public class CoolDownUtil {
 
-	private static Hashtable<UUID, Long> cooldowns = new Hashtable<>();
+	private CoolDownUtil() {
+		throw new IllegalStateException("Utility Class");
+	}
+
+	private static final HashMap<UUID, Long> cooldowns = new HashMap<>();
 	
 	public static void remove(UUID uuid) {
 		cooldowns.remove(uuid);
