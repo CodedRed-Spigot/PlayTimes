@@ -7,61 +7,92 @@ import me.codedred.playtimes.time.TimeManager;
 import me.codedred.playtimes.utils.ChatUtil;
 import me.codedred.playtimes.utils.PAPIHolders;
 import me.codedred.playtimes.utils.ServerUtils;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class OnlinePlayer {
 
     private final Player target;
-    private List<String> message = new ArrayList<>();
+    private final List<String> message;
+    private final DataManager dataManager;
+    private final TimeManager timeManager;
+    private final StatManager statManager;
 
     public OnlinePlayer(Player target) {
         this.target = target;
+        this.message = new ArrayList<>();
+        this.dataManager = DataManager.getInstance();
+        this.timeManager = TimeManager.getInstance();
+        this.statManager = StatManager.getInstance();
         buildMessage();
     }
 
     private void buildMessage() {
-        DataManager dataManager = DataManager.getInstance();
-        TimeManager timeManager = TimeManager.getInstance();
-        StatManager statManager = StatManager.getInstance();
-
-        message = dataManager.getConfig().getStringList("playtime.message");
-
         long rawTime;
-        if (statManager.isLegacy())
+        if (statManager.isLegacy()) {
             rawTime = statManager.getPlayerStat(target.getUniqueId(), StatisticType.PLAYTIME);
-        else
+        } else {
             rawTime = statManager.getStats().getOnlineStatistic(target, StatisticType.PLAYTIME);
+        }
+
+        message.addAll(dataManager.getConfig().getStringList("playtime.message"));
 
         if (ServerUtils.hasPAPI()) {
             List<String> papiMessage = new ArrayList<>();
-            for (String msg : message)
+            for (String msg : message) {
                 papiMessage.add(PAPIHolders.getHolders(target, msg));
-            message = papiMessage;
+            }
+            message.clear();
+            message.addAll(papiMessage);
         }
-        String timeFormat = timeManager.buildFormat(rawTime/20);
+
+        if (message.isEmpty()) {
+            return;
+        }
+
+        Map<String, String> replacements = new HashMap<>();
+        String timeFormat = timeManager.buildFormat(rawTime / 20);
+        replacements.put("%time%", timeFormat);
+        replacements.put("%player%", target.getName());
+        replacements.put("%timesjoined%", Long.toString(statManager.getPlayerStat(target.getUniqueId(), StatisticType.LEAVE)));
+        replacements.put("%joindate%", statManager.getJoinDate(target.getUniqueId()));
+
+        Pattern pattern = Pattern.compile("%(\\w+)%");
         List<String> newMessage = new ArrayList<>();
         for (String msg : message) {
-            msg = StringUtils.replace(msg,"%time%", timeFormat);
-            msg = StringUtils.replace(msg, "%player%", target.getName());
-            msg = StringUtils.replace(msg, "%timesjoined%", Long.toString(statManager.getPlayerStat(target.getUniqueId(), StatisticType.LEAVE)));
-            msg = StringUtils.replace(msg, "%joindate%", statManager.getJoinDate(target.getUniqueId()));
-            newMessage.add(msg);
+            Matcher matcher = pattern.matcher(msg);
+            StringBuilder sb = new StringBuilder();
+            while (matcher.find()) {
+                String replacement = replacements.get(matcher.group(1));
+                if (replacement != null) {
+                    matcher.appendReplacement(sb, replacement);
+                }
+            }
+            matcher.appendTail(sb);
+            newMessage.add(sb.toString());
         }
-        message = newMessage;
+        message.clear();
+        message.addAll(newMessage);
     }
 
     public void sendMessageToTarget() {
+        String playerName = target.getName();
         for (String msg : message) {
-            if (msg.contains("{\"text\":"))
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + target + " " + ChatUtil.format(msg));
-            else
-                target.sendMessage(ChatUtil.format(msg));
+            String formattedMsg = ChatUtil.format(msg)
+                    .replace("%time%", TimeManager.getInstance().buildFormat(StatManager.getInstance().getStats().getOnlineStatistic(target, StatisticType.PLAYTIME) / 20))
+                    .replace("%player%", playerName)
+                    .replace("%timesjoined%", Long.toString(StatManager.getInstance().getPlayerStat(target.getUniqueId(), StatisticType.LEAVE)))
+                    .replace("%joindate%", StatManager.getInstance().getJoinDate(target.getUniqueId()));
+
+            if (formattedMsg.contains("{\"text\":")) {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + target + " " + formattedMsg);
+            } else {
+                target.sendMessage(formattedMsg);
+            }
         }
     }
-
 }
