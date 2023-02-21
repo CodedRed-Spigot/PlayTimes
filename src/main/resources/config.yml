@@ -18,6 +18,7 @@ use-papi-placeholders: false
 playtime:
   format: "HH:mm:ss"
   locale: "en-US"
+  timezone: "CDT"
   ## Built-in Placeholders:
   ## %player% %time% %timesjoined% %joindate%
   ## You may also use PAPI Placeholders
