@@ -92,12 +92,15 @@ public class Expansions extends PlaceholderExpansion {
 		identifier = identifier.toLowerCase();
 		StatManager stats = StatManager.getInstance();
 		switch (identifier) {
-			case "playtime":
-				return TimeFormatterUtil.secondsToFormattedTime(stats.getPlayerStat(player.getUniqueId(), StatisticType.PLAYTIME)/20, "HH:mm:ss", Locale.US, "CDT");
-			case "uptime":
+			case "playtime" -> {
+				return TimeFormatterUtil.secondsToFormattedTime(stats.getPlayerStat(player.getUniqueId(), StatisticType.PLAYTIME) / 20);
+			}
+			case "uptime" -> {
 				return stats.getUptime();
-			case "joindate":
+			}
+			case "joindate" -> {
 				return stats.getJoinDate(player.getUniqueId());
+			}
 		}
 
 		// %PlayTimes_topname#%
@@ -140,7 +143,7 @@ public class Expansions extends PlaceholderExpansion {
 			if (players.size() < val + 1)
 				return "N/A";
 
-			return (players.isEmpty() ? "N/A" : TimeFormatterUtil.secondsToFormattedTime(players.get(val)/20, "HH:mm:ss", Locale.US, "CDT"));
+			return (players.isEmpty() ? "N/A" : TimeFormatterUtil.secondsToFormattedTime(players.get(val)/20));
 		}
 
 

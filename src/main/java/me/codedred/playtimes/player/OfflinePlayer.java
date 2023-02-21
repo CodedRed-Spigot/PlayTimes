@@ -46,7 +46,7 @@ public class OfflinePlayer {
             message = papiMessage;
         }
 
-        String timeFormat = TimeFormatterUtil.secondsToFormattedTime(rawTime / 20, "HH:mm:ss", Locale.US, "CDT");
+        String timeFormat = TimeFormatterUtil.secondsToFormattedTime(rawTime / 20);
         List<String> newMessage = new ArrayList<>();
         for (String msg : message) {
             msg = msg.replace("%time%", timeFormat);

@@ -72,7 +72,7 @@ public class TopTime implements CommandExecutor {
 
 			String offlinePlayerName = offlinePlayer.getName();
 			String place = String.valueOf(i + 1);
-			String time = TimeFormatterUtil.secondsToFormattedTime(map.get(offlinePlayer.getUniqueId().toString()) / 20, "HH:mm:ss", Locale.US, "CDT");
+			String time = TimeFormatterUtil.secondsToFormattedTime(map.get(offlinePlayer.getUniqueId().toString()) / 20);
 			String joinDate = statManager.getJoinDate(uuid);
 
 			if (time == null) {

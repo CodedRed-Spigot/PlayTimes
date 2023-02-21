@@ -53,7 +53,7 @@ public class OnlinePlayer {
         }
 
         Map<String, String> replacements = new HashMap<>();
-        String timeFormat = TimeFormatterUtil.secondsToFormattedTime(rawTime / 20, "HH:mm:ss", Locale.US, "CDT");
+        String timeFormat = TimeFormatterUtil.secondsToFormattedTime(rawTime / 20);
         replacements.put("%time%", timeFormat);
         replacements.put("%player%", target.getName());
         replacements.put("%timesjoined%", Long.toString(statManager.getPlayerStat(target.getUniqueId(), StatisticType.LEAVE)));
@@ -81,7 +81,7 @@ public class OnlinePlayer {
         String playerName = target.getName();
         for (String msg : message) {
             String formattedMsg = ChatUtil.format(msg)
-                    .replace("%time%", TimeFormatterUtil.secondsToFormattedTime(StatManager.getInstance().getStats().getOnlineStatistic(target, StatisticType.PLAYTIME) / 20, "HH:mm:ss", Locale.US, "CDT"))
+                    .replace("%time%", TimeFormatterUtil.secondsToFormattedTime(StatManager.getInstance().getStats().getOnlineStatistic(target, StatisticType.PLAYTIME) / 20))
                     .replace("%player%", playerName)
                     .replace("%timesjoined%", Long.toString(StatManager.getInstance().getPlayerStat(target.getUniqueId(), StatisticType.LEAVE)))
                     .replace("%joindate%", StatManager.getInstance().getJoinDate(target.getUniqueId()));

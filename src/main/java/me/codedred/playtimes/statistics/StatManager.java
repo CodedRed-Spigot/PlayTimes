@@ -62,7 +62,7 @@ public class StatManager {
     }
 
     public String getUptime() {
-        return TimeFormatterUtil.secondsToFormattedTime((int) TimeUnit.MILLISECONDS.toSeconds(ManagementFactory.getRuntimeMXBean().getUptime()), "HH:mm:ss", Locale.US, "CDT");
+        return TimeFormatterUtil.secondsToFormattedTime((int) TimeUnit.MILLISECONDS.toSeconds(ManagementFactory.getRuntimeMXBean().getUptime()));
     }
 
 }
