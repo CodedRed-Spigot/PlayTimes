@@ -7,7 +7,6 @@ import java.time.format.DateTimeFormatter;
 public class TimeFormatterUtil {
 
     private static final DataManager dataManager = DataManager.getInstance();
-    private static final String FORMAT = dataManager.getConfig().getString("playtime.format");
 
     private TimeFormatterUtil() {
         throw new IllegalStateException("Utility class");
@@ -27,6 +26,6 @@ public class TimeFormatterUtil {
 
         LocalTime time = LocalTime.of((int) hours, (int) minutes, (int) seconds);
 
-        return time.format(DateTimeFormatter.ofPattern(FORMAT));
+        return time.format(DateTimeFormatter.ofPattern(dataManager.getConfig().getString("playtime.format")));
     }
 }

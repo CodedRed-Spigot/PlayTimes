@@ -71,7 +71,7 @@ public class Time implements CommandExecutor {
             return;
         }
         data.reloadAll();
-        sender.sendMessage(ChatUtil.format("&9&lPlayTime Configurations Reloaded!"));
+        sender.sendMessage(ChatUtil.format("\n&9PlayTimes Configurations Reloaded!\n"));
     }
 
     private void handleTopCommand(CommandSender sender) {
