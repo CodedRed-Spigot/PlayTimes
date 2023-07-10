@@ -19,11 +19,12 @@ public class Join implements Listener {
 			return;
 
 		UUID uuid = event.getPlayer().getUniqueId();
-		if (!Objects.requireNonNull(data.getData().getConfigurationSection("leaderboard")).contains(uuid.toString())) {
-			long time = StatManager.getInstance().getPlayerStat(uuid, StatisticType.PLAYTIME);
-			data.getData().set("leaderboard." + uuid, time);
-			data.saveData();
+		if (data.getData().getConfigurationSection("leaderboard").contains(uuid.toString())) {
+			return;
 		}
+		long time = StatManager.getInstance().getPlayerStat(uuid, StatisticType.PLAYTIME);
+		data.getData().set("leaderboard." + uuid, time);
+		data.saveData();
 
 	}
 
