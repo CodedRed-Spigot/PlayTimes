@@ -6,6 +6,7 @@ import me.codedred.playtimes.player.OfflinePlayer;
 import me.codedred.playtimes.player.OnlinePlayer;
 import me.codedred.playtimes.server.ServerManager;
 import me.codedred.playtimes.statistics.StatManager;
+import me.codedred.playtimes.time.TimeConstants;
 import me.codedred.playtimes.time.TimeManager;
 import me.codedred.playtimes.utils.ChatUtil;
 import org.bukkit.Bukkit;
@@ -72,6 +73,7 @@ public class Time implements CommandExecutor {
             return;
         }
         data.reloadAll();
+        TimeConstants.reload();
         TimeManager.getInstance().registerTimings();
         sender.sendMessage(ChatUtil.format("&dPlayTimes Configurations Reloaded!"));
     }

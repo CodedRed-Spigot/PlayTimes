@@ -1,5 +1,6 @@
 package me.codedred.playtimes.time.formats;
 
+import me.codedred.playtimes.time.TimeConstants;
 import me.codedred.playtimes.time.Timings;
 
 public class NoSeconds implements Timings {
@@ -29,22 +30,22 @@ public class NoSeconds implements Timings {
     }
 
     private String formatSeconds(long seconds) {
-        return seconds + (seconds == 1 ? SECONDS : SECOND);
+        return seconds + (seconds == 1 ? TimeConstants.getSeconds() : TimeConstants.getSecond());
     }
 
     private String formatMinutes(int minutes) {
-        return minutes + (minutes == 1 ? MINUTE : MINUTES);
+        return minutes + (minutes == 1 ? TimeConstants.getMinute() : TimeConstants.getMinutes());
     }
 
     private String formatHours(int hours, int minutesLeft) {
-        String format = hours + (hours == 1 ? HOUR : HOURS);
+        String format = hours + (hours == 1 ? TimeConstants.getHour() : TimeConstants.getHours());
         if (minutesLeft >= 1)
             format += formatMinutes(minutesLeft);
         return format;
     }
 
     private String formatDays(int days, int minutesLeft) {
-        String format = days + (days == 1 ? DAY : DAYS);
+        String format = days + (days == 1 ? TimeConstants.getDay() : TimeConstants.getDays());
         if (minutesLeft >= 60) {
             int hours = minutesLeft / 60;
             int minutesAfterHours = minutesLeft % 60;

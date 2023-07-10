@@ -1,6 +1,6 @@
 package me.codedred.playtimes.time;
 
-public interface Timings extends TimeRegistry {
+public interface Timings {
 
     String buildFormat(long time);
 }
