@@ -1,36 +1,32 @@
 package me.codedred.playtimes.utils;
-
 import me.codedred.playtimes.data.DataManager;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.time.Duration;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class TimeFormatterUtil {
 
     private static final DataManager dataManager = DataManager.getInstance();
     private static final String FORMAT = dataManager.getConfig().getString("playtime.format");
-    private static final Locale LOCALE = Locale.forLanguageTag(dataManager.getConfig().getString("playtime.locale"));
-    private static final TimeZone TIMEZONE = TimeZone.getTimeZone(dataManager.getConfig().getString("playtime.timezone"));
-    private static final long MILLISECONDS_PER_SECOND = 1000;
-
-    private static final SimpleDateFormat SDF = new SimpleDateFormat(FORMAT, LOCALE);
 
     private TimeFormatterUtil() {
         throw new IllegalStateException("Utility class");
     }
 
     /**
-     * Converts the given time in seconds to a formatted date string based on the provided date format, locale,
-     * and timezone.
+     * Converts the given time in seconds to a formatted date string
      *
      * @param timeInSeconds the time in seconds to be converted
      * @return the formatted date string
      */
-    public static synchronized String secondsToFormattedTime(long timeInSeconds) {
-        SDF.setTimeZone(TIMEZONE);
-        Date result = new Date(timeInSeconds * MILLISECONDS_PER_SECOND);
-        return SDF.format(result);
+    public static String secondsToFormattedTime(long timeInSeconds) {
+        Duration duration = Duration.ofSeconds(timeInSeconds);
+        long hours = duration.toHoursPart();
+        long minutes = duration.toMinutesPart();
+        long seconds = duration.toSecondsPart();
+
+        LocalTime time = LocalTime.of((int) hours, (int) minutes, (int) seconds);
+
+        return time.format(DateTimeFormatter.ofPattern(FORMAT));
     }
 }

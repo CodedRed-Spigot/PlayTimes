@@ -13,12 +13,8 @@ use-papi-placeholders: false
 
   # PlayTimes format & message settings
   # For format info check here: https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
-  # For locale info check here: https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html
-  # For timezone info check here: https://garygregory.wordpress.com/2013/06/18/what-are-the-java-timezone-ids/
 playtime:
   format: "HH:mm:ss"
-  locale: "en-US"
-  timezone: "CDT"
   ## Built-in Placeholders:
   ## %player% %time% %timesjoined% %joindate%
   ## You may also use PAPI Placeholders
