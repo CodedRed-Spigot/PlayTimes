@@ -12,7 +12,7 @@ prefix: "&7[&b&lPlayTimes&7]"
 use-papi-placeholders: false
 
   # PlayTimes format & message settings
-  # The name refers to the format. Example if you have minute = " min" then it will display "x min"
+  # The name refers to the format. See spigot plugin page for format examples
 playtime:
   ## Built-in Placeholders:
   ## %player% %time% %timesjoined% %joindate%
@@ -24,11 +24,11 @@ playtime:
     - "&aJoined Date:&f %joindate%"
     - "&b&m============================"
   name:
-    second: "s "
+    second: "s"
     minute: "min "
     hour: "hr "
     day: "day "
-    seconds: "s "
+    seconds: "s"
     minutes: "mins "
     hours: "hrs "
     days: "days "
