@@ -24,14 +24,14 @@ playtime:
     - "&aJoined Date:&f %joindate%"
     - "&b&m============================"
   name:
-    second: "s"
-    minute: "min"
-    hour: "hr"
-    day: "day"
-    seconds: "s"
-    minutes: "mins"
-    hours: "hrs"
-    days: "days"
+    second: "s "
+    minute: "min "
+    hour: "hr "
+    day: "day "
+    seconds: "s "
+    minutes: "mins "
+    hours: "hrs "
+    days: "days "
 
   ## only-hours - when true it will display playtime in hours (When true this will also disable show-seconds/days setting)
   ## show-seconds - when true it will display seconds
