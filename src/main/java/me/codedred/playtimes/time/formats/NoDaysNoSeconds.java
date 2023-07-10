@@ -23,7 +23,7 @@ public class NoDaysNoSeconds implements Timings {
         int left = minutes - inMins;
 
         if (left >= 1)
-            format = format + " " + left + (left == 1 ? MINUTE : MINUTES);
+            format = format + left + (left == 1 ? MINUTE : MINUTES);
 
         return format;
 

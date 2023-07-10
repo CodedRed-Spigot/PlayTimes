@@ -39,7 +39,7 @@ public class NoSeconds implements Timings {
     private String formatHours(int hours, int minutesLeft) {
         String format = hours + (hours == 1 ? HOUR : HOURS);
         if (minutesLeft >= 1)
-            format += " " + formatMinutes(minutesLeft);
+            format += formatMinutes(minutesLeft);
         return format;
     }
 
@@ -48,9 +48,9 @@ public class NoSeconds implements Timings {
         if (minutesLeft >= 60) {
             int hours = minutesLeft / 60;
             int minutesAfterHours = minutesLeft % 60;
-            format += " " + formatHours(hours, minutesAfterHours);
+            format += formatHours(hours, minutesAfterHours);
         } else if (minutesLeft >= 1) {
-            format += " " + formatMinutes(minutesLeft);
+            format += formatMinutes(minutesLeft);
         }
         return format;
     }

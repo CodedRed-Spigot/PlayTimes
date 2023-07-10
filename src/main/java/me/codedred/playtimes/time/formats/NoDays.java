@@ -30,16 +30,16 @@ public class NoDays implements Timings {
     private String formatMinutes(int minutes, int secondsLeft) {
         String format = minutes + (minutes == 1 ? MINUTE : MINUTES);
         if (secondsLeft > 0)
-            format += " " + formatSeconds(secondsLeft);
+            format += formatSeconds(secondsLeft);
         return format;
     }
 
     private String formatHours(int hours, int minutesLeft, int secondsLeft) {
         String format = hours + (hours == 1 ? HOUR : HOURS);
         if (minutesLeft >= 1)
-            format += " " + formatMinutes(minutesLeft, secondsLeft);
+            format += formatMinutes(minutesLeft, secondsLeft);
         else if (secondsLeft > 0)
-            format += " " + formatSeconds(secondsLeft);
+            format += formatSeconds(secondsLeft);
         return format;
     }
 }
