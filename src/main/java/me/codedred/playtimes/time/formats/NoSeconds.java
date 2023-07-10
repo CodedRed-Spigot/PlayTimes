@@ -7,49 +7,51 @@ public class NoSeconds implements Timings {
     @Override
     public String buildFormat(long time) {
         if (time < 60)
-            return time + ( time == 1 ? SECONDS : SECOND);
+            return formatSeconds(time);
 
         int minutes = (int) (time / 60);
 
         // Time less than 1 hour
         if (minutes < 60)
-            return minutes + (minutes == 1 ? MINUTE : MINUTES);
-
-        String format;
+            return formatMinutes(minutes);
 
         // Time less than 1 Day
         if (minutes < 1440) {
             int hours = minutes / 60;
-            format = hours + (hours == 1 ? HOUR : HOURS);
-            int inMins = 60 * hours;
-            int left = minutes - inMins;
-
-            if (left >= 1)
-                format = format + " " + left + (left == 1 ? MINUTE : MINUTES);
-
-            return format;
+            int minutesLeft = minutes % 60;
+            return formatHours(hours, minutesLeft);
         }
 
         // Time greater than 1 day
         int days = minutes / 1440;
-        format = days + (days == 1 ? DAY : DAYS);
-        int inMins = 1440 * days;
-        int leftOver = minutes - inMins;
-        if (leftOver >= 1) {
-            if (leftOver < 60) {
-                format = format + " " + leftOver + (leftOver == 1 ? MINUTE : MINUTES);
-            }
-            else {
-                int hours = leftOver / 60;
-                format = format + " " + hours + (hours == 1 ? HOUR : HOURS);
-                int hoursInMins = 60 * hours;
-                int minsLeft = leftOver - hoursInMins;
-                if (leftOver >= 1) {
-                    format = format + " " + minsLeft + (minsLeft == 1 ? MINUTE : MINUTES);
-                }
-            }
-        }
+        int minutesLeft = minutes % 1440;
+        return formatDays(days, minutesLeft);
+    }
+
+    private String formatSeconds(long seconds) {
+        return seconds + (seconds == 1 ? SECONDS : SECOND);
+    }
+
+    private String formatMinutes(int minutes) {
+        return minutes + (minutes == 1 ? MINUTE : MINUTES);
+    }
+
+    private String formatHours(int hours, int minutesLeft) {
+        String format = hours + (hours == 1 ? HOUR : HOURS);
+        if (minutesLeft >= 1)
+            format += " " + formatMinutes(minutesLeft);
         return format;
     }
 
+    private String formatDays(int days, int minutesLeft) {
+        String format = days + (days == 1 ? DAY : DAYS);
+        if (minutesLeft >= 60) {
+            int hours = minutesLeft / 60;
+            int minutesAfterHours = minutesLeft % 60;
+            format += " " + formatHours(hours, minutesAfterHours);
+        } else if (minutesLeft >= 1) {
+            format += " " + formatMinutes(minutesLeft);
+        }
+        return format;
+    }
 }

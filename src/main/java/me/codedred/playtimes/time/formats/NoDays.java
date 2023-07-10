@@ -7,33 +7,39 @@ public class NoDays implements Timings {
     @Override
     public String buildFormat(long time) {
         if (time < 60)
-            return time + ( time == 1 ? SECONDS : SECOND);
+            return formatSeconds(time);
 
         int minutes = (int) (time / 60);
-        int seconds = 60 * minutes;
-        int secondsLeft = (int) (time - seconds);
+        int secondsLeft = (int) (time % 60);
 
         // Time less than 1 hour
-        if (minutes < 60) {
-            if (secondsLeft > 0)
-                return minutes + (minutes == 1 ? MINUTE : MINUTES) + " " + secondsLeft + (secondsLeft == 1 ? SECOND : SECONDS);
-            return minutes + (minutes == 1 ? MINUTE : MINUTES);
-        }
-
-        String format;
+        if (minutes < 60)
+            return formatMinutes(minutes, secondsLeft);
 
         // Greater than 1 hour, only in hours
         int hours = minutes / 60;
-        format = hours + (hours == 1 ? HOUR : HOURS);
-        int inMins = 60 * hours;
-        int left = minutes - inMins;
+        int minutesLeft = minutes % 60;
 
-        if (left >= 1)
-            format = format + " " + left + (left == 1 ? MINUTE : MINUTES);
+        return formatHours(hours, minutesLeft, secondsLeft);
+    }
 
+    private String formatSeconds(long seconds) {
+        return seconds + (seconds == 1 ? SECONDS : SECOND);
+    }
+
+    private String formatMinutes(int minutes, int secondsLeft) {
+        String format = minutes + (minutes == 1 ? MINUTE : MINUTES);
         if (secondsLeft > 0)
-            format = format + " " + secondsLeft + (secondsLeft == 1 ? SECOND : SECONDS);
+            format += " " + formatSeconds(secondsLeft);
+        return format;
+    }
 
+    private String formatHours(int hours, int minutesLeft, int secondsLeft) {
+        String format = hours + (hours == 1 ? HOUR : HOURS);
+        if (minutesLeft >= 1)
+            format += " " + formatMinutes(minutesLeft, secondsLeft);
+        else if (secondsLeft > 0)
+            format += " " + formatSeconds(secondsLeft);
         return format;
     }
 }
