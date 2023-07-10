@@ -107,7 +107,7 @@ public class Time implements CommandExecutor {
 
     private void handleBlockCommand(CommandSender sender, String[] args, boolean block) {
         String blockAction = block ? "block" : "unblock";
-        if (!sender.hasPermission("pt." + blockAction)) {
+        if (!sender.hasPermission("pt.block")) {
             ChatUtil.errno(sender, ChatUtil.ChatTypes.NO_PERMISSION);
             return;
         }
