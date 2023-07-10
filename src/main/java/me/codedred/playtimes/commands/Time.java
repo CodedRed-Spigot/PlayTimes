@@ -10,6 +10,7 @@ import me.codedred.playtimes.time.TimeConstants;
 import me.codedred.playtimes.time.TimeManager;
 import me.codedred.playtimes.utils.ChatUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -40,21 +41,43 @@ public class Time implements CommandExecutor {
             case "block" -> handleBlockCommand(sender, args, true);
             case "unblock" -> handleBlockCommand(sender, args, false);
             case "debug" -> handleDebugCommand(sender);
+            case "help" -> handleHelpCommand(sender);
             default -> handleOtherPlayerCommand(sender, args);
         }
         return true;
     }
+
+    private void handleHelpCommand(CommandSender sender) {
+        if (!sender.hasPermission("pt.reload")) {
+            ChatUtil.errno(sender, ChatUtil.ChatTypes.NO_PERMISSION);
+            return;
+        }
+        // assuming the main command is "pt"
+        sender.sendMessage(ChatUtil.format("&6&l*** PlayTimes Help ***"));
+        sender.sendMessage(ChatUtil.format("&e/pt: &7Displays your play time"));
+        sender.sendMessage(ChatUtil.format("&e/pt reload: &7Reloads the PlayTimes plugin configurations"));
+        sender.sendMessage(ChatUtil.format("&e/pt top: &7Shows the top players by play time"));
+        sender.sendMessage(ChatUtil.format("&e/pt block <player>: &7Blocks a player from leaderboards"));
+        sender.sendMessage(ChatUtil.format("&e/pt unblock <player>: &7Unblocks a player from leaderboards"));
+        sender.sendMessage(ChatUtil.format("&e/pt debug: &7Displays the debug info"));
+        sender.sendMessage(ChatUtil.format("&e/pt <player>: &7Displays the play time of <player>"));
+    }
+
+
 
     private void handleDebugCommand(CommandSender sender) {
         if (!sender.hasPermission("pt.reload")) {
             ChatUtil.errno(sender, ChatUtil.ChatTypes.NO_PERMISSION);
             return;
         }
-        // wip
-        sender.sendMessage("Server version: " + Bukkit.getServer().getVersion() +
-                "\nPlayTimes version: " + JavaPlugin.getPlugin(PlayTimes.class).getDescription().getVersion() +
-                "\nStatManager: " + StatManager.getInstance().name +
-                "\nServerStatus: " + ServerManager.getInstance().isOnline());
+        boolean isOnline = ServerManager.getInstance().isOnline();
+        String serverStatus = isOnline ? "Online" : "Offline";
+
+        sender.sendMessage(ChatUtil.format("&6&l*** PlayTimes Debug ***"));
+        sender.sendMessage(ChatColor.GOLD + "Server version: " + ChatColor.WHITE + Bukkit.getServer().getVersion() +
+                ChatColor.GOLD + "\nPlayTimes version: " + ChatColor.WHITE + JavaPlugin.getPlugin(PlayTimes.class).getDescription().getVersion() +
+                ChatColor.GOLD + "\nStatManager: " + ChatColor.WHITE + StatManager.getInstance().name +
+                ChatColor.GOLD + "\nServerStatus: " + ChatColor.WHITE + serverStatus);
     }
 
     private void handlePlayerCommand(CommandSender sender) {
