@@ -1,10 +1,9 @@
 package me.codedred.playtimes.statistics;
 
+import me.codedred.playtimes.time.TimeManager;
 import me.codedred.playtimes.utils.ServerUtils;
-import me.codedred.playtimes.utils.TimeFormatterUtil;
 
 import java.lang.management.ManagementFactory;
-import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -62,7 +61,7 @@ public class StatManager {
     }
 
     public String getUptime() {
-        return TimeFormatterUtil.secondsToFormattedTime((int) TimeUnit.MILLISECONDS.toSeconds(ManagementFactory.getRuntimeMXBean().getUptime()));
+        return TimeManager.getInstance().buildFormat((int) TimeUnit.MILLISECONDS.toSeconds(ManagementFactory.getRuntimeMXBean().getUptime()));
     }
 
 }

@@ -2,6 +2,7 @@ package me.codedred.playtimes.commands;
 
 import me.codedred.playtimes.data.DataManager;
 import me.codedred.playtimes.statistics.StatManager;
+import me.codedred.playtimes.time.TimeManager;
 import me.codedred.playtimes.utils.*;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -11,7 +12,6 @@ import org.bukkit.entity.Player;
 import me.codedred.playtimes.models.Leaderboard;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -51,6 +51,7 @@ public class TopTime implements CommandExecutor {
 		}
 
 		StatManager statManager = StatManager.getInstance();
+		TimeManager timeManager = TimeManager.getInstance();
 		String header = ChatUtil.format(data.getConfig().getString("top-playtime.header"));
 		String footer = ChatUtil.format(data.getConfig().getString("top-playtime.footer"));
 		String content = data.getConfig().getString("top-playtime.content");
@@ -72,7 +73,7 @@ public class TopTime implements CommandExecutor {
 
 			String offlinePlayerName = offlinePlayer.getName();
 			String place = String.valueOf(i + 1);
-			String time = TimeFormatterUtil.secondsToFormattedTime(map.get(offlinePlayer.getUniqueId().toString()) / 20);
+			String time = timeManager.buildFormat(map.get(offlinePlayer.getUniqueId().toString()) / 20);
 			String joinDate = statManager.getJoinDate(uuid);
 
 			if (time == null) {

@@ -3,10 +3,10 @@ package me.codedred.playtimes.player;
 import me.codedred.playtimes.data.DataManager;
 import me.codedred.playtimes.statistics.StatManager;
 import me.codedred.playtimes.statistics.StatisticType;
+import me.codedred.playtimes.time.TimeManager;
 import me.codedred.playtimes.utils.ChatUtil;
 import me.codedred.playtimes.utils.PAPIHolders;
 import me.codedred.playtimes.utils.ServerUtils;
-import me.codedred.playtimes.utils.TimeFormatterUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -21,11 +21,14 @@ public class OnlinePlayer {
     private final DataManager dataManager;
     private final StatManager statManager;
 
+    private final TimeManager timeManager;
+
     public OnlinePlayer(Player target) {
         this.target = target;
         this.message = new ArrayList<>();
         this.dataManager = DataManager.getInstance();
         this.statManager = StatManager.getInstance();
+        this.timeManager = TimeManager.getInstance();
         buildMessage();
     }
 
@@ -53,7 +56,7 @@ public class OnlinePlayer {
         }
 
         Map<String, String> replacements = new HashMap<>();
-        String timeFormat = TimeFormatterUtil.secondsToFormattedTime(rawTime / 20);
+        String timeFormat = timeManager.buildFormat(rawTime / 20);
         replacements.put("%time%", timeFormat);
         replacements.put("%player%", target.getName());
         replacements.put("%timesjoined%", Long.toString(statManager.getPlayerStat(target.getUniqueId(), StatisticType.LEAVE)));
@@ -81,7 +84,7 @@ public class OnlinePlayer {
         String playerName = target.getName();
         for (String msg : message) {
             String formattedMsg = ChatUtil.format(msg)
-                    .replace("%time%", TimeFormatterUtil.secondsToFormattedTime(StatManager.getInstance().getStats().getOnlineStatistic(target, StatisticType.PLAYTIME) / 20))
+                    .replace("%time%", timeManager.buildFormat(StatManager.getInstance().getStats().getOnlineStatistic(target, StatisticType.PLAYTIME) / 20))
                     .replace("%player%", playerName)
                     .replace("%timesjoined%", Long.toString(StatManager.getInstance().getPlayerStat(target.getUniqueId(), StatisticType.LEAVE)))
                     .replace("%joindate%", StatManager.getInstance().getJoinDate(target.getUniqueId()));

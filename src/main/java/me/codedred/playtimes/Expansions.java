@@ -4,7 +4,7 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.codedred.playtimes.models.Leaderboard;
 import me.codedred.playtimes.statistics.StatManager;
 import me.codedred.playtimes.statistics.StatisticType;
-import me.codedred.playtimes.utils.TimeFormatterUtil;
+import me.codedred.playtimes.time.TimeManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -91,9 +91,10 @@ public class Expansions extends PlaceholderExpansion {
 	public String onRequest(OfflinePlayer player, @NotNull String identifier) {
 		identifier = identifier.toLowerCase();
 		StatManager stats = StatManager.getInstance();
+		TimeManager timeManager = TimeManager.getInstance();
 		switch (identifier) {
 			case "playtime" -> {
-				return TimeFormatterUtil.secondsToFormattedTime(stats.getPlayerStat(player.getUniqueId(), StatisticType.PLAYTIME) / 20);
+				return timeManager.buildFormat(stats.getPlayerStat(player.getUniqueId(), StatisticType.PLAYTIME) / 20);
 			}
 			case "uptime" -> {
 				return stats.getUptime();
@@ -143,7 +144,7 @@ public class Expansions extends PlaceholderExpansion {
 			if (players.size() < val + 1)
 				return "N/A";
 
-			return (players.isEmpty() ? "N/A" : TimeFormatterUtil.secondsToFormattedTime(players.get(val)/20));
+			return (players.isEmpty() ? "N/A" : timeManager.buildFormat(players.get(val)/20));
 		}
 
 
