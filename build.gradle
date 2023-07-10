@@ -1,13 +1,16 @@
 plugins {
     id 'java'
-    id 'com.rikonardo.papermake' version '1.0.5'
+    id 'dev.codedred.craftengine' version '1.0.0'
 }
+
 
 group = 'dev.codedred'
 version = '1.5'
 
+
 repositories {
-    mavenCentral()
+    mavenLocal()
+    gradlePluginPortal()
     maven {
         name = 'spigotmc-repo'
         url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
@@ -20,6 +23,7 @@ repositories {
         url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
     }
 }
+
 
 dependencies {
     implementation 'org.jetbrains:annotations:23.0.0'
