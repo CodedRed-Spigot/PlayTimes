@@ -3,6 +3,7 @@ package me.codedred.playtimes;
 import me.codedred.playtimes.commands.Time;
 import me.codedred.playtimes.commands.TopTime;
 import me.codedred.playtimes.commands.Uptime;
+import me.codedred.playtimes.commands.completer.TimeTabCompleter;
 import me.codedred.playtimes.listeners.Join;
 import me.codedred.playtimes.listeners.Quit;
 import me.codedred.playtimes.server.ServerManager;
@@ -59,6 +60,8 @@ public class PlayTimes extends JavaPlugin {
 				new Uptime());
 		Objects.requireNonNull(getCommand("topplaytime")).setExecutor(
 				new TopTime());
+		Objects.requireNonNull(this.getCommand("pt")).setTabCompleter(new TimeTabCompleter());
+
 	}
 
 	private void checkForUpdate() {
