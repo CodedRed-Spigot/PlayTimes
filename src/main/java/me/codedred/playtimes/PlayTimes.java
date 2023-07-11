@@ -38,7 +38,7 @@ public class PlayTimes extends JavaPlugin {
 		registerCommands();
 
 		@SuppressWarnings("unused")
-        Metrics metrics = new Metrics(this);
+        Metrics metrics = new Metrics(this, 5289);
 		getLogger().info("[PlayTimes] Successfully loaded.");
 	}
 
