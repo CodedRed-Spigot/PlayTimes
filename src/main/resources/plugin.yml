@@ -4,7 +4,7 @@ main: me.codedred.playtimes.PlayTimes
 author: Cmaaxx
 authors: [CodedRed]
 version: 1.5
-softdepend: [PlaceholdersAPI, PlaceholderAPI]
+softdepend: [PlaceholderAPI]
 
 commands:
   playtime:
@@ -21,4 +21,4 @@ commands:
     description: Check your servers uptime!
     usage: /topplaytime
     permission: pt.top
-    aliases: [toppt, topplayt]
+    aliases: [topplayt, toppt]
