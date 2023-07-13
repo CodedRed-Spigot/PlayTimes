@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+//import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class Join implements Listener {
@@ -32,6 +33,11 @@ public class Join implements Listener {
 
 		long time = StatManager.getInstance().getPlayerStat(uuid, StatisticType.PLAYTIME);
 		leaderboardSection.set(uuid.toString(), time);
+
+//		LocalDateTime now = LocalDateTime.now();
+//		String lastPlayed = now.toString();
+//		data.getData().set("last_played." + uuid, lastPlayed);
+
 		data.saveData();
 	}
 }

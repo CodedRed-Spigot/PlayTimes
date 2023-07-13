@@ -69,9 +69,9 @@ public class PlayTimes extends JavaPlugin {
 			UpdateChecker updater = new UpdateChecker(this, 58858);
 			try {
 				if (!updater.checkForUpdates()) {
-					getLogger().warning(ChatUtil.format("&eYou are using an older version of PlayTimes!"));
-					getLogger().info(ChatUtil.format("&eDownload the newest version here:"));
-					getLogger().info(ChatUtil.format("&bhttps://www.spigotmc.org/resources/58858/"));
+					getLogger().warning(ChatUtil.format("You are using an older version of PlayTimes!"));
+					getLogger().info(ChatUtil.format("Download the newest version here:"));
+					getLogger().info(ChatUtil.format("https://www.spigotmc.org/resources/58858/"));
 				} else {
 					getLogger().info("[PlayTimes] Plugin is up to date! - " + getDescription().getVersion());
 				}

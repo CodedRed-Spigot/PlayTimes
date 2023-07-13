@@ -34,10 +34,15 @@ public class ServerUtils {
      */
     public static boolean isRisenVersion() {
         String[] versionParts = Bukkit.getServer().getVersion().split("\\.");
-        int majorVersion = Integer.parseInt(versionParts[1]);
-        int minorVersion = Integer.parseInt(versionParts[2].replaceAll("[^0-9]", ""));
+
+        int majorVersion = Integer.parseInt(versionParts[1].replaceAll("[^0-9]", ""));
+        int minorVersion = 0;
+        if (versionParts.length >= 3)
+            minorVersion = Integer.parseInt(versionParts[2].replaceAll("[^0-9]", ""));
+
         return majorVersion >= 17 && minorVersion >= 0;
     }
+
 
 
     public static boolean hasPAPI() {

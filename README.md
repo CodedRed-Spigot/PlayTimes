@@ -22,7 +22,13 @@
 
 ## About The Project
 
-PlayTimes is your ideal plugin for gamified competition! It enables players to compete for the most time played, with leaderboards for showing off achievements. Beyond player time, you can also monitor server uptime. Future plans include introducing PlayTime Rewards, Ranks, and Shop! Start using PlayTimes today to add an exciting dimension to your server.
+Introducing PlayTimes, the ultimate plugin for your server! Elevate the gaming experience by allowing players to showcase their skills and compete for top positions on the prestigious playtime leaderboards. Not only can you effortlessly monitor the playtime of online and offline players, but you can also keep track of the server's uptime for maximum efficiency. But that's not all! Brace yourself for an array of exciting features that are on the horizon, including PlayTime Rewards, PlayTime Ranks, and the immersive PlayTime Shop. Get ready to take your server to the next level with PlayTimes!
+
+<img src="https://imgur.com/KebViUJ.gif"> <img src="https://imgur.com/v6ErIo9.gif">
+
+<img src="https://imgur.com/VGZ0iuV.gif"> <img src="https://imgur.com/f4A5LRY.gif">
+
+<img src="https://imgur.com/kOy8YSx.gif"> <img src="https://imgur.com/gNYsU00.gif">
 
 ## Usage
 
