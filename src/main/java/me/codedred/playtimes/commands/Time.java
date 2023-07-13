@@ -133,6 +133,10 @@ public class Time implements CommandExecutor {
         } else {
             uuid = Objects.requireNonNull(Bukkit.getPlayer(playerName)).getUniqueId();
         }
+        if (uuid == null) {
+            sender.sendMessage(ChatUtil.formatWithPrefix("&c&lUser not found."));
+            return;
+        }
         if (block) {
             data.getData().set(blockedKey, uuid.toString());
             if (data.getData().contains("leaderboard." + uuid)) {
