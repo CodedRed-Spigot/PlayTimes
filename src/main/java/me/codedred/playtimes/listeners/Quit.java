@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+//import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class Quit implements Listener {
@@ -23,6 +24,10 @@ public class Quit implements Listener {
 		UUID uuid = event.getPlayer().getUniqueId();
 		long playtime = statManager.getPlayerStat(uuid, StatisticType.PLAYTIME);
 		data.getData().set("leaderboard." + uuid, playtime);
+
+//		LocalDateTime now = LocalDateTime.now();
+//		String lastPlayed = now.toString();
+//		data.getData().set("last_played." + uuid, lastPlayed);
 		data.saveData();
 	}
 }
