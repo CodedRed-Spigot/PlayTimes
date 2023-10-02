@@ -24,7 +24,7 @@ public class UpdateChecker {
         this.cachedVersion = plugin.getDescription().getVersion();
     }
 
-    public boolean checkForUpdates() throws IOException {
+    public boolean hasUpdatesAvailable() throws IOException {
         String latestVersion = getCachedVersion();
 
         if (latestVersion == null) {
