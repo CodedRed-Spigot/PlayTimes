@@ -10,6 +10,8 @@ out/
 # mpeltonen/sbt-idea plugin
 .idea_modules/
 
+bin
+
 # JIRA plugin
 atlassian-ide-plugin.xml
 
@@ -116,3 +118,34 @@ run/
 
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
 !gradle-wrapper.jar
+
+
+# VS Code directories
+.vscode/
+
+# User workspace settings
+.vscode/settings.json
+
+# User workspace launch configurations
+.vscode/launch.json
+
+# User workspace tasks
+.vscode/tasks.json
+
+# Recommended extensions for this workspace
+.vscode/extensions.json
+
+# VS Code directories for Java development
+.vscode-test/
+
+# VS Code for Java standalone server
+.vscode-server/
+
+# Windows image file caches
+iconcache_*.db
+
+# Windows Installer directory
+Installer/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt

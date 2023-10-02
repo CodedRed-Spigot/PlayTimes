@@ -49,6 +49,8 @@ public class Expansions extends PlaceholderExpansion {
 				return StatManager.getInstance().getUptime();
 			case "joindate":
 				return StatManager.getInstance().getJoinDate(player.getUniqueId());
+			case "timesjoined":
+				return Long.toString(StatManager.getInstance().getPlayerStat(player.getUniqueId(), StatisticType.LEAVE));
 			default:
 				return handleLeaderboardIdentifier(identifier);
 		}

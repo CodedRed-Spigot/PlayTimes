@@ -59,7 +59,8 @@ public class OnlinePlayer {
         String timeFormat = timeManager.buildFormat(rawTime / 20);
         replacements.put("%time%", timeFormat);
         replacements.put("%player%", target.getName());
-        replacements.put("%timesjoined%", Long.toString(statManager.getPlayerStat(target.getUniqueId(), StatisticType.LEAVE)));
+        replacements.put("%timesjoined%",
+                Long.toString(statManager.getPlayerStat(target.getUniqueId(), StatisticType.LEAVE)));
         replacements.put("%joindate%", statManager.getJoinDate(target.getUniqueId()));
 
         Pattern pattern = Pattern.compile("%(\\w+)%");
@@ -84,9 +85,13 @@ public class OnlinePlayer {
         String playerName = target.getName();
         for (String msg : message) {
             String formattedMsg = ChatUtil.format(msg)
-                    .replace("%time%", timeManager.buildFormat(StatManager.getInstance().getStats().getOnlineStatistic(target, StatisticType.PLAYTIME) / 20))
+                    .replace("%time%",
+                            timeManager.buildFormat(StatManager.getInstance().getStats().getOnlineStatistic(target,
+                                    StatisticType.PLAYTIME) / 20))
                     .replace("%player%", playerName)
-                    .replace("%timesjoined%", Long.toString(StatManager.getInstance().getPlayerStat(target.getUniqueId(), StatisticType.LEAVE)))
+                    .replace("%timesjoined%",
+                            Long.toString(
+                                    StatManager.getInstance().getPlayerStat(target.getUniqueId(), StatisticType.LEAVE)))
                     .replace("%joindate%", StatManager.getInstance().getJoinDate(target.getUniqueId()));
 
             if (formattedMsg.contains("{\"text\":")) {

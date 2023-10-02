@@ -68,7 +68,7 @@ public class PlayTimes extends JavaPlugin {
 		Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
 			UpdateChecker updater = new UpdateChecker(this, 58858);
 			try {
-				if (!updater.checkForUpdates()) {
+				if (updater.hasUpdatesAvailable()) {
 					getLogger().warning(ChatUtil.format("You are using an older version of PlayTimes!"));
 					getLogger().info(ChatUtil.format("Download the newest version here:"));
 					getLogger().info(ChatUtil.format("https://www.spigotmc.org/resources/58858/"));

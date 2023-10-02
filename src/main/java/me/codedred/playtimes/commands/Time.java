@@ -52,7 +52,6 @@ public class Time implements CommandExecutor {
             ChatUtil.errno(sender, ChatUtil.ChatTypes.NO_PERMISSION);
             return;
         }
-        // assuming the main command is "pt"
         sender.sendMessage(ChatUtil.format("&6&l*** PlayTimes Help ***"));
         sender.sendMessage(ChatUtil.format("&e/pt: &7Displays your play time"));
         sender.sendMessage(ChatUtil.format("&e/pt reload: &7Reloads the PlayTimes plugin configurations"));
@@ -62,8 +61,6 @@ public class Time implements CommandExecutor {
         sender.sendMessage(ChatUtil.format("&e/pt debug: &7Displays the debug info"));
         sender.sendMessage(ChatUtil.format("&e/pt <player>: &7Displays the play time of <player>"));
     }
-
-
 
     private void handleDebugCommand(CommandSender sender) {
         if (!sender.hasPermission("pt.reload")) {
@@ -75,7 +72,8 @@ public class Time implements CommandExecutor {
 
         sender.sendMessage(ChatUtil.format("&6&l*** PlayTimes Debug ***"));
         sender.sendMessage(ChatColor.GOLD + "Server version: " + ChatColor.WHITE + Bukkit.getServer().getVersion() +
-                ChatColor.GOLD + "\nPlayTimes version: " + ChatColor.WHITE + JavaPlugin.getPlugin(PlayTimes.class).getDescription().getVersion() +
+                ChatColor.GOLD + "\nPlayTimes version: " + ChatColor.WHITE
+                + JavaPlugin.getPlugin(PlayTimes.class).getDescription().getVersion() +
                 ChatColor.GOLD + "\nStatManager: " + ChatColor.WHITE + StatManager.getInstance().name +
                 ChatColor.GOLD + "\nServerStatus: " + ChatColor.WHITE + serverStatus);
     }
@@ -112,14 +110,16 @@ public class Time implements CommandExecutor {
             return;
         }
         if (args.length < 2) {
-            sender.sendMessage(ChatUtil.formatWithPrefix("&c&lIncorrect Usage&c, try &7/pt " + blockAction + " <player>"));
+            sender.sendMessage(
+                    ChatUtil.formatWithPrefix("&c&lIncorrect Usage&c, try &7/pt " + blockAction + " <player>"));
             return;
         }
         String playerName = args[1];
         String blockedKey = "blocked." + playerName.toLowerCase();
         if (block == data.getData().contains(blockedKey)) {
             sender.sendMessage(ChatUtil.formatWithPrefix("&cUser is already " + blockAction + "ed!"));
-            sender.sendMessage(ChatUtil.formatWithPrefix("&c&oMaybe try, &7/pt " + (block ? "unblock" : "block") + " <player>"));
+            sender.sendMessage(
+                    ChatUtil.formatWithPrefix("&c&oMaybe try, &7/pt " + (block ? "unblock" : "block") + " <player>"));
             return;
         }
         UUID uuid;
@@ -151,6 +151,10 @@ public class Time implements CommandExecutor {
     }
 
     private void handleOtherPlayerCommand(CommandSender sender, String[] args) {
+        if (!sender.hasPermission("pt.others")) {
+            ChatUtil.errno(sender, ChatUtil.ChatTypes.NO_PERMISSION);
+            return;
+        }
         new BukkitRunnable() {
             @Override
             public void run() {
