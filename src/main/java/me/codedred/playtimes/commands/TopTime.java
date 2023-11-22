@@ -66,26 +66,32 @@ public class TopTime implements CommandExecutor {
 		for (int i = 0; i < map.size(); i++) {
 			UUID uuid = UUID.fromString(map.keySet().toArray()[i].toString());
 			org.bukkit.OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
-
+		
 			if (ServerUtils.hasPAPI()) {
 				content = PAPIHolders.getHolders(offlinePlayer, content);
 			}
-
-			String offlinePlayerName = offlinePlayer.getName();
+		
+			String defaultPlayerName = "Unknown";
+			String defaultJoinDate = "N/A";
+			String defaultTime = "0h 0m 0s";
+		
+			String offlinePlayerName = offlinePlayer.getName() != null ? offlinePlayer.getName() : defaultPlayerName;
 			String place = String.valueOf(i + 1);
 			String time = timeManager.buildFormat(map.get(offlinePlayer.getUniqueId().toString()) / 20);
-			String joinDate = statManager.getJoinDate(uuid);
-
+			String joinDate = statManager.getJoinDate(uuid) != null ? statManager.getJoinDate(uuid) : defaultJoinDate;
+		
 			if (time == null) {
-				continue;
+				time = defaultTime;
 			}
-
-			sender.sendMessage(ChatUtil.format(content
-					.replace("%player%", offlinePlayerName)
-					.replace("%place%", place)
-					.replace("%time%", time)
-					.replace("%joindate%", joinDate)));
-
+		
+			String formattedContent = content
+				.replace("%player%", offlinePlayerName)
+				.replace("%place%", place)
+				.replace("%time%", time)
+				.replace("%joindate%", joinDate);
+		
+			sender.sendMessage(ChatUtil.format(formattedContent));
+		
 			content = data.getConfig().getString("top-playtime.content");
 		}
 
