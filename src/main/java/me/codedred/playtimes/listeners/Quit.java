@@ -24,7 +24,10 @@ public class Quit implements Listener {
         StatManager
           .getInstance()
           .getStats()
-          .getOnlineStatistic(event.getPlayer(), StatisticType.PLAYTIME) /
+          .getPlayerStatistic(
+            event.getPlayer().getUniqueId(),
+            StatisticType.PLAYTIME
+          ) /
         20
       );
     }
