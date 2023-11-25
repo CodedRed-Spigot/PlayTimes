@@ -1,0 +1,14 @@
+database-settings:
+  enabled: false
+  type: 'mysql' # change to 'sqlite' for SQLite
+  host: 'localhost'
+  port: 3306
+  user: 'root'
+  password: 'password'
+  database: 'playtimes'
+  # IMPORTANT: 
+  # 'serverId' must be UNIQUE to the server! 
+  # If you have multiple servers running PlayTimes make sure each config has a unique 'serverId'
+  # The 'serverId' will also be used for the placeholders, %PlayTimes_db_serverId% for example: %PlayTimes_db_survival%
+  # The placeholder will return the time played in that server.
+  serverId: 'survival'

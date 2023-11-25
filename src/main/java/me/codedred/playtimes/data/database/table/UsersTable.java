@@ -1,7 +1,6 @@
 package me.codedred.playtimes.data.database.table;
 
 import me.codedred.playtimes.data.database.datasource.DataSource;
-import me.codedred.playtimes.models.User;
 import me.codedred.playtimes.utils.Async;
 import lombok.val;
 
@@ -34,13 +33,13 @@ public class UsersTable {
         }
     }
 
-    public void insertOrUpdate(User user, String serverId, long playtime) {
+    public void insertOrUpdate(String uuid, String serverId, long playtime) {
         Async.run(() -> {
             String query = String.format("INSERT INTO `%s` (`uniqueId`, `serverId`, `playtime`) VALUES (?, ?, ?) " +
                     "ON DUPLICATE KEY UPDATE `playtime` = `playtime` + ?", TABLE_NAME);
 
             try (val preparedStatement = dataSource.getConnection().prepareStatement(query)) {
-                preparedStatement.setString(1, user.getUniqueId().toString());
+                preparedStatement.setString(1, uuid);
                 preparedStatement.setString(2, serverId);
                 preparedStatement.setLong(3, playtime);
                 preparedStatement.setLong(4, playtime);
