@@ -2,6 +2,7 @@ package me.codedred.playtimes.listeners;
 
 import java.util.UUID;
 import me.codedred.playtimes.data.DataManager;
+import me.codedred.playtimes.data.database.manager.DatabaseManager;
 import me.codedred.playtimes.statistics.StatManager;
 import me.codedred.playtimes.statistics.StatisticType;
 import org.bukkit.configuration.ConfigurationSection;
@@ -13,7 +14,16 @@ public class Join implements Listener {
 
   @EventHandler
   public void onJoin(PlayerJoinEvent event) {
+    UUID uuid = event.getPlayer().getUniqueId();
     DataManager data = DataManager.getInstance();
+
+    // Database
+    if (data.getDBConfig().getBoolean("database-settings.enabled")) {
+      DatabaseManager dbManager = DatabaseManager.getInstance();
+      dbManager.retrievePlayTime(uuid);
+    }
+
+    // Leaderboard
     if (
       data
         .getData()
@@ -22,7 +32,6 @@ public class Join implements Listener {
       return;
     }
 
-    UUID uuid = event.getPlayer().getUniqueId();
     ConfigurationSection leaderboardSection = data
       .getData()
       .getConfigurationSection("leaderboard");
