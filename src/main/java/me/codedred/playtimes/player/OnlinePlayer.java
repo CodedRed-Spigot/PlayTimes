@@ -19,48 +19,83 @@ public class OnlinePlayer {
   private final List<String> message;
   private final DataManager dataManager;
   private final StatManager statManager;
-
   private final TimeManager timeManager;
 
+  /**
+   * Constructor for OnlinePlayer.
+   * Initializes the required managers and builds the message for the player.
+   *
+   * @param target The player for whom this OnlinePlayer instance is created.
+   */
   public OnlinePlayer(Player target) {
     this.target = target;
-    this.message = new ArrayList<>();
     this.dataManager = DataManager.getInstance();
     this.statManager = StatManager.getInstance();
     this.timeManager = TimeManager.getInstance();
-    buildMessage();
+    this.message = buildMessage();
   }
 
-  private void buildMessage() {
-    long rawTime;
-    if (statManager.isLegacy()) {
-      rawTime =
-        statManager.getPlayerStat(target.getUniqueId(), StatisticType.PLAYTIME);
-    } else {
-      rawTime =
-        statManager
-          .getStats()
-          .getOnlineStatistic(target, StatisticType.PLAYTIME);
-    }
+  /**
+   * Builds the message to be sent to the player.
+   * This involves fetching playtime statistics, formatting them,
+   * and applying any necessary replacements and PlaceholderAPI placeholders.
+   *
+   * @return A list of formatted strings representing the message.
+   */
+  private List<String> buildMessage() {
+    List<String> builtMessage = new ArrayList<>();
+    long rawTime = getPlaytimeStat();
 
-    message.addAll(dataManager.getConfig().getStringList("playtime.message"));
+    builtMessage.addAll(
+      dataManager.getConfig().getStringList("playtime.message")
+    );
 
     if (ServerUtils.hasPAPI()) {
-      List<String> papiMessage = new ArrayList<>();
-      for (String msg : message) {
-        papiMessage.add(PAPIHolders.getHolders(target, msg));
-      }
-      message.clear();
-      message.addAll(papiMessage);
+      builtMessage = applyPAPIPlaceholders(builtMessage);
     }
 
-    if (message.isEmpty()) {
-      return;
-    }
+    return processMessageWithReplacements(
+      builtMessage,
+      prepareReplacements(rawTime)
+    );
+  }
 
+  /**
+   * Retrieves the playtime statistic for the player.
+   *
+   * @return The raw playtime statistic.
+   */
+  private long getPlaytimeStat() {
+    return statManager.isLegacy()
+      ? statManager.getPlayerStat(target.getUniqueId(), StatisticType.PLAYTIME)
+      : statManager
+        .getStats()
+        .getOnlineStatistic(target, StatisticType.PLAYTIME);
+  }
+
+  /**
+   * Applies PlaceholderAPI placeholders to the message if available.
+   *
+   * @param message The message list to process.
+   * @return A list of messages with placeholders applied.
+   */
+  private List<String> applyPAPIPlaceholders(List<String> message) {
+    List<String> papiMessage = new ArrayList<>();
+    for (String msg : message) {
+      papiMessage.add(PAPIHolders.getHolders(target, msg));
+    }
+    return papiMessage;
+  }
+
+  /**
+   * Prepares a map of replacements to be used in the message.
+   *
+   * @param rawTime The playtime statistic to format and include in the replacements.
+   * @return A map of placeholder keys and their replacement values.
+   */
+  private Map<String, String> prepareReplacements(long rawTime) {
     Map<String, String> replacements = new HashMap<>();
-    String timeFormat = timeManager.buildFormat(rawTime / 20);
-    replacements.put("%time%", timeFormat);
+    replacements.put("%time%", timeManager.buildFormat(rawTime / 20));
     replacements.put("%player%", target.getName());
     replacements.put(
       "%timesjoined%",
@@ -75,9 +110,22 @@ public class OnlinePlayer {
       "%joindate%",
       statManager.getJoinDate(target.getUniqueId())
     );
+    return replacements;
+  }
 
-    Pattern pattern = Pattern.compile("%(\\w+)%");
+  /**
+   * Processes the message by applying the necessary replacements.
+   *
+   * @param message      The original message.
+   * @param replacements The map of placeholders and their replacements.
+   * @return A list of processed messages.
+   */
+  private List<String> processMessageWithReplacements(
+    List<String> message,
+    Map<String, String> replacements
+  ) {
     List<String> newMessage = new ArrayList<>();
+    Pattern pattern = Pattern.compile("%(\\w+)%");
     for (String msg : message) {
       Matcher matcher = pattern.matcher(msg);
       StringBuilder sb = new StringBuilder();
@@ -90,43 +138,21 @@ public class OnlinePlayer {
       matcher.appendTail(sb);
       newMessage.add(sb.toString());
     }
-    message.clear();
-    message.addAll(newMessage);
+    return newMessage;
   }
 
+  /**
+   * Sends the formatted message to the target player.
+   * This method determines the appropriate method to send the message
+   * (e.g., standard chat message or JSON formatted tellraw command).
+   */
   public void sendMessageToTarget() {
-    String playerName = target.getName();
     for (String msg : message) {
-      String formattedMsg = ChatUtil
-        .format(msg)
-        .replace(
-          "%time%",
-          timeManager.buildFormat(
-            StatManager
-              .getInstance()
-              .getStats()
-              .getOnlineStatistic(target, StatisticType.PLAYTIME) /
-            20
-          )
-        )
-        .replace("%player%", playerName)
-        .replace(
-          "%timesjoined%",
-          Long.toString(
-            StatManager
-              .getInstance()
-              .getPlayerStat(target.getUniqueId(), StatisticType.TIMES_JOINED)
-          )
-        )
-        .replace(
-          "%joindate%",
-          StatManager.getInstance().getJoinDate(target.getUniqueId())
-        );
-
+      String formattedMsg = ChatUtil.format(msg);
       if (formattedMsg.contains("{\"text\":")) {
         Bukkit.dispatchCommand(
           Bukkit.getConsoleSender(),
-          "tellraw " + target + " " + formattedMsg
+          "tellraw " + target.getName() + " " + formattedMsg
         );
       } else {
         target.sendMessage(formattedMsg);
