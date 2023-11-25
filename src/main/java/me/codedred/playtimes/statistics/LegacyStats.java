@@ -24,8 +24,7 @@ public class LegacyStats implements Stats {
 
         return switch (type) {
           case PLAYTIME -> jsonObject.get("stat.playOneMinute").getAsLong();
-          case LEAVE -> jsonObject.get("stat.leaveGame").getAsLong();
-          case REST -> jsonObject.get("stat.timeSinceDeath").getAsLong();
+          case TIMES_JOINED -> jsonObject.get("stat.leaveGame").getAsLong();
         };
       } catch (Exception e) {
         //e.printStackTrace();

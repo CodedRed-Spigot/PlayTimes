@@ -34,8 +34,9 @@ public class RisingStats implements Stats {
           case PLAYTIME -> passenger
             .get("minecraft:play_one_minute")
             .getAsLong();
-          case LEAVE -> passenger.get("minecraft:leave_game").getAsLong();
-          case REST -> passenger.get("minecraft:time_since_rest").getAsLong();
+          case TIMES_JOINED -> passenger
+            .get("minecraft:leave_game")
+            .getAsLong();
         };
       } catch (Exception e) {
         //e.printStackTrace();
@@ -48,8 +49,7 @@ public class RisingStats implements Stats {
   public long getOnlineStatistic(Player player, StatisticType type) {
     return switch (type) {
       case PLAYTIME -> player.getStatistic(Statistic.PLAY_ONE_MINUTE);
-      case REST -> player.getStatistic(Statistic.TIME_SINCE_REST);
-      case LEAVE -> player.getStatistic(Statistic.LEAVE_GAME) + 1;
+      case TIMES_JOINED -> player.getStatistic(Statistic.LEAVE_GAME) + 1;
     };
   }
 

@@ -52,7 +52,7 @@ public class Expansions extends PlaceholderExpansion {
         return Long.toString(
           StatManager
             .getInstance()
-            .getPlayerStat(player.getUniqueId(), StatisticType.LEAVE)
+            .getPlayerStat(player.getUniqueId(), StatisticType.TIMES_JOINED)
         );
       default:
         return handleLeaderboardIdentifier(identifier);
