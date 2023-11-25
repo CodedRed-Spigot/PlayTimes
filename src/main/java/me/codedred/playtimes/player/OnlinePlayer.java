@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import me.codedred.playtimes.data.DataManager;
+import me.codedred.playtimes.data.database.manager.DatabaseManager;
 import me.codedred.playtimes.statistics.StatManager;
 import me.codedred.playtimes.statistics.StatisticType;
 import me.codedred.playtimes.time.TimeManager;
@@ -110,6 +111,16 @@ public class OnlinePlayer {
       "%joindate%",
       statManager.getJoinDate(target.getUniqueId())
     );
+
+    if (
+      DataManager
+        .getInstance()
+        .getDBConfig()
+        .getBoolean("database-settings.enabled")
+    ) {
+      replacements.put("%PlayTimes_db_serverId%", "DYNAMIC");
+    }
+
     return replacements;
   }
 
@@ -125,19 +136,38 @@ public class OnlinePlayer {
     Map<String, String> replacements
   ) {
     List<String> newMessage = new ArrayList<>();
-    Pattern pattern = Pattern.compile("%(\\w+)%");
+    boolean dbEnabled = DataManager
+      .getInstance()
+      .getDBConfig()
+      .getBoolean("database-settings.enabled");
+
     for (String msg : message) {
-      Matcher matcher = pattern.matcher(msg);
-      StringBuilder sb = new StringBuilder();
+      Matcher matcher = Pattern.compile("%PlayTimes_db_(\\w+)%").matcher(msg);
+      StringBuffer sb = new StringBuffer();
+
       while (matcher.find()) {
-        String replacement = replacements.get(matcher.group(1));
-        if (replacement != null) {
-          matcher.appendReplacement(sb, replacement);
+        if (dbEnabled) {
+          String serverId = matcher.group(1);
+          Long playTime = DatabaseManager
+            .getInstance()
+            .getPlayTimeForServer(target.getUniqueId(), serverId);
+          matcher.appendReplacement(
+            sb,
+            playTime != null ? playTime.toString() : "0"
+          );
         }
       }
       matcher.appendTail(sb);
-      newMessage.add(sb.toString());
+      msg = sb.toString();
+
+      // Replace other static placeholders
+      for (Map.Entry<String, String> entry : replacements.entrySet()) {
+        msg = msg.replace(entry.getKey(), entry.getValue());
+      }
+
+      newMessage.add(msg);
     }
+
     return newMessage;
   }
 

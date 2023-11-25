@@ -1,7 +1,10 @@
 package me.codedred.playtimes.player;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import me.codedred.playtimes.data.DataManager;
+import me.codedred.playtimes.data.database.manager.DatabaseManager;
 import me.codedred.playtimes.statistics.StatManager;
 import me.codedred.playtimes.statistics.StatisticType;
 import me.codedred.playtimes.time.TimeManager;
@@ -99,6 +102,16 @@ public class OfflinePlayer {
       )
     );
     replacements.put("%joindate%", statManager.getJoinDate(target));
+
+    if (
+      DataManager
+        .getInstance()
+        .getDBConfig()
+        .getBoolean("database-settings.enabled")
+    ) {
+      replacements.put("%PlayTimes_db_serverId%", "DYNAMIC");
+    }
+
     return replacements;
   }
 
@@ -114,13 +127,39 @@ public class OfflinePlayer {
     Map<String, String> replacements
   ) {
     List<String> newMessage = new ArrayList<>();
-    replacements.forEach((placeholder, replacement) -> {
-      List<String> processedMessage = new ArrayList<>();
-      for (String msg : message) {
-        processedMessage.add(msg.replace(placeholder, replacement));
+    boolean dbEnabled = DataManager
+      .getInstance()
+      .getDBConfig()
+      .getBoolean("database-settings.enabled");
+
+    for (String msg : message) {
+      for (Map.Entry<String, String> entry : replacements.entrySet()) {
+        if (entry.getKey().equals("%PlayTimes_db_serverId%") && dbEnabled) {
+          // Handle dynamic replacement
+          Pattern pattern = Pattern.compile("%PlayTimes_db_(\\w+)%");
+          Matcher matcher = pattern.matcher(msg);
+          StringBuffer sb = new StringBuffer();
+
+          while (matcher.find()) {
+            String serverId = matcher.group(1);
+            Long playTime = DatabaseManager
+              .getInstance()
+              .getPlayTimeForServer(target, serverId);
+            matcher.appendReplacement(
+              sb,
+              playTime != null ? playTime.toString() : "0"
+            );
+          }
+          matcher.appendTail(sb);
+          msg = sb.toString();
+        } else {
+          // Replace static placeholders
+          msg = msg.replace(entry.getKey(), entry.getValue());
+        }
       }
-      newMessage.addAll(processedMessage);
-    });
+      newMessage.add(msg);
+    }
+
     return newMessage;
   }
 
