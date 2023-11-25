@@ -1,5 +1,6 @@
 package me.codedred.playtimes.data.database.manager;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -16,14 +17,12 @@ public class DatabaseManager {
 
   private static DatabaseManager instance;
 
-  private final PlayTimes plugin;
   private DataSource dataSource;
   private UsersTable usersTable;
 
   private Map<UUID, Map<String, Long>> userPlaytimes = new HashMap<>();
 
   private DatabaseManager() {
-    this.plugin = PlayTimes.getPlugin(PlayTimes.class);
     setupDataSource();
   }
 
@@ -42,10 +41,10 @@ public class DatabaseManager {
 
     switch (type.toLowerCase()) {
       case "mysql":
-        this.dataSource = new MySQL(plugin);
+        this.dataSource = new MySQL(PlayTimes.getPlugin(PlayTimes.class));
         break;
       case "sqlite":
-        this.dataSource = new SQLite(plugin);
+        this.dataSource = new SQLite(PlayTimes.getPlugin(PlayTimes.class));
         break;
       default:
         throw new IllegalStateException(
@@ -57,9 +56,14 @@ public class DatabaseManager {
   }
 
   public void load() {
-    if (dataSource.getConnection() != null) {
-      this.usersTable = new UsersTable(dataSource);
-      this.usersTable.createTable();
+    try {
+      if (dataSource.getConnection() != null) {
+        this.usersTable = new UsersTable(dataSource);
+        this.usersTable.createTable();
+      }
+    } catch (SQLException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
   }
 

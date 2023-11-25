@@ -1,11 +1,14 @@
 package me.codedred.playtimes;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Objects;
 import me.codedred.playtimes.commands.Time;
 import me.codedred.playtimes.commands.TopTime;
 import me.codedred.playtimes.commands.Uptime;
 import me.codedred.playtimes.commands.completer.TimeTabCompleter;
+import me.codedred.playtimes.data.DataManager;
+import me.codedred.playtimes.data.database.manager.DatabaseManager;
 import me.codedred.playtimes.listeners.Join;
 import me.codedred.playtimes.listeners.Quit;
 import me.codedred.playtimes.server.ServerManager;
@@ -21,10 +24,14 @@ public class PlayTimes extends JavaPlugin {
   @Override
   public void onEnable() {
     checkForUpdate();
+    DataManager dataManager = DataManager.getInstance();
+    dataManager.reloadAll();
 
     ServerManager.getInstance().register();
     StatManager.getInstance().registerStatistics();
     TimeManager.getInstance().registerTimings();
+
+    loadDatabase();
 
     if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
       Expansions exp = new Expansions();
@@ -60,6 +67,32 @@ public class PlayTimes extends JavaPlugin {
     Objects
       .requireNonNull(this.getCommand("pt"))
       .setTabCompleter(new TimeTabCompleter());
+  }
+
+  public void loadDatabase() {
+    if (
+      DataManager
+        .getInstance()
+        .getDBConfig()
+        .getBoolean("database-settings.enabled")
+    ) {
+      getLogger().info("[PlayTimes] Connecting to Database...");
+      DatabaseManager databaseManager = DatabaseManager.getInstance();
+      try {
+        if (databaseManager.getDataSource().getConnection() != null) {
+          try {
+            databaseManager.getDataSource().closeConnection();
+          } catch (Exception e) {
+            getLogger()
+              .warning("Error while trying to close Database connection..");
+          }
+        }
+      } catch (SQLException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      databaseManager.load();
+    }
   }
 
   private void checkForUpdate() {

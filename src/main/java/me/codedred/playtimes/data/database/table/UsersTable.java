@@ -1,17 +1,18 @@
 package me.codedred.playtimes.data.database.table;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import lombok.val;
 import me.codedred.playtimes.data.database.datasource.DataSource;
 import me.codedred.playtimes.utils.Async;
 
 public class UsersTable {
 
   private static final String TABLE_NAME = "playtimes";
-
   private final DataSource dataSource;
 
   public UsersTable(DataSource dataSource) {
@@ -29,13 +30,14 @@ public class UsersTable {
     );
 
     try (
-      val preparedStatement = dataSource
-        .getConnection()
-        .prepareStatement(createTableSql)
+      Connection conn = dataSource.getConnection();
+      PreparedStatement preparedStatement = conn.prepareStatement(
+        createTableSql
+      )
     ) {
       preparedStatement.executeUpdate();
-    } catch (SQLException exception) {
-      exception.printStackTrace();
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
   }
 
@@ -48,9 +50,8 @@ public class UsersTable {
       );
 
       try (
-        val preparedStatement = dataSource
-          .getConnection()
-          .prepareStatement(query)
+        Connection conn = dataSource.getConnection();
+        PreparedStatement preparedStatement = conn.prepareStatement(query)
       ) {
         preparedStatement.setString(1, uuid);
         preparedStatement.setString(2, serverId);
@@ -58,8 +59,8 @@ public class UsersTable {
         preparedStatement.setLong(4, playtime);
 
         preparedStatement.executeUpdate();
-      } catch (SQLException exception) {
-        exception.printStackTrace();
+      } catch (SQLException e) {
+        e.printStackTrace();
       }
     });
   }
@@ -68,23 +69,22 @@ public class UsersTable {
     Map<String, Long> playtimes = new HashMap<>();
 
     try (
-      val preparedStatement = dataSource
-        .getConnection()
-        .prepareStatement(
-          String.format("SELECT * FROM `%s` WHERE `uniqueId` = ?", TABLE_NAME)
-        )
+      Connection conn = dataSource.getConnection();
+      PreparedStatement preparedStatement = conn.prepareStatement(
+        String.format("SELECT * FROM `%s` WHERE `uniqueId` = ?", TABLE_NAME)
+      )
     ) {
       preparedStatement.setString(1, uuid.toString());
 
-      try (val resultSet = preparedStatement.executeQuery()) {
+      try (ResultSet resultSet = preparedStatement.executeQuery()) {
         while (resultSet.next()) {
           String serverId = resultSet.getString("serverId");
           long playtime = resultSet.getLong("playtime");
           playtimes.put(serverId, playtime);
         }
       }
-    } catch (SQLException exception) {
-      exception.printStackTrace();
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
 
     return playtimes;

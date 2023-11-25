@@ -13,7 +13,7 @@ public class SQLite implements DataSource {
   private Connection connection;
 
   public SQLite(PlayTimes plugin) {
-    val config = DataManager.getInstance().getConfig();
+    val config = DataManager.getInstance().getDBConfig();
     val database = config.getString("database");
 
     try {
