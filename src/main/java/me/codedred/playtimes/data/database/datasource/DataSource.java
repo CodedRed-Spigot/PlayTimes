@@ -4,9 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public interface DataSource {
+  Connection getConnection();
 
-    Connection getConnection();
-
-    void closeConnection() throws SQLException;
-
+  void closeConnection() throws SQLException;
 }

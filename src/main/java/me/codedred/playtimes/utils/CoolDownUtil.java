@@ -5,33 +5,31 @@ import java.util.UUID;
 
 public class CoolDownUtil {
 
-	private CoolDownUtil() {
-		throw new IllegalStateException("Utility Class");
-	}
+  private CoolDownUtil() {
+    throw new IllegalStateException("Utility Class");
+  }
 
-	private static final HashMap<UUID, Long> cooldowns = new HashMap<>();
-	
-	public static void remove(UUID uuid) {
-		cooldowns.remove(uuid);
-	}
-	
-	
-	public static void add(UUID uuid, long time) {
-		cooldowns.put(uuid, time);
-	}
-	
-	
-	public static int left(UUID uuid) {
-		return (int) (cooldowns.get(uuid)/1000 - (System.currentTimeMillis()/1000));
-	}
-	
-	
-	public static boolean contains(UUID uuid) {
-		if (cooldowns.containsKey(uuid)) {
-			if (cooldowns.get(uuid) > System.currentTimeMillis())
-				return true;
-			remove(uuid);
-		}
-		return false;
-	}
+  private static final HashMap<UUID, Long> cooldowns = new HashMap<>();
+
+  public static void remove(UUID uuid) {
+    cooldowns.remove(uuid);
+  }
+
+  public static void add(UUID uuid, long time) {
+    cooldowns.put(uuid, time);
+  }
+
+  public static int left(UUID uuid) {
+    return (int) (
+      cooldowns.get(uuid) / 1000 - (System.currentTimeMillis() / 1000)
+    );
+  }
+
+  public static boolean contains(UUID uuid) {
+    if (cooldowns.containsKey(uuid)) {
+      if (cooldowns.get(uuid) > System.currentTimeMillis()) return true;
+      remove(uuid);
+    }
+    return false;
+  }
 }
