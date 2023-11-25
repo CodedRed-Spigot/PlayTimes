@@ -24,10 +24,12 @@ public class MySQL implements DataSource {
     this.user = config.getString("user");
     this.password = config.getString("password");
     val database = config.getString("database");
+    val SSL = config.getBoolean("useSSL");
 
     this.connectionUrl =
       String.format(
-        "jdbc:mysql://%s:%s/%s?autoReconnect=true&useSSL=false",
+        "jdbc:mysql://%s:%s/%s?autoReconnect=true&useSSL=",
+        SSL,
         host,
         port,
         database
