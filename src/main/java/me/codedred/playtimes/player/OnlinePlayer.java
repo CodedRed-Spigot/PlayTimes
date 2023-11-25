@@ -153,7 +153,9 @@ public class OnlinePlayer {
             .getPlayTimeForServer(target.getUniqueId(), serverId);
           matcher.appendReplacement(
             sb,
-            playTime != null ? playTime.toString() : "0"
+            playTime != null
+              ? timeManager.buildFormat(playTime)
+              : timeManager.buildFormat(0)
           );
         }
       }

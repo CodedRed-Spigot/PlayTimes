@@ -131,6 +131,7 @@ public class OfflinePlayer {
       .getInstance()
       .getDBConfig()
       .getBoolean("database-settings.enabled");
+    TimeManager timeManager = TimeManager.getInstance();
 
     for (String msg : message) {
       for (Map.Entry<String, String> entry : replacements.entrySet()) {
@@ -147,7 +148,9 @@ public class OfflinePlayer {
               .getPlayTimeForServer(target, serverId);
             matcher.appendReplacement(
               sb,
-              playTime != null ? playTime.toString() : "0"
+              playTime != null
+                ? timeManager.buildFormat(playTime)
+                : timeManager.buildFormat(0)
             );
           }
           matcher.appendTail(sb);
