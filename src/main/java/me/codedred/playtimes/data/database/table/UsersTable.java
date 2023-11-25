@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -25,6 +26,7 @@ public class UsersTable {
       "`uniqueId` VARCHAR(36) NOT NULL," +
       "`serverId` VARCHAR(255) NOT NULL," +
       "`playtime` BIGINT NOT NULL DEFAULT 0," +
+      "`lastUpdated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP," +
       "PRIMARY KEY (`uniqueId`, `serverId`))",
       TABLE_NAME
     );
@@ -88,5 +90,32 @@ public class UsersTable {
     }
 
     return playtimes;
+  }
+
+  public Map<String, Timestamp> getLastUpdatedTimesByUuid(UUID uuid) {
+    Map<String, Timestamp> lastUpdatedTimes = new HashMap<>();
+
+    String query = String.format(
+      "SELECT `serverId`, `lastUpdated` FROM `%s` WHERE `uniqueId` = ?",
+      TABLE_NAME
+    );
+    try (
+      Connection conn = dataSource.getConnection();
+      PreparedStatement preparedStatement = conn.prepareStatement(query)
+    ) {
+      preparedStatement.setString(1, uuid.toString());
+
+      try (ResultSet resultSet = preparedStatement.executeQuery()) {
+        while (resultSet.next()) {
+          String serverId = resultSet.getString("serverId");
+          Timestamp lastUpdated = resultSet.getTimestamp("lastUpdated");
+          lastUpdatedTimes.put(serverId, lastUpdated);
+        }
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+    return lastUpdatedTimes;
   }
 }
