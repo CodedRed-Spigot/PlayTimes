@@ -36,7 +36,7 @@ public class PlayTimes extends JavaPlugin {
     if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
       Expansions exp = new Expansions();
       exp.register();
-      getLogger().info("[PlayTimes] PlaceholdersAPI Hooked!");
+      getLogger().info("PlaceholdersAPI Hooked!");
     }
 
     registerEvents();
@@ -44,7 +44,7 @@ public class PlayTimes extends JavaPlugin {
 
     @SuppressWarnings("unused")
     Metrics metrics = new Metrics(this, 5289);
-    getLogger().info("[PlayTimes] Successfully loaded.");
+    getLogger().info("Successfully loaded.");
   }
 
   @Override
@@ -76,7 +76,7 @@ public class PlayTimes extends JavaPlugin {
         .getDBConfig()
         .getBoolean("database-settings.enabled")
     ) {
-      getLogger().info("[PlayTimes] Connecting to Database...");
+      getLogger().info("Connecting to Database...");
       DatabaseManager databaseManager = DatabaseManager.getInstance();
       try {
         if (databaseManager.getDataSource().getConnection() != null) {

@@ -28,8 +28,7 @@ public class MySQL implements DataSource {
 
     this.connectionUrl =
       String.format(
-        "jdbc:mysql://%s:%s/%s?autoReconnect=true&useSSL=",
-        SSL,
+        "jdbc:mysql://%s:%s/%s?autoReconnect=true&useSSL=" + SSL,
         host,
         port,
         database
@@ -37,6 +36,7 @@ public class MySQL implements DataSource {
 
     try {
       Class.forName("com.mysql.cj.jdbc.Driver");
+      plugin.getLogger().info("Successfully connected to database.");
     } catch (ClassNotFoundException e) {
       plugin
         .getLogger()

@@ -17,6 +17,12 @@ public class Join implements Listener {
     UUID uuid = event.getPlayer().getUniqueId();
     DataManager data = DataManager.getInstance();
 
+    // Database
+    if (data.getDBConfig().getBoolean("database-settings.enabled")) {
+      DatabaseManager dbManager = DatabaseManager.getInstance();
+      dbManager.retrievePlayTime(uuid);
+    }
+
     // Leaderboard
     if (
       data
@@ -44,11 +50,5 @@ public class Join implements Listener {
     leaderboardSection.set(uuid.toString(), time);
 
     data.saveData();
-
-    // Database
-    if (data.getDBConfig().getBoolean("database-settings.enabled")) {
-      DatabaseManager dbManager = DatabaseManager.getInstance();
-      dbManager.retrievePlayTime(uuid);
-    }
   }
 }

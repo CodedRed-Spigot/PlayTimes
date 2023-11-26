@@ -96,7 +96,10 @@ public class DatabaseManager {
 
   // Given the serverId returns the playtime from that server
   public Long getPlayTimeForServer(UUID uuid, String server) {
-    if (userPlaytimes.get(uuid).containsKey(server)) {
+    if (
+      userPlaytimes.containsKey(uuid) &&
+      userPlaytimes.get(uuid).containsKey(server)
+    ) {
       return userPlaytimes.get(uuid).get(server);
     }
     return null;
