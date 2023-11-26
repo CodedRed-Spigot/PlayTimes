@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.UUID;
 import me.codedred.playtimes.data.database.datasource.DataSource;
 import me.codedred.playtimes.utils.Async;
+import org.bukkit.Bukkit;
 
 public class UsersTable {
 
@@ -117,5 +118,43 @@ public class UsersTable {
     }
 
     return lastUpdatedTimes;
+  }
+
+  /**
+   * Deletes rows from the database where the last update was more than the specified number of months ago.
+   *
+   * @param serverId The server ID to match rows.
+   * @param months   The number of months to check for old data.
+   */
+  public void purgeOldPlaytimes(String serverId, int months) {
+    Async.run(() -> {
+      String query = String.format(
+        "DELETE FROM `%s` WHERE `serverId` = ? AND `lastUpdated` < (NOW() - INTERVAL ? MONTH)",
+        TABLE_NAME
+      );
+
+      try (
+        Connection conn = dataSource.getConnection();
+        PreparedStatement preparedStatement = conn.prepareStatement(query)
+      ) {
+        preparedStatement.setString(1, serverId);
+        preparedStatement.setInt(2, months);
+
+        int deletedRows = preparedStatement.executeUpdate();
+        Bukkit
+          .getLogger()
+          .info(
+            "[PlayTimes] Deleted " +
+            deletedRows +
+            " rows for serverId " +
+            serverId +
+            " older than " +
+            months +
+            " months."
+          );
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    });
   }
 }

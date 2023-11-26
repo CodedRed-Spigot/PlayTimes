@@ -11,6 +11,7 @@ import me.codedred.playtimes.data.database.datasource.DataSource;
 import me.codedred.playtimes.data.database.datasource.impl.MySQL;
 import me.codedred.playtimes.data.database.datasource.impl.SQLite;
 import me.codedred.playtimes.data.database.table.UsersTable;
+import org.bukkit.Bukkit;
 
 @Getter
 public class DatabaseManager {
@@ -117,5 +118,31 @@ public class DatabaseManager {
     }
 
     return playtime;
+  }
+
+  public void purgeOldPlaytimeData() {
+    Bukkit
+      .getLogger()
+      .info("[PlayTimes] Initiating purge of outdated playtime data...");
+
+    String serverId = DataManager
+      .getInstance()
+      .getDBConfig()
+      .getString("database-settings.serverId");
+    int months = DataManager
+      .getInstance()
+      .getDBConfig()
+      .getInt("purge-database.months", 12);
+
+    Bukkit
+      .getLogger()
+      .info(
+        String.format(
+          "[PlayTimes] Purging playtime data for server ID '%s' that is older than %d months.",
+          serverId,
+          months
+        )
+      );
+    this.usersTable.purgeOldPlaytimes(serverId, months);
   }
 }

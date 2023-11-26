@@ -8,14 +8,14 @@ database-settings:
   password: "password"
   useSSL: false
   # IMPORTANT:
-  # 'serverId' must be UNIQUE to the server!
-  # If you have multiple servers running PlayTimes make sure each config has a unique 'serverId'
-  # The 'serverId' will also be used for the placeholders, %PlayTimes_db_serverId% for example: %PlayTimes_db_survival%
-  # The placeholder will return the time played in that server.
+  # 'serverId' must be UNIQUE to each server!
+  # If you have multiple servers running PlayTimes, ensure each config has a unique 'serverId'.
+  # The 'serverId' will also be used for placeholders, like %PlayTimes_db_serverId% (e.g., %PlayTimes_db_survival%).
+  # The placeholder will return the playtime on that specific server.
   serverId: "survival"
 
-# If enabled, upon starting your server if will purge all user info that is older than x months.
-# NOTE: this will only purge data for the specific serverId. Not data for all servers!
+# If enabled, upon starting your server it will purge all user info that is older than x months.
+# NOTE: This will only purge data for the specific 'serverId', not for all servers!
 purge-database:
   enabled: false
   months: 12

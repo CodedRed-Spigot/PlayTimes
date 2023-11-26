@@ -78,6 +78,7 @@ public class PlayTimes extends JavaPlugin {
     ) {
       getLogger().info("Connecting to Database...");
       DatabaseManager databaseManager = DatabaseManager.getInstance();
+
       try {
         if (databaseManager.getDataSource().getConnection() != null) {
           try {
@@ -86,12 +87,19 @@ public class PlayTimes extends JavaPlugin {
             getLogger()
               .warning("Error while trying to close Database connection..");
           }
+          databaseManager.load();
+
+          if (
+            DataManager
+              .getInstance()
+              .getDBConfig()
+              .getBoolean("purge-database.enabled")
+          ) databaseManager.purgeOldPlaytimeData();
         }
       } catch (SQLException e) {
-        // TODO Auto-generated catch block
+        getLogger().severe("Error loading the database: " + e.getMessage());
         e.printStackTrace();
       }
-      databaseManager.load();
     }
   }
 
