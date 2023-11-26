@@ -80,7 +80,7 @@ public class DatabaseManager {
     userPlaytimes.put(uuid, timeMap);
   }
 
-  // Called onPlayerLeave
+  // Called onPlayerQuit
   public void updatePlaytime(UUID uuid, Long playtime) {
     getUsersTable()
       .insertOrUpdate(

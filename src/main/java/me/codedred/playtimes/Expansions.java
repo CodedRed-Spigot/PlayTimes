@@ -2,6 +2,7 @@ package me.codedred.playtimes;
 
 import java.util.*;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import me.codedred.playtimes.data.database.manager.DatabaseManager;
 import me.codedred.playtimes.models.Leaderboard;
 import me.codedred.playtimes.statistics.StatManager;
 import me.codedred.playtimes.statistics.StatisticType;
@@ -54,9 +55,34 @@ public class Expansions extends PlaceholderExpansion {
             .getInstance()
             .getPlayerStat(player.getUniqueId(), StatisticType.TIMES_JOINED)
         );
+      // New cases for %PlayTimes_db_serverId% and %PlayTimes_total%
+      case "total":
+        return getTotalPlaytime(player);
       default:
+        if (identifier.startsWith("db_")) {
+          return getServerSpecificPlaytime(player, identifier.substring(3));
+        }
         return handleLeaderboardIdentifier(identifier);
     }
+  }
+
+  private String getTotalPlaytime(OfflinePlayer player) {
+    TimeManager timeManager = TimeManager.getInstance();
+    Long totalPlaytime = DatabaseManager
+      .getInstance()
+      .getTotalPlayTime(player.getUniqueId());
+    return timeManager.buildFormat(totalPlaytime != null ? totalPlaytime : 0);
+  }
+
+  private String getServerSpecificPlaytime(
+    OfflinePlayer player,
+    String serverId
+  ) {
+    TimeManager timeManager = TimeManager.getInstance();
+    Long playtime = DatabaseManager
+      .getInstance()
+      .getPlayTimeForServer(player.getUniqueId(), serverId);
+    return timeManager.buildFormat(playtime != null ? playtime : 0);
   }
 
   private String getPlayerPlayTime(OfflinePlayer player) {
