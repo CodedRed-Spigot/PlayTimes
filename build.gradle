@@ -1,6 +1,5 @@
 plugins {
     id 'java'
-    id 'dev.codedred.craftengine' version '1.0.0'
 }
 
 
