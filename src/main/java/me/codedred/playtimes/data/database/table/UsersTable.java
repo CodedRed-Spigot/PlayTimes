@@ -47,7 +47,7 @@ public class UsersTable {
     Async.run(() -> {
       String query = String.format(
         "INSERT INTO `%s` (`uniqueId`, `serverId`, `playtime`) VALUES (?, ?, ?) " +
-        "ON DUPLICATE KEY UPDATE `playtime` = `playtime` + ?",
+        "ON DUPLICATE KEY UPDATE `playtime` = ?",
         TABLE_NAME
       );
 
