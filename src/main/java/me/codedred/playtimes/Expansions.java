@@ -2,6 +2,7 @@ package me.codedred.playtimes;
 
 import java.util.*;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import me.codedred.playtimes.data.DataManager;
 import me.codedred.playtimes.data.database.manager.DatabaseManager;
 import me.codedred.playtimes.models.Leaderboard;
 import me.codedred.playtimes.statistics.StatManager;
@@ -67,22 +68,38 @@ public class Expansions extends PlaceholderExpansion {
   }
 
   private String getTotalPlaytime(OfflinePlayer player) {
-    TimeManager timeManager = TimeManager.getInstance();
-    Long totalPlaytime = DatabaseManager
-      .getInstance()
-      .getTotalPlayTime(player.getUniqueId());
-    return timeManager.buildFormat(totalPlaytime != null ? totalPlaytime : 0);
+    if (
+      DataManager
+        .getInstance()
+        .getDBConfig()
+        .getBoolean("database-settings.enabled")
+    ) {
+      TimeManager timeManager = TimeManager.getInstance();
+      Long totalPlaytime = DatabaseManager
+        .getInstance()
+        .getTotalPlayTime(player.getUniqueId());
+      return timeManager.buildFormat(totalPlaytime != null ? totalPlaytime : 0);
+    }
+    return "N/A";
   }
 
   private String getServerSpecificPlaytime(
     OfflinePlayer player,
     String serverId
   ) {
-    TimeManager timeManager = TimeManager.getInstance();
-    Long playtime = DatabaseManager
-      .getInstance()
-      .getPlayTimeForServer(player.getUniqueId(), serverId);
-    return timeManager.buildFormat(playtime != null ? playtime : 0);
+    if (
+      DataManager
+        .getInstance()
+        .getDBConfig()
+        .getBoolean("database-settings.enabled")
+    ) {
+      TimeManager timeManager = TimeManager.getInstance();
+      Long playtime = DatabaseManager
+        .getInstance()
+        .getPlayTimeForServer(player.getUniqueId(), serverId);
+      return timeManager.buildFormat(playtime != null ? playtime : 0);
+    }
+    return "N/A";
   }
 
   private String getPlayerPlayTime(OfflinePlayer player) {
