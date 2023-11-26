@@ -110,6 +110,12 @@ public class OfflinePlayer {
         .getBoolean("database-settings.enabled")
     ) {
       replacements.put("%PlayTimes_db_serverId%", "DYNAMIC");
+      replacements.put(
+        "%PlayTimes_total%",
+        timeManager.buildFormat(
+          DatabaseManager.getInstance().getTotalPlayTime(target)
+        )
+      );
     }
 
     return replacements;

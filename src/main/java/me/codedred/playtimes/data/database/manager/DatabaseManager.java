@@ -102,7 +102,7 @@ public class DatabaseManager {
     return null;
   }
 
-  // %PlayTimes_total_playtime%
+  // %PlayTimes_total%
   public Long getTotalPlayTime(UUID uuid) {
     Long playtime = 0L;
     Map<String, Long> userPlaytimeMap = userPlaytimes.get(uuid);
