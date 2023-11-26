@@ -23,8 +23,7 @@ public class Quit implements Listener {
         uuid,
         StatManager
           .getInstance()
-          .getStats()
-          .getPlayerStatistic(
+          .getPlayerStat(
             event.getPlayer().getUniqueId(),
             StatisticType.PLAYTIME
           ) /

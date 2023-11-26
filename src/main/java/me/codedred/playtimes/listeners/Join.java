@@ -1,10 +1,12 @@
 package me.codedred.playtimes.listeners;
 
 import java.util.UUID;
+import me.codedred.playtimes.PlayTimes;
 import me.codedred.playtimes.data.DataManager;
 import me.codedred.playtimes.data.database.manager.DatabaseManager;
 import me.codedred.playtimes.statistics.StatManager;
 import me.codedred.playtimes.statistics.StatisticType;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,6 +23,18 @@ public class Join implements Listener {
     if (data.getDBConfig().getBoolean("database-settings.enabled")) {
       DatabaseManager dbManager = DatabaseManager.getInstance();
       dbManager.retrievePlayTime(uuid);
+
+      // hacky bug fix that will update data again if database query was too slow.
+      // this bug only arises when switching servers super fast!
+      Bukkit
+        .getScheduler()
+        .runTaskLaterAsynchronously(
+          PlayTimes.getPlugin(PlayTimes.class),
+          () -> {
+            dbManager.retrievePlayTime(uuid);
+          },
+          20L * 30
+        );
     }
 
     // Leaderboard
