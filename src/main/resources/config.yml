@@ -1,21 +1,21 @@
 # PlayTimes by CodedRed
-# For support please ask here: https://discord.gg/7A9UA2n
+# For support please ask here: https://github.com/CodedRed-Spigot/PlayTimes/issues
 
 # Prefix will show before 'player-not-found' & 'player-never-joined' messages
 prefix: "&7[&b&lPlayTimes&7]"
 
-
-  # Placeholders API info
-  # Only enable this if you are using PAPI holders in PlayTimes
-  # If you want to use PlayTimes placeholders in other plugins...
-  # Just download PAPI and it will *automatically* register
+# Placeholders API info
+# Only enable this if you are using PAPI holders in PlayTimes
+# If you want to use PlayTimes placeholders in other plugins...
+# Just download PAPI and it will *automatically* register
 use-papi-placeholders: false
 
-  # PlayTimes format & message settings
-  # The name refers to the format. See spigot plugin page for format examples
+# PlayTimes format & message settings
+# The name refers to the format. See spigot plugin page for format examples
 playtime:
   ## Built-in Placeholders:
   ## %player% %time% %timesjoined% %joindate%
+  ## Database placeholders info found here: https://github.com/CodedRed-Spigot/PlayTimes/wiki/Bungee-Support
   ## You may also use PAPI Placeholders
   message:
     - "&b&m=======&b&l[%player%]&b&m======="
@@ -47,10 +47,10 @@ uptime:
     - "&aServer Uptime:&f %serveruptime%"
     - "&b&m============================"
 
-  # /toppt command info
-  ## Built-in Placeholders:
-  ## %player% %place% %time% %joindate%
-  ## You may also use PAPI placeholders
+# /toppt command info
+## Built-in Placeholders:
+## %player% %place% %time% %joindate%
+## You may also use PAPI placeholders
 top-playtime:
   header: "&b******&9[&3&lPlayTime Leaderboards&9]&b*****"
   content: "&5%place%) &9&l%player% &9&o- %time%"
@@ -58,10 +58,9 @@ top-playtime:
   enable-cooldown: true
   cooldown-seconds: 60
 
-
-  # date-format can be changed to your liking.
-  # For more placeholders look here: https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
-  # This is the join date format.
+# date-format can be changed to your liking.
+# For more placeholders look here: https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
+# This is the join date format.
 date-format: "MM/dd/yyyy"
 
 # Built in messages, may change to your liking :D
@@ -70,3 +69,16 @@ messages:
   player-not-found: "&cPlayer not found."
   player-never-joined: "&cPlayer has never joined the server!"
   cooldown: "&cYou cannot use this command for %timeleft% seconds!"
+
+# TODO: Decide if I will be added this or not:
+# This is an optional command for you to allow you to display more information.
+# permission: pt.more & pt.more.others
+playtime-more-command:
+  enabled: false
+  command: "more" # the actual command usage: /pt more
+  message:
+    - "&b&m=======&b&l[%player%'s Info']&b&m======="
+    - "&aCreative PlayTime:&f %PlayTimes_db_creative%"
+    - "&aSurvival PlayTime:&f %PlayTimes_db_survival%"
+    - "&2Total:&f %PlayTimes_total%"
+    - "&b&m============================"
