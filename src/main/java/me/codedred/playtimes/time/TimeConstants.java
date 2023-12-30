@@ -22,7 +22,7 @@ public class TimeConstants {
     hours = data.getString("playtime.name.hours");
     day = data.getString("playtime.name.day");
     days = data.getString("playtime.name.days");
-    rounded = data.getBoolean("playtime.name.rounded");
+    rounded = data.getBoolean("playtime.round-numbers");
   }
 
   public static String getSecond() {
