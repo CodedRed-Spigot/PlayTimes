@@ -1,27 +1,26 @@
 # PlayTimes by CodedRed
-# For support please ask here: https://github.com/CodedRed-Spigot/PlayTimes/issues
+# For assistance, please submit inquiries here: https://github.com/CodedRed-Spigot/PlayTimes/issues
 
-# Prefix will show before 'player-not-found' & 'player-never-joined' messages
+# The 'prefix' configures the introductory text for 'player-not-found' and 'player-never-joined' notifications.
 prefix: "&7[&b&lPlayTimes&7]"
 
-# Placeholders API info
-# Only enable this if you are using PAPI holders in PlayTimes
-# If you want to use PlayTimes placeholders in other plugins...
-# Just download PAPI and it will *automatically* register
+# Placeholder API Configuration
+# Activate this only if using PlaceholderAPI with PlayTimes.
+# To integrate PlayTimes placeholders into other plugins, simply install PlaceholderAPI; integration occurs seamlessly.
 use-papi-placeholders: false
 
-# PlayTimes format & message settings
-# The name refers to the format. See spigot plugin page for format examples
+# PlayTimes Formatting and Message Customization
+# 'playtime.name' defines time unit labels. For formatting guidance, refer to our Spigot plugin page.
 playtime:
-  ## Built-in Placeholders:
-  ## %player% %time% %timesjoined% %joindate%
-  ## Database placeholders info found here: https://github.com/CodedRed-Spigot/PlayTimes/wiki/Bungee-Support
-  ## You may also use PAPI Placeholders
+  ## Default Placeholders:
+  ## %player%, %time%, %timesjoined%, %joindate%
+  ## For database placeholders, visit: https://github.com/CodedRed-Spigot/PlayTimes/wiki/Bungee-Support
+  ## PlaceholderAPI placeholders are also compatible.
   message:
     - "&b&m=======&b&l[%player%]&b&m======="
     - "&aPlaytime:&f %time%"
-    - "&aTimes joined:&f %timesjoined%"
-    - "&aJoined Date:&f %joindate%"
+    - "&aTimes Joined:&f %timesjoined%"
+    - "&aJoin Date:&f %joindate%"
     - "&b&m============================"
   name:
     second: "s"
@@ -33,24 +32,27 @@ playtime:
     hours: "hrs "
     days: "days "
 
-  ## only-hours - when true it will display playtime in hours (When true this will also disable show-seconds/days setting)
-  ## show-seconds - when true it will display seconds
-  ## show-days - when true it will display days
+  ## 'only-hours' - Displays playtime solely in hours. Activating this overrides 'show-seconds' and 'show-days'.
+  ## 'show-seconds' - Includes seconds in the display.
+  ## 'show-days' - Includes days in the display.
   only-hours: false
   show-seconds: true
   show-days: true
 
-# /Uptime command info - only placeholder is %serveruptime%
+  # 'round-numbers' - Rounds off the playtime to whole numbers when 'only-hours' is true.
+  round-numbers: true
+
+# /Uptime Command Configuration - Use '%serveruptime%' to display server uptime.
 uptime:
   message:
     - "&b&m============================"
     - "&aServer Uptime:&f %serveruptime%"
     - "&b&m============================"
 
-# /toppt command info
-## Built-in Placeholders:
-## %player% %place% %time% %joindate%
-## You may also use PAPI placeholders
+# /toppt Command Settings
+## Standard Placeholders:
+## %player%, %place%, %time%, %joindate%
+## PlaceholderAPI placeholders are also supported.
 top-playtime:
   header: "&b******&9[&3&lPlayTime Leaderboards&9]&b*****"
   content: "&5%place%) &9&l%player% &9&o- %time%"
@@ -58,27 +60,13 @@ top-playtime:
   enable-cooldown: true
   cooldown-seconds: 60
 
-# date-format can be changed to your liking.
-# For more placeholders look here: https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
-# This is the join date format.
+# 'date-format' - Customize this to change the format of join dates.
+# Explore more formatting options at: https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
 date-format: "MM/dd/yyyy"
 
-# Built in messages, may change to your liking :D
+# Customizable Built-In Messages
 messages:
-  noPermission: "&cYou cannot run this command."
-  player-not-found: "&cPlayer not found."
-  player-never-joined: "&cPlayer has never joined the server!"
-  cooldown: "&cYou cannot use this command for %timeleft% seconds!"
-
-# TODO: Decide if I will be added this or not:
-# This is an optional command for you to allow you to display more information.
-# permission: pt.more & pt.more.others
-playtime-more-command:
-  enabled: false
-  command: "more" # the actual command usage: /pt more
-  message:
-    - "&b&m=======&b&l[%player%'s Info']&b&m======="
-    - "&aCreative PlayTime:&f %PlayTimes_db_creative%"
-    - "&aSurvival PlayTime:&f %PlayTimes_db_survival%"
-    - "&2Total:&f %PlayTimes_total%"
-    - "&b&m============================"
+  noPermission: "&cYou are not authorized to execute this command."
+  player-not-found: "&cUnable to locate player."
+  player-never-joined: "&cThis player has not joined the server."
+  cooldown: "&cCommand unavailable for %timeleft% seconds!"
