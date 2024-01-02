@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import me.codedred.playtimes.PlayTimes;
@@ -43,7 +43,7 @@ public class CustomConfig {
   }
 
   private void checkAndAddDefaults() {
-    Map<String, Object> requiredKeys = new HashMap<>();
+    Map<String, Object> requiredKeys = new LinkedHashMap<>();
     requiredKeys.put("prefix", "&7[&b&lPlayTimes&7]");
     requiredKeys.put("use-papi-placeholders", false);
 

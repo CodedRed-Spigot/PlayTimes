@@ -1,6 +1,7 @@
 package me.codedred.playtimes.afk;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import me.codedred.playtimes.PlayTimes;
 import me.codedred.playtimes.data.DataManager;
@@ -76,7 +77,11 @@ public class AFKManager {
             }
             afkTime.put(
               player.getUniqueId(),
-              afkTime.getOrDefault(player.getUniqueId(), 0L) + 1
+              afkTime.getOrDefault(
+                player.getUniqueId(),
+                getDefaultAfkTime(player.getUniqueId())
+              ) +
+              1
             );
           }
         }
@@ -89,13 +94,29 @@ public class AFKManager {
       );
   }
 
+  private Long getDefaultAfkTime(UUID uuid) {
+    DataManager dataManager = DataManager.getInstance();
+
+    if (dataManager.hasDatabase()) {
+      Map<String, Long> timeMap = DatabaseManager
+        .getInstance()
+        .getTimeForServer(uuid);
+      return timeMap != null ? timeMap.getOrDefault("afktime", 0L) : 0L;
+    } else {
+      return dataManager.getData().getLong("afktime." + uuid, 0L);
+    }
+  }
+
   public void removePlayer(Player player) {
     lastActive.remove(player.getUniqueId());
     afkTime.remove(player.getUniqueId());
   }
 
   public long getAFKTime(Player player) {
-    return afkTime.getOrDefault(player.getUniqueId(), 0L);
+    return afkTime.getOrDefault(
+      player.getUniqueId(),
+      getDefaultAfkTime(player.getUniqueId())
+    );
   }
 
   public long getOfflineAFKTime(UUID uuid) {
