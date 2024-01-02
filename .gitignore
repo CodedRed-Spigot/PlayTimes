@@ -5,6 +5,9 @@
 *.ipr
 *.iws
 
+# Hide my todo txt file
+/src/main/resources/todo.txt
+
 # IntelliJ
 out/
 # mpeltonen/sbt-idea plugin
@@ -118,7 +121,6 @@ run/
 
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
 !gradle-wrapper.jar
-
 
 # VS Code directories
 .vscode/
