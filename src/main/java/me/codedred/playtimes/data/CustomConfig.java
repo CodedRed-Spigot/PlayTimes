@@ -46,16 +46,18 @@ public class CustomConfig {
     Map<String, Object> requiredKeys = new HashMap<>();
     requiredKeys.put("prefix", "&7[&b&lPlayTimes&7]");
     requiredKeys.put("use-papi-placeholders", false);
+
     requiredKeys.put(
       "playtime.message",
       new String[] {
         "&b&m=======&b&l[%player%]&b&m=======",
-        "&aPlaytime:&f %time%",
+        "&aPlaytime:&f %playtime%",
         "&aTimes Joined:&f %timesjoined%",
         "&aJoin Date:&f %joindate%",
         "&b&m============================",
       }
     );
+
     requiredKeys.put("playtime.name.second", "s");
     requiredKeys.put("playtime.name.minute", "min ");
     requiredKeys.put("playtime.name.hour", "hr ");
@@ -68,6 +70,20 @@ public class CustomConfig {
     requiredKeys.put("playtime.show-seconds", true);
     requiredKeys.put("playtime.show-days", true);
     requiredKeys.put("playtime.round-numbers", true);
+
+    requiredKeys.put("afk-settings.enabled", false);
+    requiredKeys.put("afk-settings.threshold", 5);
+    requiredKeys.put("afk-settings.notify-on-afk.onAFK", true);
+    requiredKeys.put("afk-settings.notify-on-afk.onBackFromAFK", true);
+    requiredKeys.put(
+      "afk-settings.afk-message",
+      "&eYou are now marked as AFK."
+    );
+    requiredKeys.put(
+      "afk-settings.back-from-afk-message",
+      "&eYou are no longer AFK."
+    );
+
     requiredKeys.put(
       "uptime.message",
       new String[] {
@@ -76,6 +92,7 @@ public class CustomConfig {
         "&b&m============================",
       }
     );
+
     requiredKeys.put(
       "top-playtime.header",
       "&b******&9[&3&lPlayTime Leaderboards&9]&b*****"
@@ -90,7 +107,9 @@ public class CustomConfig {
     );
     requiredKeys.put("top-playtime.enable-cooldown", true);
     requiredKeys.put("top-playtime.cooldown-seconds", 60);
+
     requiredKeys.put("date-format", "MM/dd/yyyy");
+
     requiredKeys.put("messages.noPermission", "&cYou cannot run this command.");
     requiredKeys.put("messages.player-not-found", "&cUnable to locate player.");
     requiredKeys.put(

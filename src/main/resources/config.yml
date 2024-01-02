@@ -47,7 +47,7 @@ afk-settings:
   enabled: true
 
   ## Time in minutes after which a player is considered AFK.
-  threshold: 2
+  threshold: 5
 
   ## Notifications settings for AFK status changes.
   notify-on-afk:
