@@ -97,6 +97,9 @@ public class OnlinePlayer {
   private Map<String, String> prepareReplacements(long rawTime) {
     Map<String, String> replacements = new HashMap<>();
     replacements.put("%time%", timeManager.buildFormat(rawTime / 20));
+    replacements.put("%playtime%", timeManager.buildFormat(rawTime / 20));
+    replacements.put("%rawtime%", timeManager.buildFormat(rawTime / 20));
+    //replacements.put("%afktime%", timeManager.buildFormat(rawTime / 20));
     replacements.put("%player%", target.getName());
     replacements.put(
       "%timesjoined%",
@@ -118,13 +121,29 @@ public class OnlinePlayer {
         .getDBConfig()
         .getBoolean("database-settings.enabled")
     ) {
-      replacements.put("%PlayTimes_db_serverId%", "DYNAMIC");
+      replacements.put("%playtime_serverId%", "DYNAMIC");
+      replacements.put("%afktime_serverId%", "DYNAMIC");
+      replacements.put("%rawtime_serverId%", "DYNAMIC");
       replacements.put(
-        "%PlayTimes_total%",
+        "%global_playtime%",
         timeManager.buildFormat(
           DatabaseManager
             .getInstance()
             .getRawTotalPlaytime(target.getUniqueId())
+        )
+      );
+      replacements.put(
+        "%global_rawtime%",
+        timeManager.buildFormat(
+          DatabaseManager
+            .getInstance()
+            .getRawTotalPlaytime(target.getUniqueId())
+        )
+      );
+      replacements.put(
+        "%global_afktime%",
+        timeManager.buildFormat(
+          DatabaseManager.getInstance().getRawTotalAfktime(target.getUniqueId())
         )
       );
     }
@@ -150,26 +169,37 @@ public class OnlinePlayer {
       .getBoolean("database-settings.enabled");
 
     for (String msg : message) {
-      Matcher matcher = Pattern.compile("%PlayTimes_db_(\\w+)%").matcher(msg);
       StringBuffer sb = new StringBuffer();
 
-      while (matcher.find()) {
-        if (dbEnabled) {
-          // use this or offline player?
-          String serverId = matcher.group(1);
-          Long playTime = DatabaseManager
+      if (dbEnabled) {
+        Matcher matcher = Pattern
+          .compile("%(rawtime|afktime|playtime)_(\\w+)%")
+          .matcher(msg);
+        while (matcher.find()) {
+          String placeholderType = matcher.group(1);
+          String serverId = matcher.group(2);
+          Long timeValue = DatabaseManager
             .getInstance()
             .getTimeForServer(target.getUniqueId(), serverId)
-            .get("playtime");
+            .get(placeholderType != "rawtime" ? placeholderType : "playtime");
+
+          if (placeholderType == "playtime") {
+            timeValue -=
+              DatabaseManager
+                .getInstance()
+                .getTimeForServer(target.getUniqueId(), serverId)
+                .get("afktime");
+          }
+
           matcher.appendReplacement(
             sb,
-            playTime != null
-              ? timeManager.buildFormat(playTime)
+            timeValue != null
+              ? timeManager.buildFormat(timeValue)
               : timeManager.buildFormat(0)
           );
         }
+        matcher.appendTail(sb);
       }
-      matcher.appendTail(sb);
       msg = sb.toString();
 
       // Replace other static placeholders

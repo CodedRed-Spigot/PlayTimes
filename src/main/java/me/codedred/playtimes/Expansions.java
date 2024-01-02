@@ -56,7 +56,7 @@ public class Expansions extends PlaceholderExpansion {
             .getInstance()
             .getPlayerStat(player.getUniqueId(), StatisticType.TIMES_JOINED)
         );
-      // New cases for %PlayTimes_db_serverId% and %PlayTimes_total%
+      // New cases for %PlayTimes_playtime_serverId% and %PlayTimes_total%
       case "total":
         return getTotalPlaytime(player);
       default:
@@ -77,7 +77,7 @@ public class Expansions extends PlaceholderExpansion {
       TimeManager timeManager = TimeManager.getInstance();
       Long totalPlaytime = DatabaseManager
         .getInstance()
-        .getRawTotalPlaytime(player.getUniqueId());
+        .getTotalEffectivePlaytime(player.getUniqueId());
       return timeManager.buildFormat(totalPlaytime != null ? totalPlaytime : 0);
     }
     return "N/A";
@@ -97,7 +97,7 @@ public class Expansions extends PlaceholderExpansion {
       Long playtime = DatabaseManager
         .getInstance()
         .getTimeForServer(player.getUniqueId(), serverId)
-        .get("afktime");
+        .get("playtime");
       return timeManager.buildFormat(playtime != null ? playtime : 0);
     }
     return "N/A";
