@@ -136,7 +136,7 @@ public class DatabaseManager {
     return playtime;
   }
 
-  public Long getRawTotalAfktime(UUID uuid) {
+  public Long getTotalAfktime(UUID uuid) {
     Long afktime = 0L;
     Map<String, Long> userPlaytimeMap = userPlaytimes.get(uuid).get("afktime");
 

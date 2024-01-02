@@ -131,7 +131,7 @@ public class OfflinePlayer {
       replacements.put(
         "%global_afktime%",
         timeManager.buildFormat(
-          DatabaseManager.getInstance().getRawTotalAfktime(target)
+          DatabaseManager.getInstance().getTotalAfktime(target)
         )
       );
     }

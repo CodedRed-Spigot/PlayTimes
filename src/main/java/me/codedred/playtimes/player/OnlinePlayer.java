@@ -129,7 +129,7 @@ public class OnlinePlayer {
         timeManager.buildFormat(
           DatabaseManager
             .getInstance()
-            .getRawTotalPlaytime(target.getUniqueId())
+            .getTotalEffectivePlaytime(target.getUniqueId())
         )
       );
       replacements.put(
@@ -143,7 +143,7 @@ public class OnlinePlayer {
       replacements.put(
         "%global_afktime%",
         timeManager.buildFormat(
-          DatabaseManager.getInstance().getRawTotalAfktime(target.getUniqueId())
+          DatabaseManager.getInstance().getTotalAfktime(target.getUniqueId())
         )
       );
     }
