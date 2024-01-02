@@ -35,6 +35,6 @@ public class AFKListener implements Listener {
 
   @EventHandler
   public void onPlayerQuit(PlayerQuitEvent event) {
-    AFKManager.getInstance().removePlayer(event.getPlayer());
+    AFKManager.getInstance().removePlayer(event.getPlayer().getUniqueId());
   }
 }

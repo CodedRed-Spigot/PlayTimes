@@ -107,6 +107,7 @@ public class CustomConfig {
     );
     requiredKeys.put("top-playtime.enable-cooldown", true);
     requiredKeys.put("top-playtime.cooldown-seconds", 60);
+    requiredKeys.put("top-playtime.track-rawtime", false);
 
     requiredKeys.put("date-format", "MM/dd/yyyy");
 

@@ -2,6 +2,7 @@ package me.codedred.playtimes.listeners;
 
 import java.util.UUID;
 import me.codedred.playtimes.PlayTimes;
+import me.codedred.playtimes.afk.AFKManager;
 import me.codedred.playtimes.data.DataManager;
 import me.codedred.playtimes.data.database.manager.DatabaseManager;
 import me.codedred.playtimes.statistics.StatManager;
@@ -61,6 +62,16 @@ public class Join implements Listener {
     long time = StatManager
       .getInstance()
       .getPlayerStat(uuid, StatisticType.PLAYTIME);
+
+    if (
+      !data.getConfig().getBoolean("top-playtime.track-rawtime", false) &&
+      data.hasAfkEnabled()
+    ) {
+      time -=
+        AFKManager.getInstance().getAFKTime(event.getPlayer().getUniqueId()) *
+        20;
+    }
+
     leaderboardSection.set(uuid.toString(), time);
 
     data.saveData();

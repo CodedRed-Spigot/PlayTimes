@@ -29,7 +29,7 @@ public class Quit implements Listener {
             StatisticType.PLAYTIME
           ) /
         20,
-        AFKManager.getInstance().getAFKTime(event.getPlayer())
+        AFKManager.getInstance().getAFKTime(event.getPlayer().getUniqueId())
       );
     } else {
       // save afktime in data.yml
@@ -37,7 +37,7 @@ public class Quit implements Listener {
         .getData()
         .set(
           "afktime." + uuid,
-          AFKManager.getInstance().getAFKTime(event.getPlayer())
+          AFKManager.getInstance().getAFKTime(event.getPlayer().getUniqueId())
         );
       data.saveData();
     }
@@ -50,8 +50,16 @@ public class Quit implements Listener {
 
     StatManager statManager = StatManager.getInstance();
     long playtime = statManager.getPlayerStat(uuid, StatisticType.PLAYTIME);
-    data.getData().set("leaderboard." + uuid, playtime);
+    if (
+      !data.getConfig().getBoolean("top-playtime.track-rawtime", false) &&
+      data.hasAfkEnabled()
+    ) {
+      playtime -=
+        AFKManager.getInstance().getAFKTime(event.getPlayer().getUniqueId()) *
+        20;
+    }
 
+    data.getData().set("leaderboard." + uuid, playtime);
     data.saveData();
   }
 }

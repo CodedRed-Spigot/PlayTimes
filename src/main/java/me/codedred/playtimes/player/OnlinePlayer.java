@@ -47,7 +47,7 @@ public class OnlinePlayer {
   private List<String> buildMessage() {
     List<String> builtMessage = new ArrayList<>();
     long rawTime = getPlaytimeStat();
-    long afkTime = AFKManager.getInstance().getAFKTime(target);
+    long afkTime = AFKManager.getInstance().getAFKTime(target.getUniqueId());
 
     builtMessage.addAll(
       dataManager.getConfig().getStringList("playtime.message")

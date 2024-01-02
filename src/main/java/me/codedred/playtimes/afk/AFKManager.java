@@ -107,25 +107,12 @@ public class AFKManager {
     }
   }
 
-  public void removePlayer(Player player) {
-    lastActive.remove(player.getUniqueId());
-    afkTime.remove(player.getUniqueId());
+  public void removePlayer(UUID uuid) {
+    lastActive.remove(uuid);
+    afkTime.remove(uuid);
   }
 
-  public long getAFKTime(Player player) {
-    return afkTime.getOrDefault(
-      player.getUniqueId(),
-      getDefaultAfkTime(player.getUniqueId())
-    );
-  }
-
-  public long getOfflineAFKTime(UUID uuid) {
-    if (DataManager.getInstance().hasDatabase()) {
-      return DatabaseManager
-        .getInstance()
-        .getTimeForServer(uuid)
-        .get("afktime");
-    }
-    return DataManager.getInstance().getData().getLong("afktime." + uuid);
+  public long getAFKTime(UUID uuid) {
+    return afkTime.getOrDefault(uuid, getDefaultAfkTime(uuid));
   }
 }

@@ -53,7 +53,7 @@ public class OfflinePlayer {
       .getConfig()
       .getStringList("playtime.message");
     long rawTime = statManager.getPlayerStat(target, StatisticType.PLAYTIME);
-    long afkTime = AFKManager.getInstance().getOfflineAFKTime(target);
+    long afkTime = AFKManager.getInstance().getAFKTime(target);
 
     if (ServerUtils.hasPAPI()) {
       builtMessage = applyPAPIPlaceholders(builtMessage);

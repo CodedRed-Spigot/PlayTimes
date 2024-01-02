@@ -1,6 +1,7 @@
 package me.codedred.playtimes.models;
 
 import java.util.*;
+import me.codedred.playtimes.afk.AFKManager;
 import me.codedred.playtimes.data.DataManager;
 import me.codedred.playtimes.statistics.StatManager;
 import me.codedred.playtimes.statistics.StatisticType;
@@ -63,6 +64,7 @@ public class Leaderboard {
    */
   private void updateTimes(Map<String, Integer> topTen) {
     StatManager statManager = StatManager.getInstance();
+    DataManager dataManager = DataManager.getInstance();
     List<Map.Entry<String, Integer>> list = new ArrayList<>(topTen.entrySet());
 
     for (Map.Entry<String, Integer> entry : list) {
@@ -71,6 +73,17 @@ public class Leaderboard {
         UUID.fromString(uuid),
         StatisticType.PLAYTIME
       );
+
+      if (
+        !dataManager
+          .getConfig()
+          .getBoolean("top-playtime.track-rawtime", false) &&
+        dataManager.hasAfkEnabled()
+      ) {
+        latestTime -=
+          AFKManager.getInstance().getAFKTime(UUID.fromString(uuid)) * 20;
+      }
+
       topTen.put(uuid, latestTime);
     }
 

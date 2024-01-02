@@ -53,4 +53,8 @@ public class DataManager {
       DatabaseManager.getInstance().isConnected()
     );
   }
+
+  public boolean hasAfkEnabled() {
+    return getConfig().getBoolean("afk-settings.enabled", false);
+  }
 }

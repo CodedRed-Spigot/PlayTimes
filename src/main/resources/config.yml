@@ -76,6 +76,7 @@ top-playtime:
   footer: "&b****************************************"
   enable-cooldown: true
   cooldown-seconds: 60
+  track-rawtime: false
 
 # 'date-format' - Customize this to change the format of join dates.
 # Explore more formatting options at: https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
