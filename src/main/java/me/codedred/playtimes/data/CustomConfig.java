@@ -73,16 +73,19 @@ public class CustomConfig {
 
     requiredKeys.put("afk-settings.enabled", false);
     requiredKeys.put("afk-settings.threshold", 5);
-    requiredKeys.put("afk-settings.notify-on-afk.onAFK", true);
-    requiredKeys.put("afk-settings.notify-on-afk.onBackFromAFK", true);
+    requiredKeys.put("afk-settings.broadcast-afk.on-enter-afk", true);
+    requiredKeys.put("afk-settings.broadcast-afk.on-exit-afk", true);
     requiredKeys.put(
-      "afk-settings.afk-message",
+      "afk-settings.on-enter-afk-message",
       "&eYou are now marked as AFK."
     );
     requiredKeys.put(
-      "afk-settings.back-from-afk-message",
+      "afk-settings.on-exit-afk-message",
       "&eYou are no longer AFK."
     );
+    requiredKeys.put("afk-settings.cancel-afk.on-player-move", true);
+    requiredKeys.put("afk-settings.cancel-afk.on-player-chat", true);
+    requiredKeys.put("afk-settings.cancel-afk.on-player-interact", true);
 
     requiredKeys.put(
       "uptime.message",

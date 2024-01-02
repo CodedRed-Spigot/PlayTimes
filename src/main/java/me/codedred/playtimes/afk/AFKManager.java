@@ -31,11 +31,10 @@ public class AFKManager {
   private AFKManager() {
     config = DataManager.getInstance().getConfig();
     afkThresholdMillis = config.getLong("afk-settings.threshold") * 60L * 1000L;
-    notifyOnAfk = config.getBoolean("afk-settings.notify-on-afk.onAFK");
-    notifyOnBack =
-      config.getBoolean("afk-settings.notify-on-afk.onBackFromAFK");
-    onAfkMessage = config.getString("afk-settings.afk-message");
-    onBackMessage = config.getString("afk-settings.back-from-afk-message");
+    notifyOnAfk = config.getBoolean("afk-settings.broadcast-afk.on-enter-afk");
+    notifyOnBack = config.getBoolean("afk-settings.broadcast-afk.on-exit-afk");
+    onAfkMessage = config.getString("afk-settings.on-enter-afk-message");
+    onBackMessage = config.getString("afk-settings.on-exit-afk-message");
   }
 
   public static AFKManager getInstance() {
@@ -124,10 +123,9 @@ public class AFKManager {
   public void reload() {
     FileConfiguration config = DataManager.getInstance().getConfig();
     afkThresholdMillis = config.getLong("afk-settings.threshold") * 60L * 1000L;
-    notifyOnAfk = config.getBoolean("afk-settings.notify-on-afk.onAFK");
-    notifyOnBack =
-      config.getBoolean("afk-settings.notify-on-afk.onBackFromAFK");
-    onAfkMessage = config.getString("afk-settings.afk-message");
-    onBackMessage = config.getString("afk-settings.back-from-afk-message");
+    notifyOnAfk = config.getBoolean("afk-settings.broadcast-afk.on-enter-afk");
+    notifyOnBack = config.getBoolean("afk-settings.broadcast-afk.on-exit-afk");
+    onAfkMessage = config.getString("afk-settings.on-enter-afk-message");
+    onBackMessage = config.getString("afk-settings.on-exit-afk-message");
   }
 }

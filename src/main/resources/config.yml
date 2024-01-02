@@ -50,14 +50,14 @@ afk-settings:
   threshold: 5
 
   ## Notifications settings for AFK status changes.
-  notify-on-afk:
-    onAFK: true
-    onBackFromAFK: true
+  broadcast-afk:
+    on-enter-afk: true
+    on-exit-afk: true
 
   # Message to send to the player when they are marked as AFK.
-  afk-message: "&eYou are now marked as AFK."
+  on-enter-afk-message: "&eYou are now marked as AFK."
   # Message to send to the player when they are no longer marked as AFK.
-  back-from-afk-message: "&eYou are no longer AFK."
+  on-exit-afk-message: "&eYou are no longer AFK."
   # Leave true unless you are experiencing lag/issues with one of the afk listeners.
   cancel-afk:
     on-player-move: true
