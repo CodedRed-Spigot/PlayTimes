@@ -2,9 +2,7 @@ package me.codedred.playtimes.afk;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import me.codedred.playtimes.PlayTimes;
 import me.codedred.playtimes.data.DataManager;
 import me.codedred.playtimes.data.database.manager.DatabaseManager;
@@ -83,15 +81,6 @@ public class AFKManager {
               );
             }
           }
-          // Remove players who are no longer online
-          Set<UUID> onlinePlayers = Bukkit
-            .getOnlinePlayers()
-            .stream()
-            .map(Player::getUniqueId)
-            .collect(Collectors.toSet());
-
-          lastActive.keySet().retainAll(onlinePlayers);
-          afkTime.keySet().retainAll(onlinePlayers);
         },
         20L,
         20L
