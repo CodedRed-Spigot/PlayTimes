@@ -47,7 +47,7 @@ public class AFKManager {
 
   public boolean isAFK(Player player) {
     long afkThresholdMillis =
-      config.getLong("afk-settings.afk-threshold") * 60L * 1000L;
+      config.getLong("afk-settings.threshold") * 60L * 1000L;
     return (
       lastActive.containsKey(player.getUniqueId()) &&
       System.currentTimeMillis() -

@@ -48,14 +48,16 @@ afk-settings:
   enabled: true
 
   # Time in minutes after which a player is considered AFK.
-  afk-threshold: 2
+  threshold: 2
+
+  # When true, this will remove afk time from %time% placeholder
+  # Use %rawTime% to get the raw playtime without afk time removed.
+  # Use %afkTime% to get the total time afk
+  adjust-time: true
 
   # Notifications settings for AFK status changes.
   notify-on-afk:
-    # Notify the player when they become AFK.
     onAFK: true
-
-    # Notify the player when they come back from being AFK.
     onBackFromAFK: true
 
   # Message to send to the player when they are marked as AFK.
