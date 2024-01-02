@@ -3,6 +3,8 @@ package me.codedred.playtimes;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Objects;
+import me.codedred.playtimes.afk.AFKListener;
+import me.codedred.playtimes.afk.AFKManager;
 import me.codedred.playtimes.commands.Time;
 import me.codedred.playtimes.commands.TopTime;
 import me.codedred.playtimes.commands.Uptime;
@@ -44,6 +46,8 @@ public class PlayTimes extends JavaPlugin {
 
     @SuppressWarnings("unused")
     Metrics metrics = new Metrics(this, 5289);
+
+    AFKManager.getInstance().startAFKChecker();
     getLogger().info("Successfully loaded.");
   }
 
@@ -56,6 +60,9 @@ public class PlayTimes extends JavaPlugin {
     PluginManager pm = getServer().getPluginManager();
     pm.registerEvents(new Join(), this);
     pm.registerEvents(new Quit(), this);
+    if (
+      DataManager.getInstance().getConfig().getBoolean("afk-settings.enabled")
+    ) pm.registerEvents(new AFKListener(), this);
   }
 
   private void registerCommands() {
