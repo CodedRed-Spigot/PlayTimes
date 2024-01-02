@@ -3,8 +3,11 @@ package me.codedred.playtimes;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Objects;
-import me.codedred.playtimes.afk.AFKListener;
 import me.codedred.playtimes.afk.AFKManager;
+import me.codedred.playtimes.afk.listeners.onChat;
+import me.codedred.playtimes.afk.listeners.onInteract;
+import me.codedred.playtimes.afk.listeners.onJoinQuit;
+import me.codedred.playtimes.afk.listeners.onMove;
 import me.codedred.playtimes.commands.Time;
 import me.codedred.playtimes.commands.TopTime;
 import me.codedred.playtimes.commands.Uptime;
@@ -18,6 +21,7 @@ import me.codedred.playtimes.statistics.StatManager;
 import me.codedred.playtimes.time.TimeManager;
 import me.codedred.playtimes.utils.ChatUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -58,11 +62,31 @@ public class PlayTimes extends JavaPlugin {
 
   private void registerEvents() {
     PluginManager pm = getServer().getPluginManager();
+    DataManager data = DataManager.getInstance();
+
     pm.registerEvents(new Join(), this);
     pm.registerEvents(new Quit(), this);
-    if (
-      DataManager.getInstance().getConfig().getBoolean("afk-settings.enabled")
-    ) pm.registerEvents(new AFKListener(), this);
+
+    if (data.hasAfkEnabled()) {
+      pm.registerEvents(new onJoinQuit(), this);
+
+      FileConfiguration config = data.getConfig();
+      boolean cancelAfkOnMove = config.getBoolean(
+        "afk-settings.cancel-afk.on-player-move"
+      );
+      boolean cancelAfkOnChat = config.getBoolean(
+        "afk-settings.cancel-afk.on-player-chat"
+      );
+      boolean cancelAfkOnInteract = config.getBoolean(
+        "afk-settings.cancel-afk.on-player-interact"
+      );
+
+      if (cancelAfkOnMove || cancelAfkOnChat || cancelAfkOnInteract) {
+        if (cancelAfkOnMove) pm.registerEvents(new onMove(), this);
+        if (cancelAfkOnChat) pm.registerEvents(new onChat(), this);
+        if (cancelAfkOnInteract) pm.registerEvents(new onInteract(), this);
+      }
+    }
   }
 
   private void registerCommands() {

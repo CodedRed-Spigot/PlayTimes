@@ -1,6 +1,7 @@
 package me.codedred.playtimes.data;
 
 import me.codedred.playtimes.PlayTimes;
+import me.codedred.playtimes.afk.AFKManager;
 import me.codedred.playtimes.data.database.manager.DatabaseManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -45,6 +46,7 @@ public class DataManager {
     data.reloadConfig();
     cfg.reloadConfig();
     db.reloadConfig();
+    if (hasAfkEnabled()) AFKManager.getInstance().reload();
   }
 
   public boolean hasDatabase() {

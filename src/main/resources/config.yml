@@ -58,6 +58,11 @@ afk-settings:
   afk-message: "&eYou are now marked as AFK."
   # Message to send to the player when they are no longer marked as AFK.
   back-from-afk-message: "&eYou are no longer AFK."
+  # Leave true unless you are experiencing lag/issues with one of the afk listeners.
+  cancel-afk:
+    on-player-move: true
+    on-player-chat: true
+    on-player-interact: true
 
 # /Uptime Command Configuration - Use '%serveruptime%' to display server uptime.
 uptime:

@@ -121,23 +121,19 @@ public class OnlinePlayer {
     );
 
     if (DataManager.getInstance().hasDatabase()) {
-      replacements.put("%playtime_serverId%", "DYNAMIC");
-      replacements.put("%afktime_serverId%", "DYNAMIC");
-      replacements.put("%rawtime_serverId%", "DYNAMIC");
+      replacements.put("%playtime_serverId%", "((Missing ServerId))");
+      replacements.put("%afktime_serverId%", "((Missing ServerId!))");
+      replacements.put("%rawtime_serverId%", "((Missing ServerId!))");
       replacements.put(
         "%global_playtime%",
         timeManager.buildFormat(
-          DatabaseManager
-            .getInstance()
-            .getTotalEffectivePlaytime(target.getUniqueId())
+          DatabaseManager.getInstance().getTotalPlaytime(target.getUniqueId())
         )
       );
       replacements.put(
         "%global_rawtime%",
         timeManager.buildFormat(
-          DatabaseManager
-            .getInstance()
-            .getRawTotalPlaytime(target.getUniqueId())
+          DatabaseManager.getInstance().getTotalRawtime(target.getUniqueId())
         )
       );
       replacements.put(

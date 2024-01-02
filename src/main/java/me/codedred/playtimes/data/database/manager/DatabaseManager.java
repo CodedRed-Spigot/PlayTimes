@@ -123,7 +123,7 @@ public class DatabaseManager {
     return getTimeForServer(uuid, serverId);
   }
 
-  public Long getRawTotalPlaytime(UUID uuid) {
+  public Long getTotalRawtime(UUID uuid) {
     Long playtime = 0L;
     Map<String, Long> userPlaytimeMap = userPlaytimes.get(uuid).get("playtime");
 
@@ -150,7 +150,7 @@ public class DatabaseManager {
   }
 
   // Calculate the total playtime after subtracting total afktime
-  public Long getTotalEffectivePlaytime(UUID uuid) {
+  public Long getTotalPlaytime(UUID uuid) {
     Long totalPlaytime = 0L;
     Long totalAfktime = 0L;
 

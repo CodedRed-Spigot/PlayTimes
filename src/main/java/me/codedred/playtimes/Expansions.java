@@ -72,7 +72,7 @@ public class Expansions extends PlaceholderExpansion {
       TimeManager timeManager = TimeManager.getInstance();
       Long totalPlaytime = DatabaseManager
         .getInstance()
-        .getTotalEffectivePlaytime(player.getUniqueId());
+        .getTotalPlaytime(player.getUniqueId());
       return timeManager.buildFormat(totalPlaytime != null ? totalPlaytime : 0);
     }
     return "N/A";

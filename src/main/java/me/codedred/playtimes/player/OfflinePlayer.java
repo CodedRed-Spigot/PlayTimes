@@ -113,19 +113,19 @@ public class OfflinePlayer {
     replacements.put("%joindate%", statManager.getJoinDate(target));
 
     if (DataManager.getInstance().hasDatabase()) {
-      replacements.put("%playtime_serverId%", "DYNAMIC");
-      replacements.put("%afktime_serverId%", "DYNAMIC");
-      replacements.put("%rawtime_serverId%", "DYNAMIC");
+      replacements.put("%playtime_serverId%", "((Missing ServerId!))");
+      replacements.put("%afktime_serverId%", "((Missing ServerId!))");
+      replacements.put("%rawtime_serverId%", "((Missing ServerId!))");
       replacements.put(
         "%global_playtime%",
         timeManager.buildFormat(
-          DatabaseManager.getInstance().getTotalEffectivePlaytime(target)
+          DatabaseManager.getInstance().getTotalPlaytime(target)
         )
       );
       replacements.put(
         "%global_rawtime%",
         timeManager.buildFormat(
-          DatabaseManager.getInstance().getRawTotalPlaytime(target)
+          DatabaseManager.getInstance().getTotalRawtime(target)
         )
       );
       replacements.put(
