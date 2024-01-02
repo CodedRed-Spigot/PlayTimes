@@ -122,7 +122,9 @@ public class OnlinePlayer {
       replacements.put(
         "%PlayTimes_total%",
         timeManager.buildFormat(
-          DatabaseManager.getInstance().getTotalPlayTime(target.getUniqueId())
+          DatabaseManager
+            .getInstance()
+            .getRawTotalPlaytime(target.getUniqueId())
         )
       );
     }
@@ -153,10 +155,12 @@ public class OnlinePlayer {
 
       while (matcher.find()) {
         if (dbEnabled) {
+          // use this or offline player?
           String serverId = matcher.group(1);
           Long playTime = DatabaseManager
             .getInstance()
-            .getPlayTimeForServer(target.getUniqueId(), serverId);
+            .getTimeForServer(target.getUniqueId(), serverId)
+            .get("playtime");
           matcher.appendReplacement(
             sb,
             playTime != null

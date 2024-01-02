@@ -113,7 +113,7 @@ public class OfflinePlayer {
       replacements.put(
         "%PlayTimes_total%",
         timeManager.buildFormat(
-          DatabaseManager.getInstance().getTotalPlayTime(target)
+          DatabaseManager.getInstance().getRawTotalPlaytime(target)
         )
       );
     }
@@ -149,13 +149,16 @@ public class OfflinePlayer {
 
           while (matcher.find()) {
             String serverId = matcher.group(1);
-            Long playTime = DatabaseManager
+            Map<String, Long> timeMap = DatabaseManager
               .getInstance()
-              .getPlayTimeForServer(target, serverId);
+              .getTimeForServer(target, serverId);
+
+            // raw playtime - should not be?
+            Long playtime = timeMap.get("playtime");
             matcher.appendReplacement(
               sb,
-              playTime != null
-                ? timeManager.buildFormat(playTime)
+              timeMap != null
+                ? timeManager.buildFormat(playtime)
                 : timeManager.buildFormat(0)
             );
           }

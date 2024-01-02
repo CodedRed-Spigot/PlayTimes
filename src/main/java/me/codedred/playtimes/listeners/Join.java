@@ -22,7 +22,7 @@ public class Join implements Listener {
     // Database
     if (data.getDBConfig().getBoolean("database-settings.enabled")) {
       DatabaseManager dbManager = DatabaseManager.getInstance();
-      dbManager.retrievePlayTime(uuid);
+      dbManager.retrievePlaytime(uuid);
 
       // hacky bug fix that will update data again if database query was too slow.
       // this bug only arises when switching servers super fast!
@@ -31,7 +31,7 @@ public class Join implements Listener {
         .runTaskLaterAsynchronously(
           PlayTimes.getPlugin(PlayTimes.class),
           () -> {
-            dbManager.retrievePlayTime(uuid);
+            dbManager.retrievePlaytime(uuid);
           },
           20L * 30
         );

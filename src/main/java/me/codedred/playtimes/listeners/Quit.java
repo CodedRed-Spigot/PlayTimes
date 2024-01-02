@@ -27,7 +27,8 @@ public class Quit implements Listener {
             event.getPlayer().getUniqueId(),
             StatisticType.PLAYTIME
           ) /
-        20
+        20,
+        0L
       );
     }
 

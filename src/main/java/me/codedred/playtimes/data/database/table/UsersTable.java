@@ -27,6 +27,7 @@ public class UsersTable {
       "`uniqueId` VARCHAR(36) NOT NULL," +
       "`serverId` VARCHAR(255) NOT NULL," +
       "`playtime` BIGINT NOT NULL DEFAULT 0," +
+      "`afktime` BIGINT NOT NULL DEFAULT 0," +
       "`lastUpdated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP," +
       "PRIMARY KEY (`uniqueId`, `serverId`))",
       TABLE_NAME
@@ -44,11 +45,16 @@ public class UsersTable {
     }
   }
 
-  public void insertOrUpdate(String uuid, String serverId, long playtime) {
+  public void insertOrUpdate(
+    String uuid,
+    String serverId,
+    long playtime,
+    long afktime
+  ) {
     Async.run(() -> {
       String query = String.format(
-        "INSERT INTO `%s` (`uniqueId`, `serverId`, `playtime`) VALUES (?, ?, ?) " +
-        "ON DUPLICATE KEY UPDATE `playtime` = ?",
+        "INSERT INTO `%s` (`uniqueId`, `serverId`, `playtime`, `afktime`) VALUES (?, ?, ?, ?) " +
+        "ON DUPLICATE KEY UPDATE `playtime` = ?, `afktime` = ?",
         TABLE_NAME
       );
 
@@ -59,7 +65,9 @@ public class UsersTable {
         preparedStatement.setString(1, uuid);
         preparedStatement.setString(2, serverId);
         preparedStatement.setLong(3, playtime);
-        preparedStatement.setLong(4, playtime);
+        preparedStatement.setLong(4, afktime);
+        preparedStatement.setLong(5, playtime);
+        preparedStatement.setLong(6, afktime);
 
         preparedStatement.executeUpdate();
       } catch (SQLException e) {
@@ -68,8 +76,8 @@ public class UsersTable {
     });
   }
 
-  public Map<String, Long> getPlaytimesByUuid(UUID uuid) {
-    Map<String, Long> playtimes = new HashMap<>();
+  public Map<String, Map<String, Long>> getPlaytimesByUuid(UUID uuid) {
+    Map<String, Map<String, Long>> timesMap = new HashMap<>();
 
     try (
       Connection conn = dataSource.getConnection();
@@ -83,14 +91,20 @@ public class UsersTable {
         while (resultSet.next()) {
           String serverId = resultSet.getString("serverId");
           long playtime = resultSet.getLong("playtime");
-          playtimes.put(serverId, playtime);
+          long afktime = resultSet.getLong("afktime");
+
+          Map<String, Long> timeData = new HashMap<>();
+          timeData.put("playtime", playtime);
+          timeData.put("afktime", afktime);
+
+          timesMap.put(serverId, timeData);
         }
       }
     } catch (SQLException e) {
       e.printStackTrace();
     }
 
-    return playtimes;
+    return timesMap;
   }
 
   public Map<String, Timestamp> getLastUpdatedTimesByUuid(UUID uuid) {

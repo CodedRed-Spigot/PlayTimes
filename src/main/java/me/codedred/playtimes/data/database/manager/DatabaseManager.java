@@ -21,7 +21,7 @@ public class DatabaseManager {
   private DataSource dataSource;
   private UsersTable usersTable;
 
-  private Map<UUID, Map<String, Long>> userPlaytimes = new HashMap<>();
+  private Map<UUID, Map<String, Map<String, Long>>> userPlaytimes = new HashMap<>();
 
   private DatabaseManager() {
     setupDataSource();
@@ -76,13 +76,14 @@ public class DatabaseManager {
   }
 
   // Called onPlayerJoin
-  public void retrievePlayTime(UUID uuid) {
-    Map<String, Long> timeMap = getUsersTable().getPlaytimesByUuid(uuid);
+  public void retrievePlaytime(UUID uuid) {
+    Map<String, Map<String, Long>> timeMap = getUsersTable()
+      .getPlaytimesByUuid(uuid);
     userPlaytimes.put(uuid, timeMap);
   }
 
   // Called onPlayerQuit
-  public void updatePlaytime(UUID uuid, Long playtime) {
+  public void updatePlaytime(UUID uuid, Long playtime, Long akftime) {
     getUsersTable()
       .insertOrUpdate(
         uuid.toString(),
@@ -90,13 +91,13 @@ public class DatabaseManager {
           .getInstance()
           .getDBConfig()
           .getString("database-settings.serverId"),
-        playtime
+        playtime,
+        akftime
       );
     userPlaytimes.remove(uuid);
   }
 
-  // Given the serverId returns the playtime from that server
-  public Long getPlayTimeForServer(UUID uuid, String server) {
+  public Map<String, Long> getTimeForServer(UUID uuid, String server) {
     if (
       userPlaytimes.containsKey(uuid) &&
       userPlaytimes.get(uuid).containsKey(server)
@@ -106,10 +107,9 @@ public class DatabaseManager {
     return null;
   }
 
-  // %PlayTimes_total%
-  public Long getTotalPlayTime(UUID uuid) {
+  public Long getRawTotalPlaytime(UUID uuid) {
     Long playtime = 0L;
-    Map<String, Long> userPlaytimeMap = userPlaytimes.get(uuid);
+    Map<String, Long> userPlaytimeMap = userPlaytimes.get(uuid).get("playtime");
 
     if (userPlaytimeMap != null) {
       for (Long individualPlaytime : userPlaytimeMap.values()) {
@@ -118,6 +118,36 @@ public class DatabaseManager {
     }
 
     return playtime;
+  }
+
+  public Long getRawTotalAfktime(UUID uuid) {
+    Long afktime = 0L;
+    Map<String, Long> userPlaytimeMap = userPlaytimes.get(uuid).get("afktime");
+
+    if (userPlaytimeMap != null) {
+      for (Long individualAfktime : userPlaytimeMap.values()) {
+        afktime += individualAfktime;
+      }
+    }
+
+    return afktime;
+  }
+
+  // Calculate the total playtime after subtracting total afktime
+  public Long getTotalEffectivePlaytime(UUID uuid) {
+    Long totalPlaytime = 0L;
+    Long totalAfktime = 0L;
+
+    Map<String, Map<String, Long>> userTimeData = userPlaytimes.get(uuid);
+
+    if (userTimeData != null) {
+      for (Map<String, Long> serverData : userTimeData.values()) {
+        totalPlaytime += serverData.getOrDefault("playtime", 0L);
+        totalAfktime += serverData.getOrDefault("afktime", 0L);
+      }
+    }
+
+    return totalPlaytime - totalAfktime;
   }
 
   public void purgeOldPlaytimeData() {
