@@ -29,16 +29,12 @@ public class TopTime implements CommandExecutor {
       return true;
     }
 
-    if (!(sender instanceof Player player)) {
-      sender.sendMessage("Must be a player to run this command.");
-      return true;
-    }
-
     DataManager data = DataManager.getInstance();
 
     if (
       data.getConfig().getBoolean("top-playtime.enable-cooldown") &&
-      !player.hasPermission("pt.block-cooldown")
+      !sender.hasPermission("pt.block-cooldown") &&
+      sender instanceof Player player
     ) {
       if (CoolDownUtil.contains(player.getUniqueId())) {
         String cooldownMessage = Objects
@@ -78,8 +74,8 @@ public class TopTime implements CommandExecutor {
     String content = data.getConfig().getString("top-playtime.content");
 
     if (ServerUtils.hasPAPI()) {
-      header = PAPIHolders.getHolders(player, header);
-      footer = PAPIHolders.getHolders(player, footer);
+      header = PAPIHolders.getHolders((Player) sender, header);
+      footer = PAPIHolders.getHolders((Player) sender, footer);
     }
 
     sender.sendMessage(header);
