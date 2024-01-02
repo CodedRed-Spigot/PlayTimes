@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.UUID;
 import me.codedred.playtimes.PlayTimes;
 import me.codedred.playtimes.data.DataManager;
+import me.codedred.playtimes.data.database.manager.DatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -95,5 +96,15 @@ public class AFKManager {
 
   public long getAFKTime(Player player) {
     return afkTime.getOrDefault(player.getUniqueId(), 0L);
+  }
+
+  public long getOfflineAFKTime(UUID uuid) {
+    if (DataManager.getInstance().hasDatabase()) {
+      return DatabaseManager
+        .getInstance()
+        .getTimeForServer(uuid)
+        .get("afktime");
+    }
+    return DataManager.getInstance().getData().getLong("afktime." + uuid);
   }
 }

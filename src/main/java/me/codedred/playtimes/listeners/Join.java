@@ -20,7 +20,7 @@ public class Join implements Listener {
     DataManager data = DataManager.getInstance();
 
     // Database
-    if (data.getDBConfig().getBoolean("database-settings.enabled")) {
+    if (data.hasDatabase()) {
       DatabaseManager dbManager = DatabaseManager.getInstance();
       dbManager.retrievePlaytime(uuid);
 

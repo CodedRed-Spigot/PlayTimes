@@ -13,12 +13,12 @@ use-papi-placeholders: false
 # 'playtime.name' defines time unit labels. For formatting guidance, refer to our Spigot plugin page.
 playtime:
   ## Default Placeholders:
-  ## %player%, %time%, %timesjoined%, %joindate%, %rawTime%, %afkTime%
+  ## %player%, %playtime%, %timesjoined%, %joindate%, %rawTime%, %afkTime%
   ## For database placeholders, visit: https://github.com/CodedRed-Spigot/PlayTimes/wiki/Bungee-Support
   ## PlaceholderAPI placeholders are also compatible.
   message:
     - "&b&m=======&b&l[%player%]&b&m======="
-    - "&aPlaytime:&f %time%"
+    - "&aPlaytime:&f %playtime%"
     - "&aTimes Joined:&f %timesjoined%"
     - "&aJoin Date:&f %joindate%"
     - "&b&m============================"

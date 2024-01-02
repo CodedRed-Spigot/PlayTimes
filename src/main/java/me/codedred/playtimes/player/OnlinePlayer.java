@@ -3,6 +3,7 @@ package me.codedred.playtimes.player;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import me.codedred.playtimes.afk.AFKManager;
 import me.codedred.playtimes.data.DataManager;
 import me.codedred.playtimes.data.database.manager.DatabaseManager;
 import me.codedred.playtimes.statistics.StatManager;
@@ -46,6 +47,7 @@ public class OnlinePlayer {
   private List<String> buildMessage() {
     List<String> builtMessage = new ArrayList<>();
     long rawTime = getPlaytimeStat();
+    long afkTime = AFKManager.getInstance().getAFKTime(target);
 
     builtMessage.addAll(
       dataManager.getConfig().getStringList("playtime.message")
@@ -57,7 +59,7 @@ public class OnlinePlayer {
 
     return processMessageWithReplacements(
       builtMessage,
-      prepareReplacements(rawTime)
+      prepareReplacements(rawTime, afkTime)
     );
   }
 
@@ -94,12 +96,15 @@ public class OnlinePlayer {
    * @param rawTime The playtime statistic to format and include in the replacements.
    * @return A map of placeholder keys and their replacement values.
    */
-  private Map<String, String> prepareReplacements(long rawTime) {
+  private Map<String, String> prepareReplacements(long rawTime, long afkTime) {
     Map<String, String> replacements = new HashMap<>();
-    replacements.put("%time%", timeManager.buildFormat(rawTime / 20));
-    replacements.put("%playtime%", timeManager.buildFormat(rawTime / 20));
+    replacements.put("%time%", timeManager.buildFormat(rawTime / 20 - afkTime));
+    replacements.put(
+      "%playtime%",
+      timeManager.buildFormat(rawTime / 20 - afkTime)
+    );
     replacements.put("%rawtime%", timeManager.buildFormat(rawTime / 20));
-    //replacements.put("%afktime%", timeManager.buildFormat(rawTime / 20));
+    replacements.put("%afktime%", timeManager.buildFormat(afkTime));
     replacements.put("%player%", target.getName());
     replacements.put(
       "%timesjoined%",
@@ -115,12 +120,7 @@ public class OnlinePlayer {
       statManager.getJoinDate(target.getUniqueId())
     );
 
-    if (
-      DataManager
-        .getInstance()
-        .getDBConfig()
-        .getBoolean("database-settings.enabled")
-    ) {
+    if (DataManager.getInstance().hasDatabase()) {
       replacements.put("%playtime_serverId%", "DYNAMIC");
       replacements.put("%afktime_serverId%", "DYNAMIC");
       replacements.put("%rawtime_serverId%", "DYNAMIC");
@@ -163,15 +163,10 @@ public class OnlinePlayer {
     Map<String, String> replacements
   ) {
     List<String> newMessage = new ArrayList<>();
-    boolean dbEnabled = DataManager
-      .getInstance()
-      .getDBConfig()
-      .getBoolean("database-settings.enabled");
 
     for (String msg : message) {
-      StringBuffer sb = new StringBuffer();
-
-      if (dbEnabled) {
+      if (DataManager.getInstance().hasDatabase()) {
+        StringBuffer sb = new StringBuffer();
         Matcher matcher = Pattern
           .compile("%(rawtime|afktime|playtime)_(\\w+)%")
           .matcher(msg);
@@ -199,8 +194,8 @@ public class OnlinePlayer {
           );
         }
         matcher.appendTail(sb);
+        msg = sb.toString();
       }
-      msg = sb.toString();
 
       // Replace other static placeholders
       for (Map.Entry<String, String> entry : replacements.entrySet()) {

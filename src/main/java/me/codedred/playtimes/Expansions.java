@@ -68,12 +68,7 @@ public class Expansions extends PlaceholderExpansion {
   }
 
   private String getTotalPlaytime(OfflinePlayer player) {
-    if (
-      DataManager
-        .getInstance()
-        .getDBConfig()
-        .getBoolean("database-settings.enabled")
-    ) {
+    if (DataManager.getInstance().hasDatabase()) {
       TimeManager timeManager = TimeManager.getInstance();
       Long totalPlaytime = DatabaseManager
         .getInstance()
@@ -87,12 +82,7 @@ public class Expansions extends PlaceholderExpansion {
     OfflinePlayer player,
     String serverId
   ) {
-    if (
-      DataManager
-        .getInstance()
-        .getDBConfig()
-        .getBoolean("database-settings.enabled")
-    ) {
+    if (DataManager.getInstance().hasDatabase()) {
       TimeManager timeManager = TimeManager.getInstance();
       Long playtime = DatabaseManager
         .getInstance()

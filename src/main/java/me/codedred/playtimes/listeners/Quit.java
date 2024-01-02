@@ -1,6 +1,7 @@
 package me.codedred.playtimes.listeners;
 
 import java.util.UUID;
+import me.codedred.playtimes.afk.AFKManager;
 import me.codedred.playtimes.data.DataManager;
 import me.codedred.playtimes.data.database.manager.DatabaseManager;
 import me.codedred.playtimes.statistics.StatManager;
@@ -17,7 +18,7 @@ public class Quit implements Listener {
     DataManager data = DataManager.getInstance();
 
     // Database
-    if (data.getDBConfig().getBoolean("database-settings.enabled")) {
+    if (data.hasDatabase()) {
       DatabaseManager dbManager = DatabaseManager.getInstance();
       dbManager.updatePlaytime(
         uuid,
@@ -28,8 +29,17 @@ public class Quit implements Listener {
             StatisticType.PLAYTIME
           ) /
         20,
-        0L
+        AFKManager.getInstance().getAFKTime(event.getPlayer())
       );
+    } else {
+      // save afktime in data.yml
+      data
+        .getData()
+        .set(
+          "afktime." + uuid,
+          AFKManager.getInstance().getAFKTime(event.getPlayer())
+        );
+      data.saveData();
     }
 
     // Leaderboard

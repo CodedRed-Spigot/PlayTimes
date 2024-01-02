@@ -20,10 +20,17 @@ public class DatabaseManager {
 
   private DataSource dataSource;
   private UsersTable usersTable;
+  private boolean connected = false;
+  private final String serverId;
 
   private Map<UUID, Map<String, Map<String, Long>>> userPlaytimes = new HashMap<>();
 
   private DatabaseManager() {
+    serverId =
+      DataManager
+        .getInstance()
+        .getDBConfig()
+        .getString("database-settings.serverId");
     setupDataSource();
   }
 
@@ -54,17 +61,30 @@ public class DatabaseManager {
           ". Accepted Values: 'mysql', 'sqlite'"
         );
     }
+
+    try {
+      connected = dataSource != null && dataSource.getConnection() != null;
+    } catch (SQLException e) {
+      Bukkit
+        .getServer()
+        .getLogger()
+        .warning("[PlayTimes] Error thrown from DatabaseManager!");
+    }
+  }
+
+  public boolean isConnected() {
+    return connected;
   }
 
   public void load() {
-    try {
-      if (dataSource.getConnection() != null) {
-        this.usersTable = new UsersTable(dataSource);
-        this.usersTable.createTable();
-      }
-    } catch (SQLException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+    if (isConnected()) {
+      this.usersTable = new UsersTable(dataSource);
+      this.usersTable.createTable();
+    } else {
+      Bukkit
+        .getServer()
+        .getLogger()
+        .warning("[PlayTimes] Couldn't connect to Database!");
     }
   }
 
@@ -85,15 +105,7 @@ public class DatabaseManager {
   // Called onPlayerQuit
   public void updatePlaytime(UUID uuid, Long playtime, Long akftime) {
     getUsersTable()
-      .insertOrUpdate(
-        uuid.toString(),
-        DataManager
-          .getInstance()
-          .getDBConfig()
-          .getString("database-settings.serverId"),
-        playtime,
-        akftime
-      );
+      .insertOrUpdate(uuid.toString(), serverId, playtime, akftime);
     userPlaytimes.remove(uuid);
   }
 
@@ -105,6 +117,10 @@ public class DatabaseManager {
       return userPlaytimes.get(uuid).get(server);
     }
     return null;
+  }
+
+  public Map<String, Long> getTimeForServer(UUID uuid) {
+    return getTimeForServer(uuid, serverId);
   }
 
   public Long getRawTotalPlaytime(UUID uuid) {
@@ -155,10 +171,6 @@ public class DatabaseManager {
       .getLogger()
       .info("[PlayTimes] Initiating purge of outdated playtime data...");
 
-    String serverId = DataManager
-      .getInstance()
-      .getDBConfig()
-      .getString("database-settings.serverId");
     int months = DataManager
       .getInstance()
       .getDBConfig()

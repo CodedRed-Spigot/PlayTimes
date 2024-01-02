@@ -1,6 +1,7 @@
 package me.codedred.playtimes.data;
 
 import me.codedred.playtimes.PlayTimes;
+import me.codedred.playtimes.data.database.manager.DatabaseManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -44,5 +45,12 @@ public class DataManager {
     data.reloadConfig();
     cfg.reloadConfig();
     db.reloadConfig();
+  }
+
+  public boolean hasDatabase() {
+    return (
+      getDBConfig().getBoolean("database-settings.enabled") &&
+      DatabaseManager.getInstance().isConnected()
+    );
   }
 }
