@@ -30,8 +30,6 @@ public class PlayTimes extends JavaPlugin {
   @Override
   public void onEnable() {
     checkForUpdate();
-    DataManager dataManager = DataManager.getInstance();
-    dataManager.reloadAll();
 
     ServerManager.getInstance().register();
     StatManager.getInstance().registerStatistics();

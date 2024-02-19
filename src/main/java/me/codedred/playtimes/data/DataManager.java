@@ -3,6 +3,7 @@ package me.codedred.playtimes.data;
 import me.codedred.playtimes.PlayTimes;
 import me.codedred.playtimes.afk.AFKManager;
 import me.codedred.playtimes.data.database.manager.DatabaseManager;
+import me.codedred.playtimes.server.ServerManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -46,6 +47,7 @@ public class DataManager {
     data.reloadConfig();
     cfg.reloadConfig();
     db.reloadConfig();
+    ServerManager.getInstance().updateLookupType();
     if (hasAfkEnabled()) AFKManager.getInstance().reload();
   }
 

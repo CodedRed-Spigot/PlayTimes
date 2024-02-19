@@ -125,6 +125,12 @@ public class CustomConfig {
       "&cCommand unavailable for %timeleft% seconds!"
     );
 
+    requiredKeys.put(
+      "uuid-lookups.what-does-this-do",
+      "https://github.com/CodedRed-Spigot/PlayTimes/wiki/UUID-LOOKUPS"
+    );
+    requiredKeys.put("uuid-lookups.type", "default");
+
     boolean changesMade = false;
     for (Map.Entry<String, Object> entry : requiredKeys.entrySet()) {
       if (!this.dataConfig.contains(entry.getKey())) {

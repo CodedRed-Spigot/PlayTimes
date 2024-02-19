@@ -60,6 +60,9 @@ public class Time implements CommandExecutor {
     sender.sendMessage(ChatUtil.format("&6&l*** PlayTimes Help ***"));
     sender.sendMessage(ChatUtil.format("&e/pt: &7Displays your play time"));
     sender.sendMessage(
+      ChatUtil.format("&e/pt <player>: &7Displays the play time of <player>")
+    );
+    sender.sendMessage(
       ChatUtil.format(
         "&e/pt reload: &7Reloads the PlayTimes plugin configurations"
       )
@@ -79,9 +82,6 @@ public class Time implements CommandExecutor {
     );
     sender.sendMessage(
       ChatUtil.format("&e/pt version: &7Displays the version info")
-    );
-    sender.sendMessage(
-      ChatUtil.format("&e/pt <player>: &7Displays the play time of <player>")
     );
   }
 
@@ -118,7 +118,11 @@ public class Time implements CommandExecutor {
       ChatColor.GOLD +
       "\nAFK Status: " +
       ChatColor.WHITE +
-      DataManager.getInstance().hasAfkEnabled()
+      DataManager.getInstance().hasAfkEnabled() +
+      ChatColor.GOLD +
+      "\nUUID Lookup Type: " +
+      ChatColor.WHITE +
+      ServerManager.getInstance().isOfflineLookup()
     );
   }
 

@@ -14,6 +14,7 @@ public class ServerManager {
   }
 
   private ServerStatus status;
+  private boolean offlineLookup = false;
 
   public void register() {
     if (Bukkit.getOnlineMode()) {
@@ -22,6 +23,7 @@ public class ServerManager {
       status = new ServerOffline();
     }
     cleanLeaderboard();
+    updateLookupType();
   }
 
   public ServerStatus getStatus() {
@@ -38,6 +40,30 @@ public class ServerManager {
 
   public boolean isOnline() {
     return getStatus().isOnline();
+  }
+
+  public boolean isOfflineLookup() {
+    return offlineLookup;
+  }
+
+  public void updateLookupType() {
+    DataManager dataManager = DataManager.getInstance();
+    boolean databaseEnabled = dataManager
+      .getDBConfig()
+      .getBoolean("database-settings.enabled");
+    String lookupType = dataManager
+      .getConfig()
+      .getString("uuid-lookups.type", "")
+      .toLowerCase();
+
+    boolean serverOnline = isOnline();
+
+    if ("online".equals(lookupType)) {
+      offlineLookup = false;
+    } else {
+      offlineLookup =
+        (!serverOnline && !databaseEnabled) || "offline".equals(lookupType);
+    }
   }
 
   private void cleanLeaderboard() {

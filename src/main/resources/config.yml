@@ -93,3 +93,10 @@ messages:
   player-not-found: "&cUnable to locate player."
   player-never-joined: "&cThis player has not joined the server."
   cooldown: "&cCommand unavailable for %timeleft% seconds!"
+
+# Do not change this unless you know what you're doing!
+# This setting is for servers experiencing issues when looking up offline players.
+# For more information, see the link below.
+uuid-lookups:
+  what-does-this-do: https://github.com/CodedRed-Spigot/PlayTimes/wiki/UUID-LOOKUPS
+  type: "default"

@@ -25,14 +25,24 @@ public class ServerOffline implements ServerStatus {
         new InputStreamReader(is, StandardCharsets.UTF_8)
       );
       JsonObject rootobj = new Gson().fromJson(rd, JsonObject.class);
-      String id = rootobj.get("id").getAsString();
+      UUID uuid;
 
-      String uuidWithDashes = id.replaceAll(
-        "(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})",
-        "$1-$2-$3-$4-$5"
-      );
+      if (ServerManager.getInstance().isOfflineLookup()) {
+        String fixedName = rootobj.get("name").getAsString();
+        uuid =
+          UUID.nameUUIDFromBytes(
+            ("OfflinePlayer:" + fixedName).getBytes(StandardCharsets.UTF_8)
+          );
+      } else {
+        String id = rootobj.get("id").getAsString();
+        String uuidWithDashes = id.replaceAll(
+          "(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})",
+          "$1-$2-$3-$4-$5"
+        );
 
-      UUID uuid = UUID.fromString(uuidWithDashes);
+        uuid = UUID.fromString(uuidWithDashes);
+      }
+
       if (!StatManager.getInstance().hasJoinedBefore(uuid)) {
         return null;
       }
