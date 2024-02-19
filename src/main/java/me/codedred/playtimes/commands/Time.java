@@ -44,7 +44,7 @@ public class Time implements CommandExecutor {
       case "top" -> handleTopCommand(sender);
       case "block" -> handleBlockCommand(sender, args, true);
       case "unblock" -> handleBlockCommand(sender, args, false);
-      case "debug" -> handleDebugCommand(sender);
+      case "version" -> handleVersionCommand(sender);
       case "help" -> handleHelpCommand(sender);
       default -> handleOtherPlayerCommand(sender, args);
     }
@@ -77,14 +77,14 @@ public class Time implements CommandExecutor {
       )
     );
     sender.sendMessage(
-      ChatUtil.format("&e/pt debug: &7Displays the debug info")
+      ChatUtil.format("&e/pt version: &7Displays the version info")
     );
     sender.sendMessage(
       ChatUtil.format("&e/pt <player>: &7Displays the play time of <player>")
     );
   }
 
-  private void handleDebugCommand(CommandSender sender) {
+  private void handleVersionCommand(CommandSender sender) {
     if (!sender.hasPermission("pt.reload")) {
       ChatUtil.errno(sender, ChatUtil.ChatTypes.NO_PERMISSION);
       return;
@@ -92,7 +92,7 @@ public class Time implements CommandExecutor {
     boolean isOnline = ServerManager.getInstance().isOnline();
     String serverStatus = isOnline ? "Online" : "Offline";
 
-    sender.sendMessage(ChatUtil.format("&6&l*** PlayTimes Debug ***"));
+    sender.sendMessage(ChatUtil.format("&6&l*** PlayTimes Version Info ***"));
     sender.sendMessage(
       ChatColor.GOLD +
       "Server version: " +
@@ -109,7 +109,15 @@ public class Time implements CommandExecutor {
       ChatColor.GOLD +
       "\nServerStatus: " +
       ChatColor.WHITE +
-      serverStatus
+      serverStatus +
+      ChatColor.GOLD +
+      "\nDatabase connected: " +
+      ChatColor.WHITE +
+      DataManager.getInstance().hasDatabase() +
+      ChatColor.GOLD +
+      "\nAFK Status: " +
+      ChatColor.WHITE +
+      DataManager.getInstance().hasAfkEnabled()
     );
   }
 

@@ -31,7 +31,7 @@ public class TimeTabCompleter implements TabCompleter {
       }
       if (sender.hasPermission("pt.reload")) {
         completions.add("reload");
-        completions.add("debug");
+        completions.add("version");
         completions.add("help");
       }
     }
