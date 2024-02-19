@@ -6,8 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import me.codedred.playtimes.PlayTimes;
 import me.codedred.playtimes.data.DataManager;
-import me.codedred.playtimes.player.OfflinePlayer;
-import me.codedred.playtimes.player.OnlinePlayer;
+import me.codedred.playtimes.models.Message;
 import me.codedred.playtimes.server.ServerManager;
 import me.codedred.playtimes.statistics.StatManager;
 import me.codedred.playtimes.time.TimeConstants;
@@ -15,6 +14,7 @@ import me.codedred.playtimes.time.TimeManager;
 import me.codedred.playtimes.utils.ChatUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -121,8 +121,13 @@ public class Time implements CommandExecutor {
       );
       return;
     }
-    OnlinePlayer player = new OnlinePlayer((Player) sender);
-    player.sendMessageToTarget();
+    Player player = (Player) sender;
+    Message message = new Message(
+      sender,
+      player.getUniqueId(),
+      player.getName()
+    );
+    message.sendMessageToTarget();
   }
 
   private void handleReloadCommand(CommandSender sender) {
@@ -232,15 +237,11 @@ public class Time implements CommandExecutor {
             Objects.requireNonNull(Bukkit.getPlayer(args[0])).getUniqueId();
         }
 
-        org.bukkit.OfflinePlayer offlinePlayer = Bukkit
+        OfflinePlayer offlinePlayer = Bukkit
           .getServer()
           .getOfflinePlayer(target);
-        OfflinePlayer player = new OfflinePlayer(
-          sender,
-          target,
-          offlinePlayer.getName()
-        );
-        player.sendMessageToTarget();
+        Message message = new Message(sender, target, offlinePlayer.getName());
+        message.sendMessageToTarget();
       }
     }
       .runTaskAsynchronously(JavaPlugin.getPlugin(PlayTimes.class));
