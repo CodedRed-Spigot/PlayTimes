@@ -157,6 +157,7 @@ public class OfflinePlayer {
 
     for (String msg : message) {
       if (DataManager.getInstance().hasDatabase()) {
+        DatabaseManager dbManager = DatabaseManager.getInstance();
         StringBuffer sb = new StringBuffer();
         Matcher matcher = Pattern
           .compile("%(rawtime|afktime|playtime)_(\\w+)%")
@@ -164,25 +165,32 @@ public class OfflinePlayer {
         while (matcher.find()) {
           String placeholderType = matcher.group(1);
           String serverId = matcher.group(2);
-          Long timeValue = DatabaseManager
-            .getInstance()
-            .getTimeForServer(target, serverId)
-            .get(placeholderType != "rawtime" ? placeholderType : "playtime");
 
-          if (placeholderType == "playtime") {
-            timeValue -=
-              DatabaseManager
-                .getInstance()
+          if (dbManager.hasTimeForServer(target, serverId)) {
+            Long timeValue = dbManager
+              .getTimeForServer(target, serverId)
+              .get(
+                !placeholderType.equals("rawtime")
+                  ? placeholderType
+                  : "playtime"
+              );
+
+            if (placeholderType.equals("playtime")) {
+              Long afktime = dbManager
                 .getTimeForServer(target, serverId)
                 .get("afktime");
-          }
+              timeValue -= afktime;
+            }
 
-          matcher.appendReplacement(
-            sb,
-            timeValue != null
-              ? timeManager.buildFormat(timeValue)
-              : timeManager.buildFormat(0)
-          );
+            matcher.appendReplacement(
+              sb,
+              timeValue != null
+                ? timeManager.buildFormat(timeValue)
+                : timeManager.buildFormat(0)
+            );
+          } else {
+            matcher.appendReplacement(sb, timeManager.buildFormat(0));
+          }
         }
         matcher.appendTail(sb);
         msg = sb.toString();
@@ -190,7 +198,10 @@ public class OfflinePlayer {
 
       // Replace other static placeholders
       for (Map.Entry<String, String> entry : replacements.entrySet()) {
-        msg = msg.replace(entry.getKey(), entry.getValue());
+        String value = entry.getValue() == null
+          ? entry.getKey()
+          : entry.getValue();
+        msg = msg.replace(entry.getKey(), value);
       }
 
       newMessage.add(msg);

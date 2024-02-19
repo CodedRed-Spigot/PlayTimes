@@ -16,8 +16,11 @@ public class ServerManager {
   private ServerStatus status;
 
   public void register() {
-    if (Bukkit.getOnlineMode()) status = new ServerOnline(); else status =
-      new ServerOffline();
+    if (Bukkit.getOnlineMode()) {
+      status = new ServerOnline();
+    } else {
+      status = new ServerOffline();
+    }
     cleanLeaderboard();
   }
 

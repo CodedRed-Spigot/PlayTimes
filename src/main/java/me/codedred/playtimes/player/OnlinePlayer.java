@@ -205,7 +205,10 @@ public class OnlinePlayer {
 
       // Replace other static placeholders
       for (Map.Entry<String, String> entry : replacements.entrySet()) {
-        msg = msg.replace(entry.getKey(), entry.getValue());
+        String value = entry.getValue() == null
+          ? entry.getKey()
+          : entry.getValue();
+        msg = msg.replace(entry.getKey(), value);
       }
 
       newMessage.add(msg);
