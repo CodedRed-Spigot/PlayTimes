@@ -84,11 +84,14 @@ public class Expansions extends PlaceholderExpansion {
   ) {
     if (DataManager.getInstance().hasDatabase()) {
       TimeManager timeManager = TimeManager.getInstance();
-      Long playtime = DatabaseManager
-        .getInstance()
-        .getTimeForServer(player.getUniqueId(), serverId)
-        .get("playtime");
-      return timeManager.buildFormat(playtime != null ? playtime : 0);
+      DatabaseManager dbManager = DatabaseManager.getInstance();
+      if (dbManager.hasTimeForServer(player.getUniqueId(), serverId)) {
+        Long playtime = dbManager
+          .getTimeForServer(player.getUniqueId(), serverId)
+          .get("playtime");
+        return timeManager.buildFormat(playtime != null ? playtime : 0);
+      }
+      return timeManager.buildFormat(0);
     }
     return "N/A";
   }

@@ -95,10 +95,14 @@ public class DatabaseManager {
     return this.usersTable;
   }
 
-  public void retrievePlaytime(UUID uuid) {
+  public boolean retrievePlaytime(UUID uuid) {
     Map<String, Map<String, Long>> timeMap = getUsersTable()
       .getPlaytimesByUuid(uuid);
-    userPlaytimes.put(uuid, timeMap);
+    if (timeMap != null && !timeMap.isEmpty()) {
+      userPlaytimes.put(uuid, timeMap);
+      return true;
+    }
+    return false;
   }
 
   public void updatePlaytime(UUID uuid, Long playtime, Long afktime) {
@@ -113,9 +117,11 @@ public class DatabaseManager {
   }
 
   public boolean hasTimeForServer(UUID uuid, String server) {
+    if (!userPlaytimes.containsKey(uuid)) {
+      return retrievePlaytime(uuid);
+    }
     return (
       userPlaytimes.containsKey(uuid) &&
-      userPlaytimes.get(uuid) != null &&
       userPlaytimes.get(uuid).containsKey(server)
     );
   }
