@@ -103,11 +103,11 @@ public class Time implements CommandExecutor {
       ChatColor.WHITE +
       JavaPlugin.getPlugin(PlayTimes.class).getDescription().getVersion() +
       ChatColor.GOLD +
-      "\nStatManager: " +
+      "\nStat Manager: " +
       ChatColor.WHITE +
       StatManager.getInstance().name +
       ChatColor.GOLD +
-      "\nServerStatus: " +
+      "\nServer Status: " +
       ChatColor.WHITE +
       serverStatus +
       ChatColor.GOLD +

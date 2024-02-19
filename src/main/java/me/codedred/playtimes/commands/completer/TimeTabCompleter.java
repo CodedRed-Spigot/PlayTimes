@@ -7,6 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.MetadataValue;
 import org.jetbrains.annotations.NotNull;
 
 public class TimeTabCompleter implements TabCompleter {
@@ -23,7 +24,7 @@ public class TimeTabCompleter implements TabCompleter {
     if (args.length == 1) {
       if (sender.hasPermission("pt.use")) {
         completions.add("top");
-        completions.addAll(getOnlinePlayerNames());
+        completions.addAll(getOnlinePlayerNames(sender));
       }
       if (sender.hasPermission("pt.block")) {
         completions.add("block");
@@ -39,11 +40,24 @@ public class TimeTabCompleter implements TabCompleter {
     return completions;
   }
 
-  private List<String> getOnlinePlayerNames() {
+  private List<String> getOnlinePlayerNames(CommandSender sender) {
     List<String> playerNames = new ArrayList<>();
     for (Player player : Bukkit.getOnlinePlayers()) {
-      playerNames.add(player.getName());
+      if (
+        !isVanished(player) ||
+        sender.equals(player) ||
+        sender.hasPermission("pt.seevanished")
+      ) {
+        playerNames.add(player.getName());
+      }
     }
     return playerNames;
+  }
+
+  private boolean isVanished(Player player) {
+    for (MetadataValue meta : player.getMetadata("vanished")) {
+      if (meta.asBoolean()) return true;
+    }
+    return false;
   }
 }
