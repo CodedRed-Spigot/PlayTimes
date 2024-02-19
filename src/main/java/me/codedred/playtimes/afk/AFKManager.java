@@ -90,7 +90,10 @@ public class AFKManager {
   private Long getDefaultAfkTime(UUID uuid) {
     DataManager dataManager = DataManager.getInstance();
 
-    if (dataManager.hasDatabase()) {
+    if (
+      dataManager.hasDatabase() &&
+      DatabaseManager.getInstance().hasTimeForServer(uuid)
+    ) {
       Map<String, Long> timeMap = DatabaseManager
         .getInstance()
         .getTimeForServer(uuid);

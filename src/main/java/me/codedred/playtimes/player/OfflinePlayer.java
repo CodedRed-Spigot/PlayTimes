@@ -55,6 +55,11 @@ public class OfflinePlayer {
     long rawTime = statManager.getPlayerStat(target, StatisticType.PLAYTIME);
     long afkTime = AFKManager.getInstance().getAFKTime(target);
 
+    if (dataManager.hasDatabase()) {
+      DatabaseManager dbManager = DatabaseManager.getInstance();
+      dbManager.updatePlaytime(target, rawTime / 20, afkTime);
+    }
+
     if (ServerUtils.hasPAPI()) {
       builtMessage = applyPAPIPlaceholders(builtMessage);
     }

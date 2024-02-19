@@ -95,28 +95,31 @@ public class DatabaseManager {
     return this.usersTable;
   }
 
-  // Called onPlayerJoin
   public void retrievePlaytime(UUID uuid) {
     Map<String, Map<String, Long>> timeMap = getUsersTable()
       .getPlaytimesByUuid(uuid);
     userPlaytimes.put(uuid, timeMap);
   }
 
-  // Called onPlayerQuit
   public void updatePlaytime(UUID uuid, Long playtime, Long akftime) {
     getUsersTable()
       .insertOrUpdate(uuid.toString(), serverId, playtime, akftime);
-    userPlaytimes.remove(uuid);
+  }
+
+  public boolean hasTimeForServer(UUID uuid, String server) {
+    return (
+      userPlaytimes.containsKey(uuid) &&
+      userPlaytimes.get(uuid) != null &&
+      userPlaytimes.get(uuid).containsKey(server)
+    );
+  }
+
+  public boolean hasTimeForServer(UUID uuid) {
+    return (hasTimeForServer(uuid, serverId));
   }
 
   public Map<String, Long> getTimeForServer(UUID uuid, String server) {
-    if (
-      userPlaytimes.containsKey(uuid) &&
-      userPlaytimes.get(uuid).containsKey(server)
-    ) {
-      return userPlaytimes.get(uuid).get(server);
-    }
-    return null;
+    return userPlaytimes.get(uuid).get(server);
   }
 
   public Map<String, Long> getTimeForServer(UUID uuid) {
@@ -124,25 +127,33 @@ public class DatabaseManager {
   }
 
   public Long getTotalRawtime(UUID uuid) {
-    Long playtime = 0L;
-    Map<String, Long> userPlaytimeMap = userPlaytimes.get(uuid).get("playtime");
+    Long rawtime = 0L;
 
-    if (userPlaytimeMap != null) {
-      for (Long individualPlaytime : userPlaytimeMap.values()) {
-        playtime += individualPlaytime;
+    Map<String, Map<String, Long>> userTimeData = userPlaytimes.get(uuid);
+
+    if (userTimeData != null) {
+      for (Map<String, Long> serverData : userTimeData.values()) {
+        if (serverData != null) {
+          Long individualRawtime = serverData.getOrDefault("playtime", 0L);
+          rawtime += individualRawtime;
+        }
       }
     }
 
-    return playtime;
+    return rawtime;
   }
 
   public Long getTotalAfktime(UUID uuid) {
     Long afktime = 0L;
-    Map<String, Long> userPlaytimeMap = userPlaytimes.get(uuid).get("afktime");
 
-    if (userPlaytimeMap != null) {
-      for (Long individualAfktime : userPlaytimeMap.values()) {
-        afktime += individualAfktime;
+    Map<String, Map<String, Long>> userTimeData = userPlaytimes.get(uuid);
+
+    if (userTimeData != null) {
+      for (Map<String, Long> serverData : userTimeData.values()) {
+        if (serverData != null) {
+          Long individualAfktime = serverData.getOrDefault("afktime", 0L);
+          afktime += individualAfktime;
+        }
       }
     }
 

@@ -49,6 +49,11 @@ public class OnlinePlayer {
     long rawTime = getPlaytimeStat();
     long afkTime = AFKManager.getInstance().getAFKTime(target.getUniqueId());
 
+    if (dataManager.hasDatabase()) {
+      DatabaseManager dbManager = DatabaseManager.getInstance();
+      dbManager.updatePlaytime(target.getUniqueId(), rawTime / 20, afkTime);
+    }
+
     builtMessage.addAll(
       dataManager.getConfig().getStringList("playtime.message")
     );
@@ -121,9 +126,6 @@ public class OnlinePlayer {
     );
 
     if (DataManager.getInstance().hasDatabase()) {
-      replacements.put("%playtime_serverId%", "((Missing ServerId))");
-      replacements.put("%afktime_serverId%", "((Missing ServerId!))");
-      replacements.put("%rawtime_serverId%", "((Missing ServerId!))");
       replacements.put(
         "%global_playtime%",
         timeManager.buildFormat(
@@ -159,6 +161,7 @@ public class OnlinePlayer {
     Map<String, String> replacements
   ) {
     List<String> newMessage = new ArrayList<>();
+    DatabaseManager dbManager = DatabaseManager.getInstance();
 
     for (String msg : message) {
       if (DataManager.getInstance().hasDatabase()) {
@@ -169,25 +172,32 @@ public class OnlinePlayer {
         while (matcher.find()) {
           String placeholderType = matcher.group(1);
           String serverId = matcher.group(2);
-          Long timeValue = DatabaseManager
-            .getInstance()
-            .getTimeForServer(target.getUniqueId(), serverId)
-            .get(placeholderType != "rawtime" ? placeholderType : "playtime");
 
-          if (placeholderType == "playtime") {
-            timeValue -=
-              DatabaseManager
-                .getInstance()
+          if (dbManager.hasTimeForServer(target.getUniqueId(), serverId)) {
+            Long timeValue = dbManager
+              .getTimeForServer(target.getUniqueId(), serverId)
+              .get(
+                !placeholderType.equals("rawtime")
+                  ? placeholderType
+                  : "playtime"
+              );
+
+            if (placeholderType.equals("playtime")) {
+              Long afktime = dbManager
                 .getTimeForServer(target.getUniqueId(), serverId)
                 .get("afktime");
-          }
+              timeValue -= afktime;
+            }
 
-          matcher.appendReplacement(
-            sb,
-            timeValue != null
-              ? timeManager.buildFormat(timeValue)
-              : timeManager.buildFormat(0)
-          );
+            matcher.appendReplacement(
+              sb,
+              timeValue != null
+                ? timeManager.buildFormat(timeValue)
+                : timeManager.buildFormat(0)
+            );
+          } else {
+            matcher.appendReplacement(sb, timeManager.buildFormat(0));
+          }
         }
         matcher.appendTail(sb);
         msg = sb.toString();
