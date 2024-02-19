@@ -101,9 +101,15 @@ public class DatabaseManager {
     userPlaytimes.put(uuid, timeMap);
   }
 
-  public void updatePlaytime(UUID uuid, Long playtime, Long akftime) {
+  public void updatePlaytime(UUID uuid, Long playtime, Long afktime) {
     getUsersTable()
-      .insertOrUpdate(uuid.toString(), serverId, playtime, akftime);
+      .insertOrUpdate(uuid.toString(), serverId, playtime, afktime);
+
+    userPlaytimes
+      .computeIfAbsent(uuid, k -> new HashMap<>())
+      .computeIfAbsent(serverId, k -> new HashMap<>())
+      .put("playtime", playtime);
+    userPlaytimes.get(uuid).get(serverId).put("afktime", afktime);
   }
 
   public boolean hasTimeForServer(UUID uuid, String server) {

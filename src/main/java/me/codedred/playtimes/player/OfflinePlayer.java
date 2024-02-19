@@ -118,9 +118,6 @@ public class OfflinePlayer {
     replacements.put("%joindate%", statManager.getJoinDate(target));
 
     if (DataManager.getInstance().hasDatabase()) {
-      replacements.put("%playtime_serverId%", "((Missing ServerId!))");
-      replacements.put("%afktime_serverId%", "((Missing ServerId!))");
-      replacements.put("%rawtime_serverId%", "((Missing ServerId!))");
       replacements.put(
         "%global_playtime%",
         timeManager.buildFormat(
