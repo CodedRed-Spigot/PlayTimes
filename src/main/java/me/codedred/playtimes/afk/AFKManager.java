@@ -10,6 +10,7 @@ import me.codedred.playtimes.utils.ChatUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 
 public class AFKManager {
 
@@ -25,6 +26,8 @@ public class AFKManager {
 
   private String onAfkMessage;
   private String onBackMessage;
+
+  private BukkitTask afkCheckerTask = null;
 
   private AFKManager() {
     config = DataManager.getInstance().getConfig();
@@ -61,30 +64,42 @@ public class AFKManager {
   }
 
   public void startAFKChecker() {
-    Bukkit
-      .getScheduler()
-      .runTaskTimerAsynchronously(
-        PlayTimes.getPlugin(PlayTimes.class),
-        () -> {
-          for (Player player : Bukkit.getOnlinePlayers()) {
-            if (isAFK(player)) {
-              if (!afkTime.containsKey(player.getUniqueId()) && notifyOnAfk) {
-                player.sendMessage(ChatUtil.format(onAfkMessage));
+    if (afkCheckerTask == null || afkCheckerTask.isCancelled()) {
+      afkCheckerTask =
+        Bukkit
+          .getScheduler()
+          .runTaskTimerAsynchronously(
+            PlayTimes.getPlugin(PlayTimes.class),
+            () -> {
+              for (Player player : Bukkit.getOnlinePlayers()) {
+                if (isAFK(player)) {
+                  if (
+                    !afkTime.containsKey(player.getUniqueId()) && notifyOnAfk
+                  ) {
+                    player.sendMessage(ChatUtil.format(onAfkMessage));
+                  }
+                  afkTime.put(
+                    player.getUniqueId(),
+                    afkTime.getOrDefault(
+                      player.getUniqueId(),
+                      getDefaultAfkTime(player.getUniqueId())
+                    ) +
+                    1
+                  );
+                }
               }
-              afkTime.put(
-                player.getUniqueId(),
-                afkTime.getOrDefault(
-                  player.getUniqueId(),
-                  getDefaultAfkTime(player.getUniqueId())
-                ) +
-                1
-              );
-            }
-          }
-        },
-        20L,
-        20L
-      );
+            },
+            20L,
+            20L
+          );
+    }
+  }
+
+  public void endAFKChecker() {
+    if (afkCheckerTask != null) {
+      afkCheckerTask.cancel();
+      afkCheckerTask = null;
+    }
   }
 
   private Long getDefaultAfkTime(UUID uuid) {
@@ -113,11 +128,13 @@ public class AFKManager {
   }
 
   public void reload() {
+    endAFKChecker();
     FileConfiguration config = DataManager.getInstance().getConfig();
     afkThresholdMillis = config.getLong("afk-settings.threshold") * 60L * 1000L;
     notifyOnAfk = config.getBoolean("afk-settings.broadcast-afk.on-enter-afk");
     notifyOnBack = config.getBoolean("afk-settings.broadcast-afk.on-exit-afk");
     onAfkMessage = config.getString("afk-settings.on-enter-afk-message");
     onBackMessage = config.getString("afk-settings.on-exit-afk-message");
+    startAFKChecker();
   }
 }

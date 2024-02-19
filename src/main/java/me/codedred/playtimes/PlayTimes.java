@@ -57,6 +57,7 @@ public class PlayTimes extends JavaPlugin {
 
   @Override
   public void onDisable() {
+    AFKManager.getInstance().endAFKChecker();
     getLogger().info("PlayTimes shutting down");
   }
 
