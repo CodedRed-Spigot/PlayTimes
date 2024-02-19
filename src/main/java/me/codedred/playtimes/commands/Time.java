@@ -129,13 +129,20 @@ public class Time implements CommandExecutor {
       );
       return;
     }
-    Player player = (Player) sender;
-    Message message = new Message(
-      sender,
-      player.getUniqueId(),
-      player.getName()
-    );
-    message.sendMessageToTarget();
+
+    new BukkitRunnable() {
+      @Override
+      public void run() {
+        Player player = (Player) sender;
+        Message message = new Message(
+          sender,
+          player.getUniqueId(),
+          player.getName()
+        );
+        message.sendMessageToTarget();
+      }
+    }
+      .runTaskAsynchronously(JavaPlugin.getPlugin(PlayTimes.class));
   }
 
   private void handleReloadCommand(CommandSender sender) {
