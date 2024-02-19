@@ -41,6 +41,7 @@ public class Time implements CommandExecutor {
     switch (args.length > 0 ? args[0].toLowerCase() : "") {
       case "" -> handlePlayerCommand(sender);
       case "reload" -> handleReloadCommand(sender);
+      case "reloaddatabase" -> handleReloadDatabaseCommand(sender);
       case "top" -> handleTopCommand(sender);
       case "block" -> handleBlockCommand(sender, args, true);
       case "unblock" -> handleBlockCommand(sender, args, false);
@@ -154,6 +155,27 @@ public class Time implements CommandExecutor {
     TimeConstants.reload();
     TimeManager.getInstance().registerTimings();
     sender.sendMessage(ChatUtil.format("&aPlayTimes Configurations Reloaded!"));
+    if (DataManager.getInstance().hasDatabase()) {
+      sender.sendMessage(
+        ChatUtil.format("&aTrying to reload the Database settings?")
+      );
+      sender.sendMessage(ChatUtil.format(" &e&oTry, /pt reloadDatabase"));
+    }
+  }
+
+  private void handleReloadDatabaseCommand(CommandSender sender) {
+    if (!sender.hasPermission("pt.reload")) {
+      ChatUtil.errno(sender, ChatUtil.ChatTypes.NO_PERMISSION);
+      return;
+    }
+    data.reloadDatabase();
+    PlayTimes.getPlugin(PlayTimes.class).loadDatabase();
+    sender.sendMessage(ChatUtil.format("&aDatabase Reloaded."));
+    sender.sendMessage(
+      ChatUtil.format(
+        "&oIf you are still encountering issues try restarting your server."
+      )
+    );
   }
 
   private void handleTopCommand(CommandSender sender) {

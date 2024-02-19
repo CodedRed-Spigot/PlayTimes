@@ -49,6 +49,10 @@ public class DataManager {
     if (hasAfkEnabled()) AFKManager.getInstance().reload();
   }
 
+  public void reloadDatabase() {
+    db.reloadConfig();
+  }
+
   public boolean hasDatabase() {
     return (
       getDBConfig().getBoolean("database-settings.enabled") &&
