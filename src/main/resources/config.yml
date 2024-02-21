@@ -42,7 +42,7 @@ playtime:
   round-numbers: true
 
 # AFK Tracker Configuration
-# NOTE: When enabled, this will remove afk time from %time% placeholder
+# NOTE: When enabled, this will remove afk time from %playtime% placeholder
 afk-settings:
   enabled: true
 
