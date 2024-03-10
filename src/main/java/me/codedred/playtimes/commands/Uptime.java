@@ -42,7 +42,8 @@ public class Uptime implements CommandExecutor {
       .getStringList("uptime.message");
 
     for (String message : messages) {
-      if (ServerUtils.hasPAPI() && sender instanceof Player player) {
+      if (ServerUtils.hasPAPI() && sender instanceof Player) {
+        Player player = (Player) sender;
         message = PlaceholderAPI.setPlaceholders(player, message);
       }
 

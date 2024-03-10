@@ -38,17 +38,38 @@ public class Time implements CommandExecutor {
       return true;
     }
 
-    switch (args.length > 0 ? args[0].toLowerCase() : "") {
-      case "" -> handlePlayerCommand(sender);
-      case "reload" -> handleReloadCommand(sender);
-      case "reloaddatabase" -> handleReloadDatabaseCommand(sender);
-      case "top" -> handleTopCommand(sender);
-      case "block" -> handleBlockCommand(sender, args, true);
-      case "unblock" -> handleBlockCommand(sender, args, false);
-      case "version" -> handleVersionCommand(sender);
-      case "help" -> handleHelpCommand(sender);
-      default -> handleOtherPlayerCommand(sender, args);
+    String arg = args.length > 0 ? args[0].toLowerCase() : "";
+
+    switch (arg) {
+      case "":
+        handlePlayerCommand(sender);
+        break;
+      case "reload":
+        handleReloadCommand(sender);
+        break;
+      case "reloaddatabase":
+        handleReloadDatabaseCommand(sender);
+        break;
+      case "top":
+        handleTopCommand(sender);
+        break;
+      case "block":
+        handleBlockCommand(sender, args, true);
+        break;
+      case "unblock":
+        handleBlockCommand(sender, args, false);
+        break;
+      case "version":
+        handleVersionCommand(sender);
+        break;
+      case "help":
+        handleHelpCommand(sender);
+        break;
+      default:
+        handleOtherPlayerCommand(sender, args);
+        break;
     }
+
     return true;
   }
 

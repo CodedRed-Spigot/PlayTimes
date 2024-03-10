@@ -22,25 +22,21 @@ public class RisenStats implements Stats {
     );
 
     File playerStatistics = new File(worldFolder, uuid + ".json");
-
     if (playerStatistics.exists()) {
       try {
         JsonObject jsonObject = new Gson()
           .fromJson(new FileReader(playerStatistics), JsonObject.class);
-
         JsonObject pilot = (JsonObject) jsonObject.get("stats");
         JsonObject passenger = (JsonObject) pilot.get("minecraft:custom");
 
         switch (type) {
-          case PLAYTIME -> {
+          case PLAYTIME:
             if (passenger.get("minecraft:play_time") == null) return passenger
               .get("minecraft:play_one_minute")
               .getAsLong();
             return passenger.get("minecraft:play_time").getAsLong();
-          }
-          case TIMES_JOINED -> {
+          case TIMES_JOINED:
             return passenger.get("minecraft:leave_game").getAsLong();
-          }
         }
       } catch (Exception e) {
         //e.printStackTrace();
@@ -51,10 +47,14 @@ public class RisenStats implements Stats {
 
   @Override
   public long getOnlineStatistic(Player player, StatisticType type) {
-    return switch (type) {
-      case PLAYTIME -> player.getStatistic(Statistic.PLAY_ONE_MINUTE);
-      case TIMES_JOINED -> player.getStatistic(Statistic.LEAVE_GAME) + 1;
-    };
+    switch (type) {
+      case PLAYTIME:
+        return player.getStatistic(Statistic.PLAY_ONE_MINUTE);
+      case TIMES_JOINED:
+        return player.getStatistic(Statistic.LEAVE_GAME) + 1;
+      default:
+        return 0;
+    }
   }
 
   @Override
@@ -70,6 +70,7 @@ public class RisenStats implements Stats {
       DataManager.getInstance().getConfig().getString("date-format")
     );
     Calendar calendar = Calendar.getInstance();
+
     if (player == null) {
       calendar.setTimeInMillis(Bukkit.getOfflinePlayer(uuid).getFirstPlayed());
       return simpleDateFormat.format(calendar.getTime());
@@ -77,6 +78,7 @@ public class RisenStats implements Stats {
       calendar.setTimeInMillis(player.getFirstPlayed());
       return simpleDateFormat.format(calendar.getTime());
     }
+
     return "Never Joined";
   }
 }

@@ -162,7 +162,7 @@ public class Message {
     Pattern pattern = Pattern.compile("%(rawtime|afktime|playtime)_(\\w+)%");
 
     for (String msg : message) {
-      StringBuilder sb = new StringBuilder();
+      StringBuffer sb = new StringBuffer();
       if (hasDatabase && dbManager != null) {
         Matcher matcher = pattern.matcher(msg);
         while (matcher.find()) {

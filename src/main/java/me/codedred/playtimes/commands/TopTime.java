@@ -34,8 +34,9 @@ public class TopTime implements CommandExecutor {
     if (
       data.getConfig().getBoolean("top-playtime.enable-cooldown") &&
       !sender.hasPermission("pt.block-cooldown") &&
-      sender instanceof Player player
+      sender instanceof Player
     ) {
+      Player player = (Player) sender;
       if (CoolDownUtil.contains(player.getUniqueId())) {
         String cooldownMessage = Objects
           .requireNonNull(data.getConfig().getString("messages.cooldown"))

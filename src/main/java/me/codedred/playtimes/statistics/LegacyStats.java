@@ -22,10 +22,12 @@ public class LegacyStats implements Stats {
         JsonObject jsonObject = new Gson()
           .fromJson(new FileReader(playerStatistics), JsonObject.class);
 
-        return switch (type) {
-          case PLAYTIME -> jsonObject.get("stat.playOneMinute").getAsLong();
-          case TIMES_JOINED -> jsonObject.get("stat.leaveGame").getAsLong();
-        };
+        switch (type) {
+          case PLAYTIME:
+            return jsonObject.get("stat.playOneMinute").getAsLong();
+          case TIMES_JOINED:
+            return jsonObject.get("stat.leaveGame").getAsLong();
+        }
       } catch (Exception e) {
         //e.printStackTrace();
       }
@@ -51,6 +53,7 @@ public class LegacyStats implements Stats {
       DataManager.getInstance().getConfig().getString("date-format")
     );
     Calendar calendar = Calendar.getInstance();
+
     if (player == null) {
       calendar.setTimeInMillis(Bukkit.getOfflinePlayer(uuid).getFirstPlayed());
       return simpleDateFormat.format(calendar.getTime());
@@ -58,6 +61,7 @@ public class LegacyStats implements Stats {
       calendar.setTimeInMillis(player.getFirstPlayed());
       return simpleDateFormat.format(calendar.getTime());
     }
+
     return "Never Joined";
   }
 }

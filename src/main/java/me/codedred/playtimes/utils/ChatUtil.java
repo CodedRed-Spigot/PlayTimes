@@ -17,19 +17,25 @@ public class ChatUtil {
 
   public static void errno(CommandSender sender, ChatTypes type) {
     switch (type) {
-      case NO_PERMISSION -> sender.sendMessage(
-        format(DATA_MANAGER.getConfig().getString("messages.noPermission"))
-      );
-      case PLAYER_NOT_FOUND -> sender.sendMessage(
-        formatWithPrefix(
-          DATA_MANAGER.getConfig().getString("messages.player-not-found")
-        )
-      );
-      case PLAYER_NEVER_PLAYED -> sender.sendMessage(
-        formatWithPrefix(
-          DATA_MANAGER.getConfig().getString("messages.player-never-joined")
-        )
-      );
+      case NO_PERMISSION:
+        sender.sendMessage(
+          format(DATA_MANAGER.getConfig().getString("messages.noPermission"))
+        );
+        break;
+      case PLAYER_NOT_FOUND:
+        sender.sendMessage(
+          formatWithPrefix(
+            DATA_MANAGER.getConfig().getString("messages.player-not-found")
+          )
+        );
+        break;
+      case PLAYER_NEVER_PLAYED:
+        sender.sendMessage(
+          formatWithPrefix(
+            DATA_MANAGER.getConfig().getString("messages.player-never-joined")
+          )
+        );
+        break;
     }
   }
 
