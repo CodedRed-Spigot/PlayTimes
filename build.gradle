@@ -29,7 +29,7 @@ java {
     if (JavaVersion.current() < javaVersion) {
         toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     }
-}
+} 
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'

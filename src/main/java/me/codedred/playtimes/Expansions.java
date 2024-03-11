@@ -32,7 +32,7 @@ public class Expansions extends PlaceholderExpansion {
 
   @Override
   public @NotNull String getVersion() {
-    return "1.5.4";
+    return "1.6.1";
   }
 
   @Override
@@ -56,24 +56,66 @@ public class Expansions extends PlaceholderExpansion {
             .getInstance()
             .getPlayerStat(player.getUniqueId(), StatisticType.TIMES_JOINED)
         );
-      // New cases for %PlayTimes_playtime_serverId% and %PlayTimes_total%
-      case "total":
-        return getTotalPlaytime(player);
+      case "rawtime":
+        return getRawtime(player);
+      case "afktime":
+        return getAfktime(player);
+      case "global_playtime":
+        return getGlobalPlaytime(player);
+      case "global_rawtime":
+        return getGlobalRawtime(player);
+      case "global_afktime":
+        return getGlobalAfktime(player);
       default:
-        if (identifier.startsWith("db_")) {
-          return getServerSpecificPlaytime(player, identifier.substring(3));
+        if (identifier.startsWith("rawtime_")) {
+          return getServerSpecificRawtime(player, identifier.substring(8));
+        }
+        if (identifier.startsWith("playtime_")) {
+          return getServerSpecificPlaytime(player, identifier.substring(9));
+        }
+        if (identifier.startsWith("afktime_")) {
+          return getServerSpecificAfktime(player, identifier.substring(8));
         }
         return handleLeaderboardIdentifier(identifier);
     }
   }
 
-  private String getTotalPlaytime(OfflinePlayer player) {
+  private String getRawtime(OfflinePlayer player) {
     if (DataManager.getInstance().hasDatabase()) {
       TimeManager timeManager = TimeManager.getInstance();
-      Long totalPlaytime = DatabaseManager
+      Long rawtime = DatabaseManager
         .getInstance()
-        .getTotalPlaytime(player.getUniqueId());
-      return timeManager.buildFormat(totalPlaytime != null ? totalPlaytime : 0);
+        .getTotalRawtime(player.getUniqueId());
+      return timeManager.buildFormat(rawtime != null ? rawtime : 0);
+    }
+    return "N/A";
+  }
+
+  private String getAfktime(OfflinePlayer player) {
+    if (DataManager.getInstance().hasDatabase()) {
+      TimeManager timeManager = TimeManager.getInstance();
+      Long afktime = DatabaseManager
+        .getInstance()
+        .getTotalAfktime(player.getUniqueId());
+      return timeManager.buildFormat(afktime != null ? afktime : 0);
+    }
+    return "N/A";
+  }
+
+  private String getServerSpecificRawtime(
+    OfflinePlayer player,
+    String serverId
+  ) {
+    if (DataManager.getInstance().hasDatabase()) {
+      TimeManager timeManager = TimeManager.getInstance();
+      DatabaseManager dbManager = DatabaseManager.getInstance();
+      if (dbManager.hasTimeForServer(player.getUniqueId(), serverId)) {
+        Long rawtime = dbManager
+          .getTimeForServer(player.getUniqueId(), serverId)
+          .get("playtime");
+        return timeManager.buildFormat(rawtime != null ? rawtime : 0);
+      }
+      return timeManager.buildFormat(0);
     }
     return "N/A";
   }
@@ -86,12 +128,69 @@ public class Expansions extends PlaceholderExpansion {
       TimeManager timeManager = TimeManager.getInstance();
       DatabaseManager dbManager = DatabaseManager.getInstance();
       if (dbManager.hasTimeForServer(player.getUniqueId(), serverId)) {
-        Long playtime = dbManager
-          .getTimeForServer(player.getUniqueId(), serverId)
-          .get("playtime");
+        Map<String, Long> timeForServer = dbManager.getTimeForServer(
+          player.getUniqueId(),
+          serverId
+        );
+        Long playtime =
+          timeForServer.get("playtime") -
+          timeForServer.getOrDefault("afktime", 0L);
         return timeManager.buildFormat(playtime != null ? playtime : 0);
       }
       return timeManager.buildFormat(0);
+    }
+    return "N/A";
+  }
+
+  private String getServerSpecificAfktime(
+    OfflinePlayer player,
+    String serverId
+  ) {
+    if (DataManager.getInstance().hasDatabase()) {
+      TimeManager timeManager = TimeManager.getInstance();
+      DatabaseManager dbManager = DatabaseManager.getInstance();
+      if (dbManager.hasTimeForServer(player.getUniqueId(), serverId)) {
+        Long afktime = dbManager
+          .getTimeForServer(player.getUniqueId(), serverId)
+          .get("afktime");
+        return timeManager.buildFormat(afktime != null ? afktime : 0);
+      }
+      return timeManager.buildFormat(0);
+    }
+    return "N/A";
+  }
+
+  private String getGlobalPlaytime(OfflinePlayer player) {
+    if (DataManager.getInstance().hasDatabase()) {
+      TimeManager timeManager = TimeManager.getInstance();
+      Long globalPlaytime = DatabaseManager
+        .getInstance()
+        .getTotalPlaytime(player.getUniqueId());
+      return timeManager.buildFormat(
+        globalPlaytime != null ? globalPlaytime : 0
+      );
+    }
+    return "N/A";
+  }
+
+  private String getGlobalRawtime(OfflinePlayer player) {
+    if (DataManager.getInstance().hasDatabase()) {
+      TimeManager timeManager = TimeManager.getInstance();
+      Long globalRawtime = DatabaseManager
+        .getInstance()
+        .getTotalRawtime(player.getUniqueId());
+      return timeManager.buildFormat(globalRawtime != null ? globalRawtime : 0);
+    }
+    return "N/A";
+  }
+
+  private String getGlobalAfktime(OfflinePlayer player) {
+    if (DataManager.getInstance().hasDatabase()) {
+      TimeManager timeManager = TimeManager.getInstance();
+      Long globalAfktime = DatabaseManager
+        .getInstance()
+        .getTotalAfktime(player.getUniqueId());
+      return timeManager.buildFormat(globalAfktime != null ? globalAfktime : 0);
     }
     return "N/A";
   }
