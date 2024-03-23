@@ -6,11 +6,14 @@ import java.util.Map;
 import java.util.UUID;
 import lombok.Getter;
 import me.codedred.playtimes.PlayTimes;
+import me.codedred.playtimes.afk.AFKManager;
 import me.codedred.playtimes.data.DataManager;
 import me.codedred.playtimes.data.database.datasource.DataSource;
 import me.codedred.playtimes.data.database.datasource.impl.MySQL;
 import me.codedred.playtimes.data.database.datasource.impl.SQLite;
 import me.codedred.playtimes.data.database.table.UsersTable;
+import me.codedred.playtimes.statistics.StatManager;
+import me.codedred.playtimes.statistics.StatisticType;
 import org.bukkit.Bukkit;
 
 @Getter
@@ -140,35 +143,39 @@ public class DatabaseManager {
 
   public Long getTotalRawtime(UUID uuid) {
     Long rawtime = 0L;
-
     Map<String, Map<String, Long>> userTimeData = userPlaytimes.get(uuid);
-
     if (userTimeData != null) {
-      for (Map<String, Long> serverData : userTimeData.values()) {
-        if (serverData != null) {
+      for (Map.Entry<String, Map<String, Long>> entry : userTimeData.entrySet()) {
+        String server = entry.getKey();
+        Map<String, Long> serverData = entry.getValue();
+        if (!server.equals(serverId)) {
           Long individualRawtime = serverData.getOrDefault("playtime", 0L);
           rawtime += individualRawtime;
         }
       }
     }
-
+    StatManager stats = StatManager.getInstance();
+    Long currentServerRawtime =
+      stats.getPlayerStat(uuid, StatisticType.PLAYTIME) / 20;
+    rawtime += currentServerRawtime;
     return rawtime;
   }
 
   public Long getTotalAfktime(UUID uuid) {
     Long afktime = 0L;
-
     Map<String, Map<String, Long>> userTimeData = userPlaytimes.get(uuid);
-
     if (userTimeData != null) {
-      for (Map<String, Long> serverData : userTimeData.values()) {
-        if (serverData != null) {
+      for (Map.Entry<String, Map<String, Long>> entry : userTimeData.entrySet()) {
+        String server = entry.getKey();
+        Map<String, Long> serverData = entry.getValue();
+        if (!server.equals(serverId)) {
           Long individualAfktime = serverData.getOrDefault("afktime", 0L);
           afktime += individualAfktime;
         }
       }
     }
-
+    long currentServerAfkTime = AFKManager.getInstance().getAFKTime(uuid);
+    afktime += currentServerAfkTime;
     return afktime;
   }
 
@@ -180,11 +187,24 @@ public class DatabaseManager {
     Map<String, Map<String, Long>> userTimeData = userPlaytimes.get(uuid);
 
     if (userTimeData != null) {
-      for (Map<String, Long> serverData : userTimeData.values()) {
-        totalPlaytime += serverData.getOrDefault("playtime", 0L);
-        totalAfktime += serverData.getOrDefault("afktime", 0L);
+      for (Map.Entry<String, Map<String, Long>> entry : userTimeData.entrySet()) {
+        String server = entry.getKey();
+        Map<String, Long> serverData = entry.getValue();
+
+        if (!server.equals(serverId)) {
+          totalPlaytime += serverData.getOrDefault("playtime", 0L);
+          totalAfktime += serverData.getOrDefault("afktime", 0L);
+        }
       }
     }
+
+    StatManager stats = StatManager.getInstance();
+    Long currentServerPlaytime =
+      stats.getPlayerStat(uuid, StatisticType.PLAYTIME) / 20;
+    long afkTime = AFKManager.getInstance().getAFKTime(uuid);
+
+    totalPlaytime += currentServerPlaytime;
+    totalAfktime += afkTime;
 
     return totalPlaytime - totalAfktime;
   }

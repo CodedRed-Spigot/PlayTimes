@@ -2,6 +2,7 @@ package me.codedred.playtimes;
 
 import java.util.*;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import me.codedred.playtimes.afk.AFKManager;
 import me.codedred.playtimes.data.DataManager;
 import me.codedred.playtimes.data.database.manager.DatabaseManager;
 import me.codedred.playtimes.models.Leaderboard;
@@ -78,28 +79,6 @@ public class Expansions extends PlaceholderExpansion {
         }
         return handleLeaderboardIdentifier(identifier);
     }
-  }
-
-  private String getRawtime(OfflinePlayer player) {
-    if (DataManager.getInstance().hasDatabase()) {
-      TimeManager timeManager = TimeManager.getInstance();
-      Long rawtime = DatabaseManager
-        .getInstance()
-        .getTotalRawtime(player.getUniqueId());
-      return timeManager.buildFormat(rawtime != null ? rawtime : 0);
-    }
-    return "N/A";
-  }
-
-  private String getAfktime(OfflinePlayer player) {
-    if (DataManager.getInstance().hasDatabase()) {
-      TimeManager timeManager = TimeManager.getInstance();
-      Long afktime = DatabaseManager
-        .getInstance()
-        .getTotalAfktime(player.getUniqueId());
-      return timeManager.buildFormat(afktime != null ? afktime : 0);
-    }
-    return "N/A";
   }
 
   private String getServerSpecificRawtime(
@@ -198,9 +177,26 @@ public class Expansions extends PlaceholderExpansion {
   private String getPlayerPlayTime(OfflinePlayer player) {
     StatManager stats = StatManager.getInstance();
     TimeManager timeManager = TimeManager.getInstance();
+    long afkTime = AFKManager.getInstance().getAFKTime(player.getUniqueId());
+    return timeManager.buildFormat(
+      stats.getPlayerStat(player.getUniqueId(), StatisticType.PLAYTIME) /
+      20 -
+      afkTime
+    );
+  }
+
+  private String getRawtime(OfflinePlayer player) {
+    StatManager stats = StatManager.getInstance();
+    TimeManager timeManager = TimeManager.getInstance();
     return timeManager.buildFormat(
       stats.getPlayerStat(player.getUniqueId(), StatisticType.PLAYTIME) / 20
     );
+  }
+
+  private String getAfktime(OfflinePlayer player) {
+    TimeManager timeManager = TimeManager.getInstance();
+    long afkTime = AFKManager.getInstance().getAFKTime(player.getUniqueId());
+    return timeManager.buildFormat(afkTime);
   }
 
   private String handleLeaderboardIdentifier(String identifier) {
