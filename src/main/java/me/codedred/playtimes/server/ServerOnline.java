@@ -14,10 +14,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class ServerOnline implements ServerStatus {
 
-  @SuppressWarnings("deprecation")
   @Override
   public UUID getUUID(@NotNull String name) {
-    UUID uuid = Bukkit.getOfflinePlayer(name).getUniqueId();
+    UUID uuid = Bukkit.getServer().getOfflinePlayer(name).getUniqueId();
     if (!StatManager.getInstance().hasJoinedBefore(uuid)) {
       return null;
     }

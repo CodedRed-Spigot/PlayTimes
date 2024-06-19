@@ -9,12 +9,17 @@ public class ServerManager {
 
   private static final ServerManager instance = new ServerManager();
 
+  public enum LookUpTypes {
+    OFFLINE,
+    ONLINE,
+  }
+
   public static ServerManager getInstance() {
     return instance;
   }
 
   private ServerStatus status;
-  private boolean offlineLookup = false;
+  private LookUpTypes lookupType = LookUpTypes.ONLINE;
 
   public void register() {
     if (Bukkit.getOnlineMode()) {
@@ -42,8 +47,8 @@ public class ServerManager {
     return getStatus().isOnline();
   }
 
-  public boolean isOfflineLookup() {
-    return offlineLookup;
+  public LookUpTypes lookupType() {
+    return lookupType;
   }
 
   public void updateLookupType() {
@@ -51,18 +56,25 @@ public class ServerManager {
     boolean databaseEnabled = dataManager
       .getDBConfig()
       .getBoolean("database-settings.enabled");
-    String lookupType = dataManager
+
+    boolean isSetToOffline = dataManager
       .getConfig()
-      .getString("uuid-lookups.type", "")
-      .toLowerCase();
+      .getString("uuid-lookups.type")
+      .equalsIgnoreCase("offline");
+
+    boolean isSetToOnline = dataManager
+      .getConfig()
+      .getString("uuid-lookups.type")
+      .equalsIgnoreCase("online");
 
     boolean serverOnline = isOnline();
 
-    if ("online".equals(lookupType)) {
-      offlineLookup = false;
+    if (isSetToOnline) lookupType = LookUpTypes.ONLINE; else if (
+      (!serverOnline && !databaseEnabled) || isSetToOffline
+    ) {
+      lookupType = LookUpTypes.OFFLINE;
     } else {
-      offlineLookup =
-        (!serverOnline && !databaseEnabled) || "offline".equals(lookupType);
+      lookupType = LookUpTypes.ONLINE;
     }
   }
 

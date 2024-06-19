@@ -143,7 +143,7 @@ public class Time implements CommandExecutor {
       ChatColor.GOLD +
       "\nUUID Lookup Type: " +
       ChatColor.WHITE +
-      ServerManager.getInstance().isOfflineLookup()
+      ServerManager.getInstance().lookupType()
     );
   }
 
