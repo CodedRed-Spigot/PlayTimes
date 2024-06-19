@@ -10,25 +10,28 @@ public class HexUtil {
 
   public static String hex(String message) {
     StringBuilder builder = new StringBuilder();
-    int index = 0;
+    int length = message.length();
 
-    while (index < message.length()) {
-      int colorCodeStart = message.indexOf("<#", index);
-      if (colorCodeStart != -1) {
-        int colorCodeEnd = message.indexOf(">", colorCodeStart + 2);
-        if (colorCodeEnd != -1) {
-          builder.append(message, index, colorCodeStart);
-          String hexCode = message.substring(colorCodeStart + 2, colorCodeEnd);
-          ChatColor hexColor = ChatColor.of('#' + hexCode);
-          builder.append(hexColor);
-          index = colorCodeEnd + 1;
+    for (int i = 0; i < length; i++) {
+      if (
+        message.charAt(i) == '<' &&
+        i + 8 < length &&
+        message.charAt(i + 1) == '#'
+      ) {
+        String hexCode = message.substring(i + 2, i + 8);
+        if (message.charAt(i + 8) == '>' && isValidHexCode(hexCode)) {
+          builder.append(ChatColor.of('#' + hexCode));
+          i += 8; // Skip the processed hex code and the '>'
           continue;
         }
       }
-      builder.append(message.substring(index));
-      break;
+      builder.append(message.charAt(i));
     }
 
     return ChatColor.translateAlternateColorCodes('&', builder.toString());
+  }
+
+  private static boolean isValidHexCode(String hexCode) {
+    return hexCode.matches("^[a-fA-F0-9]{6}$");
   }
 }
