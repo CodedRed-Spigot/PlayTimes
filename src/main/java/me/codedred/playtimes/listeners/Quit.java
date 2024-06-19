@@ -1,6 +1,7 @@
 package me.codedred.playtimes.listeners;
 
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import me.codedred.playtimes.afk.AFKManager;
 import me.codedred.playtimes.data.DataManager;
 import me.codedred.playtimes.data.database.manager.DatabaseManager;
@@ -19,27 +20,25 @@ public class Quit implements Listener {
 
     // Database
     if (data.hasDatabase()) {
-      DatabaseManager dbManager = DatabaseManager.getInstance();
-      dbManager.updatePlaytime(
-        uuid,
-        StatManager
-          .getInstance()
-          .getPlayerStat(
-            event.getPlayer().getUniqueId(),
-            StatisticType.PLAYTIME
-          ) /
-        20,
-        AFKManager.getInstance().getAFKTime(event.getPlayer().getUniqueId())
-      );
-    } else {
-      // save afktime in data.yml
-      data
-        .getData()
-        .set(
-          "afktime." + uuid,
-          AFKManager.getInstance().getAFKTime(event.getPlayer().getUniqueId())
+      CompletableFuture.runAsync(() -> {
+        DatabaseManager dbManager = DatabaseManager.getInstance();
+        dbManager.updatePlaytime(
+          uuid,
+          StatManager
+            .getInstance()
+            .getPlayerStat(uuid, StatisticType.PLAYTIME) /
+          20,
+          AFKManager.getInstance().getAFKTime(uuid)
         );
-      data.saveData();
+      });
+    } else {
+      // Save AFK time in data.yml
+      CompletableFuture.runAsync(() -> {
+        data
+          .getData()
+          .set("afktime." + uuid, AFKManager.getInstance().getAFKTime(uuid));
+        data.saveData();
+      });
     }
 
     // Leaderboard
@@ -48,18 +47,19 @@ public class Quit implements Listener {
       return;
     }
 
-    StatManager statManager = StatManager.getInstance();
-    long playtime = statManager.getPlayerStat(uuid, StatisticType.PLAYTIME);
-    if (
-      !data.getConfig().getBoolean("top-playtime.track-rawtime", false) &&
-      data.hasAfkEnabled()
-    ) {
-      playtime -=
-        AFKManager.getInstance().getAFKTime(event.getPlayer().getUniqueId()) *
-        20;
-    }
+    // Run leaderboard update
+    CompletableFuture.runAsync(() -> {
+      StatManager statManager = StatManager.getInstance();
+      long playtime = statManager.getPlayerStat(uuid, StatisticType.PLAYTIME);
+      if (
+        !data.getConfig().getBoolean("top-playtime.track-rawtime", false) &&
+        data.hasAfkEnabled()
+      ) {
+        playtime -= AFKManager.getInstance().getAFKTime(uuid) * 20;
+      }
 
-    data.getData().set("leaderboard." + uuid, playtime);
-    data.saveData();
+      data.getData().set("leaderboard." + uuid, playtime);
+      data.saveData();
+    });
   }
 }
