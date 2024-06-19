@@ -31,14 +31,18 @@ public class CustomConfig {
 
     this.dataConfig = YamlConfiguration.loadConfiguration(this.dataConfigFile);
 
-    if (name == "config.yml") checkAndAddDefaults();
+    if ("config.yml".equals(name)) checkAndAddDefaults();
 
-    InputStream defConfigStream = this.plugin.getResource(name);
-    if (defConfigStream != null) {
-      YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(
-        new InputStreamReader(defConfigStream)
-      );
-      this.dataConfig.setDefaults(defConfig);
+    try (InputStream defConfigStream = this.plugin.getResource(name)) {
+      if (defConfigStream != null) {
+        YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(
+          new InputStreamReader(defConfigStream)
+        );
+        this.dataConfig.setDefaults(defConfig);
+      }
+    } catch (IOException e) {
+      this.plugin.getLogger()
+        .log(Level.SEVERE, "Error reading default config", e);
     }
   }
 
@@ -155,7 +159,7 @@ public class CustomConfig {
   }
 
   public void saveConfig() {
-    if ((this.dataConfig == null) || (this.dataConfigFile == null)) return;
+    if (this.dataConfig == null || this.dataConfigFile == null) return;
     try {
       getConfig().save(this.dataConfigFile);
     } catch (IOException ex) {
