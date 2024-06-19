@@ -1,24 +1,22 @@
 name: Playtimes
+version: "${version}"
 main: me.codedred.playtimes.PlayTimes
-# Keeping 'Cmaaxx' as author for Metric purposes.
+api-version: 1.19
 author: Cmaaxx
 authors: [CodedRed]
-version: '${version}'
 softdepend: [PlaceholderAPI]
+description: Check Players PlayTime And More!
 
 commands:
   playtime:
-    description: Check your playtime!
-    usage: /playtime
-    permission: pt.use
     aliases: [playt, playerinfo, pt]
+    description: "Check your playtime!"
+    usage: "/playtime"
   uptime:
-    description: Check your servers uptime!
-    usage: /uptime
-    permission: pt.uptime
     aliases: [serveruptime, serverupt]
+    description: "Check your servers uptime!"
+    usage: "/uptime"
   topplaytime:
-    description: Check your servers uptime!
-    usage: /topplaytime
-    permission: pt.top
     aliases: [topplayt, toppt]
+    description: "Check your servers uptime!"
+    usage: "/topplaytime"
