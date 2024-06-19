@@ -1,0 +1,30 @@
+database-settings:
+  enabled: false
+  type: "mysql" # change to 'sqlite' for SQLite
+  database: "playtimes"
+  host: "localhost"
+  port: 3306
+  user: "root"
+  password: "password"
+  useSSL: false
+  # IMPORTANT:
+  # 'serverId' must be UNIQUE to each server!
+  # If you have multiple servers running PlayTimes, ensure each config has a unique 'serverId'.
+  # The 'serverId' will also be used for placeholders, like %playtime_serverId% (e.g., %playtime_survival%).
+  # The placeholder will return the playtime on that specific server.
+  serverId: "survival"
+
+# If enabled, upon starting your server it will purge all user info that is older than x months.
+# NOTE: This will only purge data for the specific 'serverId', not for all servers!
+purge-database:
+  enabled: false
+  months: 12
+# Placeholders:
+## For use in Plugin:
+# %rawtime_serverId%
+# %afktime_serverId%
+# %playtime_serverId%
+## For PAPI:
+# %PlayTimes_rawtime_serverId%
+# %PlayTimes_afktime_serverId%
+# %PlayTimes_playtime_serverId%

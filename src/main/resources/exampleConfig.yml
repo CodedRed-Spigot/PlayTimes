@@ -1,0 +1,89 @@
+# PlayTimes by CodedRed
+# For assistance, please submit inquiries here: https://github.com/CodedRed-Spigot/PlayTimes/issues
+
+# The 'prefix' configures the introductory text for 'player-not-found' and 'player-never-joined' notifications.
+prefix: "&7[&b&lPlayTimes&7]"
+
+# Placeholder API Configuration
+# Activate this only if using PlaceholderAPI with PlayTimes.
+# To integrate PlayTimes placeholders into other plugins, simply install PlaceholderAPI; integration occurs seamlessly.
+use-papi-placeholders: false
+
+# PlayTimes Formatting and Message Customization
+# 'playtime.name' defines time unit labels. For formatting guidance, refer to our Spigot plugin page.
+playtime:
+  ## Default Placeholders:
+  ## %player%, %playtime%, %timesjoined%, %joindate%, %rawTime%, %afkTime%
+  ## For database placeholders, visit: https://github.com/CodedRed-Spigot/PlayTimes/wiki/Bungee-Support
+  ## PlaceholderAPI placeholders are also compatible.
+  message:
+    - "&b&m=======&b&l[%player%]&b&m======="
+    - "&aPlaytime:&f %playtime%"
+    - "&aTimes Joined:&f %timesjoined%"
+    - "&aJoin Date:&f %joindate%"
+    - "&b&m============================"
+  name:
+    second: "s"
+    minute: "min "
+    hour: "hr "
+    day: "day "
+    seconds: "s"
+    minutes: "mins "
+    hours: "hrs "
+    days: "days "
+
+  ## 'only-hours' - Displays playtime solely in hours. Activating this overrides 'show-seconds' and 'show-days'.
+  ## 'show-seconds' - Includes seconds in the display.
+  ## 'show-days' - Includes days in the display.
+  only-hours: false
+  show-seconds: true
+  show-days: true
+  ## 'round-numbers' - Rounds off the playtime to whole numbers when 'only-hours' is true.
+  round-numbers: true
+
+# AFK Tracker Configuration
+# NOTE: When enabled, this will remove afk time from %time% placeholder
+afk-settings:
+  enabled: true
+
+  ## Time in minutes after which a player is considered AFK.
+  threshold: 2
+
+  ## Notifications settings for AFK status changes.
+  notify-on-afk:
+    onAFK: true
+    onBackFromAFK: true
+
+  # Message to send to the player when they are marked as AFK.
+  afk-message: "&eYou are now marked as AFK."
+  # Message to send to the player when they are no longer marked as AFK.
+  back-from-afk-message: "&eYou are no longer AFK."
+
+# /Uptime Command Configuration - Use '%serveruptime%' to display server uptime.
+uptime:
+  message:
+    - "&b&m============================"
+    - "&aServer Uptime:&f %serveruptime%"
+    - "&b&m============================"
+
+# /toppt Command Settings
+## Standard Placeholders:
+## %player%, %place%, %time%, %joindate%
+## PlaceholderAPI placeholders are also supported.
+top-playtime:
+  header: "&b******&9[&3&lPlayTime Leaderboards&9]&b*****"
+  content: "&5%place%) &9&l%player% &9&o- %time%"
+  footer: "&b****************************************"
+  enable-cooldown: true
+  cooldown-seconds: 60
+
+# 'date-format' - Customize this to change the format of join dates.
+# Explore more formatting options at: https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
+date-format: "MM/dd/yyyy"
+
+# Customizable Built-In Messages
+messages:
+  noPermission: "&cYou cannot run this command."
+  player-not-found: "&cUnable to locate player."
+  player-never-joined: "&cThis player has not joined the server."
+  cooldown: "&cCommand unavailable for %timeleft% seconds!"

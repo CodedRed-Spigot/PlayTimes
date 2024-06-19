@@ -1,27 +1,26 @@
 # PlayTimes by CodedRed
-# For support please ask here: https://discord.gg/7A9UA2n
+# For assistance, please submit inquiries here: https://github.com/CodedRed-Spigot/PlayTimes/issues
 
-# Prefix will show before 'player-not-found' & 'player-never-joined' messages
+# The 'prefix' configures the introductory text for 'player-not-found' and 'player-never-joined' notifications.
 prefix: "&7[&b&lPlayTimes&7]"
 
-
-  # Placeholders API info
-  # Only enable this if you are using PAPI holders in PlayTimes
-  # If you want to use PlayTimes placeholders in other plugins...
-  # Just download PAPI and it will *automatically* register
+# Placeholder API Configuration
+# Activate this only if using PlaceholderAPI with PlayTimes.
+# To integrate PlayTimes placeholders into other plugins, simply install PlaceholderAPI; integration occurs seamlessly.
 use-papi-placeholders: false
 
-  # PlayTimes format & message settings
-  # The name refers to the format. See spigot plugin page for format examples
+# PlayTimes Formatting and Message Customization
+# 'playtime.name' defines time unit labels. For formatting guidance, refer to our Spigot plugin page.
 playtime:
-  ## Built-in Placeholders:
-  ## %player% %time% %timesjoined% %joindate%
-  ## You may also use PAPI Placeholders
+  ## Default Placeholders:
+  ## %player%, %playtime%, %timesjoined%, %joindate%, %rawTime%, %afkTime%
+  ## For database placeholders, visit: https://github.com/CodedRed-Spigot/PlayTimes/wiki/Bungee-Support
+  ## PlaceholderAPI placeholders are also compatible.
   message:
     - "&b&m=======&b&l[%player%]&b&m======="
-    - "&aPlaytime:&f %time%"
-    - "&aTimes joined:&f %timesjoined%"
-    - "&aJoined Date:&f %joindate%"
+    - "&aPlaytime:&f %playtime%"
+    - "&aTimes Joined:&f %timesjoined%"
+    - "&aJoin Date:&f %joindate%"
     - "&b&m============================"
   name:
     second: "s"
@@ -33,40 +32,71 @@ playtime:
     hours: "hrs "
     days: "days "
 
-  ## only-hours - when true it will display playtime in hours (When true this will also disable show-seconds/days setting)
-  ## show-seconds - when true it will display seconds
-  ## show-days - when true it will display days
+  ## 'only-hours' - Displays playtime solely in hours. Activating this overrides 'show-seconds' and 'show-days'.
+  ## 'show-seconds' - Includes seconds in the display.
+  ## 'show-days' - Includes days in the display.
   only-hours: false
   show-seconds: true
   show-days: true
+  ## 'round-numbers' - Rounds off the playtime to whole numbers when 'only-hours' is true.
+  round-numbers: true
 
-# /Uptime command info - only placeholder is %serveruptime%
+# AFK Tracker Configuration
+# NOTE: When enabled, this will remove afk time from %playtime% placeholder
+afk-settings:
+  enabled: true
+
+  ## Time in minutes after which a player is considered AFK.
+  threshold: 5
+
+  ## Notifications settings for AFK status changes.
+  broadcast-afk:
+    on-enter-afk: true
+    on-exit-afk: true
+
+  # Message to send to the player when they are marked as AFK.
+  on-enter-afk-message: "&eYou are now marked as AFK."
+  # Message to send to the player when they are no longer marked as AFK.
+  on-exit-afk-message: "&eYou are no longer AFK."
+  # Leave true unless you are experiencing lag/issues with one of the afk listeners.
+  cancel-afk:
+    on-player-move: true
+    on-player-chat: true
+    on-player-interact: true
+
+# /Uptime Command Configuration - Use '%serveruptime%' to display server uptime.
 uptime:
   message:
     - "&b&m============================"
     - "&aServer Uptime:&f %serveruptime%"
     - "&b&m============================"
 
-  # /toppt command info
-  ## Built-in Placeholders:
-  ## %player% %place% %time% %joindate%
-  ## You may also use PAPI placeholders
+# /toppt Command Settings
+## Standard Placeholders:
+## %player%, %place%, %time%, %joindate%
+## PlaceholderAPI placeholders are also supported.
 top-playtime:
   header: "&b******&9[&3&lPlayTime Leaderboards&9]&b*****"
   content: "&5%place%) &9&l%player% &9&o- %time%"
   footer: "&b****************************************"
   enable-cooldown: true
   cooldown-seconds: 60
+  track-rawtime: false
 
-
-  # date-format can be changed to your liking.
-  # For more placeholders look here: https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
-  # This is the join date format.
+# 'date-format' - Customize this to change the format of join dates.
+# Explore more formatting options at: https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
 date-format: "MM/dd/yyyy"
 
-# Built in messages, may change to your liking :D
+# Customizable Built-In Messages
 messages:
   noPermission: "&cYou cannot run this command."
-  player-not-found: "&cPlayer not found."
-  player-never-joined: "&cPlayer has never joined the server!"
-  cooldown: "&cYou cannot use this command for %timeleft% seconds!"
+  player-not-found: "&cUnable to locate player."
+  player-never-joined: "&cThis player has not joined the server."
+  cooldown: "&cCommand unavailable for %timeleft% seconds!"
+
+# Do not change this unless you know what you're doing!
+# This setting is for servers experiencing issues when looking up offline players.
+# For more information, see the link below.
+uuid-lookups:
+  what-does-this-do: https://github.com/CodedRed-Spigot/PlayTimes/wiki/UUID-LOOKUPS
+  type: "default"
