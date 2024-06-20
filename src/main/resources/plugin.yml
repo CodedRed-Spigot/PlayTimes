@@ -1,7 +1,6 @@
 name: Playtimes
 version: "${version}"
 main: me.codedred.playtimes.PlayTimes
-api-version: 1.19
 author: Cmaaxx
 authors: [CodedRed]
 softdepend: [PlaceholderAPI]

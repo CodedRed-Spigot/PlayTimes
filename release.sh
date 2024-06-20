@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NEW_VERSION="1.6.2"
+NEW_VERSION="1.6.2b"
 
 git checkout main
 git pull origin main

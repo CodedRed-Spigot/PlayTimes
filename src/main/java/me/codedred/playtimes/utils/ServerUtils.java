@@ -36,16 +36,36 @@ public class ServerUtils {
    * @return true if so
    */
   public static boolean isRisenVersion() {
-    String[] versionParts = Bukkit.getServer().getVersion().split("\\.");
+    String version = Bukkit.getServer().getVersion();
+    String mcVersion = null;
 
-    int majorVersion = Integer.parseInt(
-      versionParts[1].replaceAll("[^0-9]", "")
-    );
-    int minorVersion = 0;
-    if (versionParts.length >= 3) minorVersion =
-      Integer.parseInt(versionParts[2].replaceAll("[^0-9]", ""));
+    if (version.contains("(MC:")) {
+      int startIndex = version.indexOf("(MC:") + 5;
+      int endIndex = version.indexOf(")", startIndex);
+      mcVersion = version.substring(startIndex, endIndex).trim();
+    }
 
-    return majorVersion >= 17 && minorVersion >= 0;
+    if (mcVersion == null) {
+      Bukkit
+        .getLogger()
+        .warning("PlayTimes failed to extract Minecraft version: " + version);
+      return false;
+    }
+
+    String[] versionParts = mcVersion.split("\\.");
+
+    try {
+      int minorVersion = versionParts.length >= 2
+        ? Integer.parseInt(versionParts[1])
+        : 0;
+
+      return minorVersion >= 17;
+    } catch (NumberFormatException e) {
+      Bukkit
+        .getLogger()
+        .warning("PlayTimes failed to parse Minecraft version: " + mcVersion);
+      return false;
+    }
   }
 
   public static boolean hasPAPI() {
