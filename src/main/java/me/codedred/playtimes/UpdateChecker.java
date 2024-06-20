@@ -31,9 +31,13 @@ public class UpdateChecker {
     connection.setReadTimeout(5000);
     connection.setUseCaches(true);
 
-    latestVersion =
-      new BufferedReader(new InputStreamReader(connection.getInputStream()))
-        .readLine();
+    try (
+      BufferedReader reader = new BufferedReader(
+        new InputStreamReader(connection.getInputStream())
+      )
+    ) {
+      latestVersion = reader.readLine();
+    }
 
     if (latestVersion == null || latestVersion.isEmpty()) {
       throw new IOException("Failed to retrieve latest version.");
