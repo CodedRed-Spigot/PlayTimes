@@ -4,6 +4,11 @@
 # The 'prefix' configures the introductory text for 'player-not-found' and 'player-never-joined' notifications.
 prefix: "&7[&b&lPlayTimes&7]"
 
+# Only for servers running Floodgate for Bedrock Geyser support.
+# This should be the same username-prefix found in your Floodgate config.yml
+# Use '' for an empty prefix
+floodgate-username-prefix: "."
+
 # Placeholder API Configuration
 # Activate this only if using PlaceholderAPI with PlayTimes.
 # To integrate PlayTimes placeholders into other plugins, simply install PlaceholderAPI; integration occurs seamlessly.

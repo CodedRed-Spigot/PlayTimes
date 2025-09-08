@@ -49,6 +49,7 @@ public class CustomConfig {
   private void checkAndAddDefaults() {
     Map<String, Object> requiredKeys = new LinkedHashMap<>();
     requiredKeys.put("prefix", "&7[&b&lPlayTimes&7]");
+    requiredKeys.put("floodgate-username-prefix", ".");
     requiredKeys.put("use-papi-placeholders", false);
 
     requiredKeys.put(

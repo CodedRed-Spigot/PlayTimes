@@ -275,10 +275,12 @@ public class Time implements CommandExecutor {
       ChatUtil.errno(sender, ChatUtil.ChatTypes.NO_PERMISSION);
       return;
     }
+    String userPrefixRegex = Pattern.quote(Objects.requireNonNull(data.getConfig().getString("floodgate-username-prefix")));
+    String regex = "[^a-z0-9_" + userPrefixRegex + "]";
     new BukkitRunnable() {
       @Override
       public void run() {
-        Pattern p = Pattern.compile("[^a-z0-9_]", Pattern.CASE_INSENSITIVE);
+        Pattern p = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher m = p.matcher(args[0]);
         boolean b = m.find();
 
