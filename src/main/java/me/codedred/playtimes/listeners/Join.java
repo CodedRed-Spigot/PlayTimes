@@ -7,6 +7,7 @@ import me.codedred.playtimes.data.DataManager;
 import me.codedred.playtimes.data.database.manager.DatabaseManager;
 import me.codedred.playtimes.statistics.StatManager;
 import me.codedred.playtimes.statistics.StatisticType;
+import me.codedred.playtimes.utils.Async;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
@@ -47,33 +48,36 @@ public class Join implements Listener {
       return;
     }
 
-    ConfigurationSection leaderboardSection = data
-      .getData()
-      .getConfigurationSection("leaderboard");
+    // Run leaderboard update asynchronously to avoid blocking main thread - DerexXD
+    Async.run(() -> {
+      ConfigurationSection leaderboardSection = data
+        .getData()
+        .getConfigurationSection("leaderboard");
 
-    if (leaderboardSection == null) {
-      leaderboardSection = data.getData().createSection("leaderboard");
-    }
+      if (leaderboardSection == null) {
+        leaderboardSection = data.getData().createSection("leaderboard");
+      }
 
-    if (leaderboardSection.contains(uuid.toString())) {
-      return;
-    }
+      if (leaderboardSection.contains(uuid.toString())) {
+        return;
+      }
 
-    long time = StatManager
-      .getInstance()
-      .getPlayerStat(uuid, StatisticType.PLAYTIME);
+      long time = StatManager
+        .getInstance()
+        .getPlayerStat(uuid, StatisticType.PLAYTIME);
 
-    if (
-      !data.getConfig().getBoolean("top-playtime.track-rawtime", false) &&
-      data.hasAfkEnabled()
-    ) {
-      time -=
-        AFKManager.getInstance().getAFKTime(event.getPlayer().getUniqueId()) *
-        20;
-    }
+      if (
+        !data.getConfig().getBoolean("top-playtime.track-rawtime", false) &&
+        data.hasAfkEnabled()
+      ) {
+        time -=
+          AFKManager.getInstance().getAFKTime(event.getPlayer().getUniqueId()) *
+          20;
+      }
 
-    leaderboardSection.set(uuid.toString(), time);
+      leaderboardSection.set(uuid.toString(), time);
 
-    data.saveData();
+      data.saveData();
+    });
   }
 }
