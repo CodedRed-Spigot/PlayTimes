@@ -1,12 +1,12 @@
 package me.codedred.playtimes.listeners;
 
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 import me.codedred.playtimes.afk.AFKManager;
 import me.codedred.playtimes.data.DataManager;
 import me.codedred.playtimes.data.database.manager.DatabaseManager;
 import me.codedred.playtimes.statistics.StatManager;
 import me.codedred.playtimes.statistics.StatisticType;
+import me.codedred.playtimes.utils.Async;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -20,7 +20,7 @@ public class Quit implements Listener {
 
     // Database
     if (data.hasDatabase()) {
-      CompletableFuture.runAsync(() -> {
+      Async.run(() -> {
         DatabaseManager dbManager = DatabaseManager.getInstance();
         dbManager.updatePlaytime(
           uuid,
@@ -33,7 +33,7 @@ public class Quit implements Listener {
       });
     } else {
       // Save AFK time in data.yml
-      CompletableFuture.runAsync(() -> {
+      Async.run(() -> {
         data
           .getData()
           .set("afktime." + uuid, AFKManager.getInstance().getAFKTime(uuid));
@@ -47,8 +47,8 @@ public class Quit implements Listener {
       return;
     }
 
-    // Run leaderboard update
-    CompletableFuture.runAsync(() -> {
+    // Run leaderboard update asynchronously - DerexXD
+    Async.run(() -> {
       StatManager statManager = StatManager.getInstance();
       long playtime = statManager.getPlayerStat(uuid, StatisticType.PLAYTIME);
       if (
