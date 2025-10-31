@@ -11,6 +11,7 @@ import me.codedred.playtimes.server.ServerManager;
 import me.codedred.playtimes.statistics.StatManager;
 import me.codedred.playtimes.time.TimeConstants;
 import me.codedred.playtimes.time.TimeManager;
+import me.codedred.playtimes.utils.Async;
 import me.codedred.playtimes.utils.ChatUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -267,7 +268,9 @@ public class Time implements CommandExecutor {
         ChatUtil.formatWithPrefix("&aUser &b&lUNBLOCKED &afrom leaderboards!")
       );
     }
-    data.saveData();
+    Async.run(() -> {
+        data.saveData();
+    });
   }
 
   private void handleOtherPlayerCommand(CommandSender sender, String[] args) {
