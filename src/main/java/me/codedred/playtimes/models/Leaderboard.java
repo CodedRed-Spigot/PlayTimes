@@ -72,6 +72,7 @@ public class Leaderboard {
       for (Map.Entry<String, Integer> key : delList) {
         data.getData().set(LEADERBOARD + "." + key.getKey(), null);
       }
+      // this is fine; happens inside the async /toppt functionality i think - DerexXD
       data.saveData();
       
       list = list.subList(0, 20);
